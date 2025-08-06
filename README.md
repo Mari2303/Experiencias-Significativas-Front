@@ -1,6 +1,6 @@
-# LOGINDashboard-Vite-React
+# Experiencias-Significativas-Vite-React
 
-Este proyecto es una plantilla de frontend que incluye funcionalidades básicas de autenticación (Login, Registro) y un Dashboard. Está construido con React, Vite y TypeScript, diseñado para ser reutilizable en varios proyectos.
+Experiencias Significativas, diseñada para registrar, gestionar y consultar experiencias de usuarios en distintos contextos educativos o sociales.
 
 ## Características Principales
 
@@ -22,8 +22,8 @@ Antes de ejecutar el proyecto, asegúrate de tener instalado lo siguiente:
 1. Clona este repositorio:
 
    ```bash
-   git clone https://github.com/tu-usuario/LOGINDashboard-Vite-React.git
-   cd LOGINDashboard-Vite-React
+  git clone https://github.com/Mari2303/Experiencias-Significativas-Front.git
+   cd Experiencias-Significativas-Front
    ```
 
 2. Instala las dependencias:
@@ -108,27 +108,12 @@ src/
   **Rutas :**
 - React Router DOM : Biblioteca para manejar la navegación entre páginas.
 
-## Contribuciones
-
-Si deseas contribuir a este proyecto, sigue estos pasos:
-
-1. Haz un fork del repositorio.
-2. Crea una nueva rama para tus cambios:
-
-```bash
-git checkout -b feature/nueva-funcionalidad
-```
-
-3. Realiza tus cambios y envía un pull request.
-
-## Licencia
-
-Este proyecto está bajo la licencia MIT . Consulta el archivo LICENSE para más detalles.
-
 ## Autor
 
-Nombre : Eduardo M Moreno
-GitHub : [Enlace a tu perfil de GitHub](https://github.com/EduMMorenolp)
+Nombre : Maria Alejandra Marin 
+Nombre : Catalina Cometa Fierro 
+Nombre : Merari Urbano Quintero
+GitHub : [Enlace a tu perfil de GitHub](https://github.com/Mari2303)
 
 ## Agradecimientos
 
