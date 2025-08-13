@@ -1,6 +1,7 @@
 // src/pages/RegisterPage.tsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2"; 
 
 const RegisterPage: React.FC = () => {
   const [PrimerNombre, setNombre] = useState("");
@@ -12,55 +13,90 @@ const RegisterPage: React.FC = () => {
   const [CodigoDane, setCodigoDane] = useState("");
   const [NombreUsuario, setNombreUsuario] = useState("");
   const [email, setEmail] = useState("");
+  const [telefono, setTelefono] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
-    console.log({
-      PrimerNombre,
-      SegundoNombre,
-      PrimerApellido,
-      SegundoApellido,
-      TipoDocumento,
-      NumeroDocumento,
-      CodigoDane,
-      NombreUsuario,
-      email,
-      password,
+
+    const personRequest = {
+      FirstName: PrimerNombre,
+      MiddleName: SegundoNombre,
+      FirstLastName: PrimerApellido,
+      SecondLastName: SegundoApellido,
+      DocumentType: TipoDocumento,
+      IdentificationNumber: NumeroDocumento,
+      CodeDane: CodigoDane,
+      Username: NombreUsuario,
+      Email: email,
+      Password: password,
+    };
+
+    try {
+      const response = await fetch("http://localhost:5062/api/Person", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        }, 
+        body: JSON.stringify(personRequest),
     });
-    navigate("/login");
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log("Persona registrada:", data);
+            Swal.fire({
+        title: "Registro Exitoso",
+        icon: "success",
+        html: `
+          <p>Su cuenta ha sido creada correctamente.</p>
+          <p>Ahora puede iniciar sesión utilizando sus credenciales.</p>
+          <p>¡Bienvenido(a)!</p>
+        `,
+        confirmButtonText: "Iniciar sesión",
+        confirmButtonColor: "#3B82F6",
+      }).then(() => {
+        navigate("/login");
+      });
+    } else {
+      const error = await response.text();
+      console.error("Error del servidor:", error);
+      alert("Error al registrar");
+    }
+  } catch (error) {
+    console.error("Error inesperado:", error);
+    alert("Error al registrar");
+  }
+     
   };
 
  
   
       return (
-<div className="relative min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-400 to-blue-100">
 
-    {/* Imagen del cohete detrás del contenido */}
-    <img
-      src="/public/images/LogoExperiencia.png"
-      alt="Logo experiencia"
-      className="absolute -top-20 -left-50 w-[300vw] h-auto opacity-80 z-0 pointer-events-none"
-    />
+        <div>        
+      <img src= "/images/Cohete.png" alt="Descripción de la imagen" className="w-600" 
+      style={{
+        top: "-20%",
+        left: "-12%",
+        height: "200%",
+        position: "absolute",
+        rotate: "10deg",
+        
+      }} />
 
-  <img
-  src="/ruta/del/cohete2.png"
-  alt="Cohete 2"
-  className="absolute bottom-0 right-0 w-[60vw] opacity-60 z-0 pointer-events-none"
-  />
-
-
-
-    {/* Capa translúcida que ocupa toda la pantalla */}
-    <div className="absolute inset-0 bg-white/10 backdrop-blur-md z-15" />
-
+    <div
+      className="min-h-screen flex items-center justify-center"
+      style={{
+        background: "linear-gradient(50deg, #009CFF 20%, #FFFFFF 80%)",
+      }}
+    >
 
 {/* Sección derecha con formulario */}
-      <div className="relative z-20 flex items-center justify-center w-full h-full">
-      <div className="bg-white p-10 rounded-lg shadow-md w-full max-w-3xl">
-        <h2 className="text-3xl font-bold text-center mb-6">Registro</h2>
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4">
+      <div className="relative z-20 flex items-center justify-center w-167 h-full ">
+      <div className="bg-white/70 p-10 rounded-lg shadow-md w-full max-w-3xl">
+        <h2 className="text-5xl font-bold text-center mb-6">Registro</h2>
+        <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
             
      
           {/* Campos individuales */}
@@ -82,7 +118,7 @@ const RegisterPage: React.FC = () => {
               type="text"
               value={SegundoNombre}
               onChange={(e) => setSegundoNombre(e.target.value)}
-              required
+
             className="w-70 border border-gray-300 rounded-md px-4 py-2 shadow-sm focus:ring-pink-500 focus:border-pink-500"
             />
           </div>
@@ -154,11 +190,33 @@ const RegisterPage: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Correo Estudiantil:</label>
+            <label className="block text-sm font-medium text-gray-700">Correo Institucional:</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              required
+              className="mt-1 block w-70 border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Correo Personal:</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="mt-1 block w-70 border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Teléfono:</label>
+            <input
+              type="tel"
+              value={telefono}
+              onChange={(e) => setTelefono(e.target.value)}
               required
               className="mt-1 block w-70 border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
             />
@@ -175,11 +233,13 @@ const RegisterPage: React.FC = () => {
             />
           </div>
 
+          
+
           {/* Botón */}
-          <div className="md:col-span-2">
+          <div className="md:col-span-2 flex justify-center">
             <button
               type="submit"
-              className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500"
+              className="w-120 bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500"
             >
               Registrarse
             </button>
@@ -187,14 +247,15 @@ const RegisterPage: React.FC = () => {
         </form>
 
         <p className="mt-4 text-center text-sm text-gray-600">
-          ¿Ya tienes cuenta?{" "}
           <a href="/login" className="text-indigo-600 hover:text-indigo-500">
-            Inicia sesión aquí
+            ¿Quieres iniciar sesión?
           </a>
         </p>
       </div>
     </div>
 </div> 
+      </div>
+    
   );
   };
 

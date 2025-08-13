@@ -3,11 +3,11 @@ import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
-import DashboardPage from "./pages/DashboardPage";
+import DashboardPage from "./pages/DashboardAdmin";
 import PrivateRoute from "./components/PrivateRoute";
 import Widgets from "./components/Widgets";
-import ProfileContent from "./components/ProfileContent";
-import SettingsContent from "./components/SettingsContent";
+import ProfileContent from "./components/Seguimiento";
+import SettingsContent from "./components/Evalucion";
 
 const AppRoutes = () => {
   return (
