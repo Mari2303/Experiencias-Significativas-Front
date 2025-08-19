@@ -1,23 +1,15 @@
-// src/components/Modulo/forms/PopulationGroupForm.tsx
 import React, { useState, useEffect } from "react";
-import {
-  addPopulationGroup,
-  updatePopulationGroup,
-  PopulationGroup,
-} from "../Services/PopulationGroup";
+import { addCriteria, Criteria, updateCriteria } from "../Services/Criteria";
+
 
 interface Props {
-  editing: PopulationGroup | null;
-  setEditing: (group: PopulationGroup | null) => void;
+  editing: Criteria | null;
+  setEditing: (Criteria: Criteria | null) => void;
   refresh: () => void;
 }
 
-export default function PopulationGroupForm({
-  editing,
-  setEditing,
-  refresh,
-}: Props) {
-  const [formData, setFormData] = useState<Omit<PopulationGroup, "id">>({
+export default function CriteriaForm({ editing, setEditing, refresh }: Props) {
+  const [formData, setFormData] = useState<Omit<Criteria, "id">>({
     nombre: "",
     codigo: "",
     activo: true,
@@ -30,7 +22,9 @@ export default function PopulationGroupForm({
     }
   }, [editing]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const { name, value, type, checked } = e.target;
     setFormData({
       ...formData,
@@ -38,35 +32,30 @@ export default function PopulationGroupForm({
     });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.nombre || !formData.codigo) {
       alert("Nombre y código son requeridos");
       return;
     }
 
-    try {
-      if (editing) {
-        await updatePopulationGroup(editing.id, formData);
-        alert("Grupo poblacional actualizado con éxito");
-      } else {
-        await addPopulationGroup(formData);
-        alert("Grupo poblacional agregado con éxito");
-      }
-
-      setFormData({ nombre: "", codigo: "", activo: true });
-      setEditing(null);
-      refresh();
-    } catch (error) {
-      console.error("Error guardando el grupo poblacional", error);
-      alert("Hubo un error al guardar. Revisa la consola.");
+    if (editing) {
+      updateCriteria(editing.id, formData);
+      alert("Criterio actualizado con éxito");
+    } else {
+      addCriteria(formData);
+      alert("Criterio agregado con éxito");
     }
+
+    setFormData({ nombre: "", codigo: "", activo: true });
+    setEditing(null);
+    refresh();
   };
 
   return (
     <form onSubmit={handleSubmit} className="mb-4 p-4 border rounded">
       <h3 className="font-bold mb-2">
-        {editing ? "Editar Grupo Poblacional" : "Agregar Grupo Poblacional"}
+        {editing ? "Editar Criterio" : "Agregar Criterio"}
       </h3>
       <input
         type="text"

@@ -1,4 +1,5 @@
 // src/components/Modulo/services/PopulationGroup.ts
+
 export interface PopulationGroup {
   id: number;
   nombre: string;
@@ -6,43 +7,37 @@ export interface PopulationGroup {
   activo: boolean;
 }
 
-const STORAGE_KEY = "populationGroups";
+const API_URL = "https://localhost:7263/api/PopulationGrade/getAll";
 
-export const getPopulationGroups = (): PopulationGroup[] => {
-  const data = localStorage.getItem(STORAGE_KEY);
-  return data ? JSON.parse(data) : [];
+export const getPopulationGroups = async (): Promise<PopulationGroup[]> => {
+  const res = await fetch(API_URL);
+  if (!res.ok) throw new Error("Error obteniendo PopulationGroups");
+  return await res.json();
 };
 
-export const addPopulationGroup = (
-  group: Omit<PopulationGroup, "id">
-): PopulationGroup => {
-  const groups = getPopulationGroups();
-  const newGroup: PopulationGroup = { id: Date.now(), ...group };
-  groups.push(newGroup);
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(groups));
-  return newGroup;
+export const addPopulationGroup = async (data: Omit<PopulationGroup, "id">) => {
+  const res = await fetch(API_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error("Error agregando PopulationGroup");
+  return await res.json();
 };
 
-export const updatePopulationGroup = (
-  id: number,
-  updatedData: Partial<PopulationGroup>
-) => {
-  const groups = getPopulationGroups().map((g) =>
-    g.id === id ? { ...g, ...updatedData } : g
-  );
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(groups));
+export const updatePopulationGroup = async (id: number, data: Partial<PopulationGroup>) => {
+  const res = await fetch(`${API_URL}/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error("Error actualizando PopulationGroup");
 };
 
-// Eliminado lógico (inactivar)
-export const deletePopulationGroupLogical = (id: number) => {
-  const groups = getPopulationGroups().map((g) =>
-    g.id === id ? { ...g, activo: false } : g
-  );
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(groups));
+export const deletePopulationGroupLogical = async (id: number) => {
+  await fetch(`${API_URL}/${id}/logical-delete`, { method: "PUT" });
 };
 
-// Eliminado permanente (remover del array)
-export const deletePopulationGroupPermanent = (id: number) => {
-  const groups = getPopulationGroups().filter((g) => g.id !== id);
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(groups));
+export const deletePopulationGroupPermanent = async (id: number) => {
+  await fetch(`${API_URL}/${id}`, { method: "DELETE" });
 };

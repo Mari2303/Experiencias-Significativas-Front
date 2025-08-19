@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import StatePage from "./States/StatePage";
 import GradePage from "./Grades/GradePage";
 import PopulationGroupPage from "./PopulationGroup/PopulationGroupPage";
+import CriteriaPage from "./Criteria/CriteriaPage";
+import LineThematicPage from "./LineThematic/LineThematicPage";
 
 // Aquí podrías importar otras páginas CRUD de tu módulo
 // import OtraEntidadPage from "./otraEntidad/OtraEntidadPage";
@@ -21,7 +23,7 @@ export default function ModuloTabs() {
           }`}
           onClick={() => setActiveTab("states")}
         >
-          States
+          Estados
         </button>
 
         {/* Grades */}
@@ -34,7 +36,7 @@ export default function ModuloTabs() {
           }`}
           onClick={() => setActiveTab("grades")}
         >
-          Grades
+          Grados
         </button>
 
 
@@ -42,13 +44,40 @@ export default function ModuloTabs() {
         
         <button
           className={`px-4 py-2 ${
-            activeTab === "PopulationGroup"
+            activeTab === "populationGroup"
               ? "border-b-2 border-sky-500 text-sky-600 font-bold"
               : "text-gray-600"
           }`}
-          onClick={() => setActiveTab("PopulationGroup")}
+          onClick={() => setActiveTab("populationGroup")}
         >
-          Population Group
+          Grupo Poblacional
+        </button>
+
+        {/* LineThematic */}
+        
+        <button
+          className={`px-4 py-2 ${
+            activeTab === "lineThematic"
+              ? "border-b-2 border-sky-500 text-sky-600 font-bold"
+              : "text-gray-600"
+          }`}
+          onClick={() => setActiveTab("lineThematic")}
+        >
+          Línea Temática
+        </button>
+      
+
+        {/* Criteria */}
+        
+        <button
+          className={`px-4 py-2 ${
+            activeTab === "criteria"
+              ? "border-b-2 border-sky-500 text-sky-600 font-bold"
+              : "text-gray-600"
+          }`}
+          onClick={() => setActiveTab("criteria")}
+        >
+          Criterios
         </button>
       </div>
 
@@ -56,8 +85,9 @@ export default function ModuloTabs() {
       <div>
         {activeTab === "states" && <StatePage />}
         {activeTab === "grades" && <GradePage />}
-        {activeTab === "PopulationGroup" && <PopulationGroupPage />}
-        {/* {activeTab === "otra" && <OtraEntidadPage />} */}
+        {activeTab === "populationGroup" && <PopulationGroupPage />}
+        {activeTab === "criteria" && <CriteriaPage />}
+        {activeTab === "lineThematic" && <LineThematicPage />}
       </div>
     </div>
   );

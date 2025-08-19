@@ -1,44 +1,18 @@
-// src/components/Modulo/lists/PopulationGroupList.tsx
-import React, { useEffect, useState } from "react";
 import {
-  getPopulationGroups,
-  deletePopulationGroupLogical,
-  deletePopulationGroupPermanent,
-  PopulationGroup,
-} from "../Services/PopulationGroup";
+  getLineThematics,
+  deleteLineThematicLogical,
+  deleteLineThematicPermanent,
+  LineThematic,
+} from "../Services/LineThematic";
 
 interface Props {
-  setEditing: (group: PopulationGroup) => void;
+  setEditing: (LineThematic: LineThematic) => void;
   refreshFlag: boolean;
   refresh: () => void;
 }
 
-export default function PopulationGroupList({
-  setEditing,
-  refreshFlag,
-  refresh,
-}: Props) {
-  const [populationGroups, setPopulationGroups] = useState<PopulationGroup[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const loadData = async () => {
-      setLoading(true);
-      try {
-        const data = await getPopulationGroups(); // ahora es async
-        setPopulationGroups(data);
-      } catch (err) {
-        console.error("Error cargando grupos poblacionales", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadData();
-  }, [refreshFlag]);
-
-  if (loading) {
-    return <p>Cargando grupos poblacionales...</p>;
-  }
+export default function LineThematicList({ setEditing, refresh }: Props) {
+  const LineThematics = getLineThematics();
 
   return (
     <table className="w-full border-collapse border">
@@ -51,14 +25,14 @@ export default function PopulationGroupList({
         </tr>
       </thead>
       <tbody>
-        {populationGroups.length === 0 && (
+        {LineThematics.length === 0 && (
           <tr>
             <td colSpan={4} className="text-center p-4">
-              No hay grupos poblacionales registrados
+              No hay grados registrados
             </td>
           </tr>
         )}
-        {populationGroups.map((g) => (
+        {LineThematics.map((g) => (
           <tr key={g.id}>
             <td className="border p-2">{g.nombre}</td>
             <td className="border p-2">{g.codigo}</td>
@@ -72,8 +46,8 @@ export default function PopulationGroupList({
               </button>
               <button
                 className="bg-orange-500 px-2 py-1 rounded text-white"
-                onClick={async () => {
-                  await deletePopulationGroupLogical(g.id);
+                onClick={() => {
+                  deleteLineThematicLogical(g.id);
                   refresh();
                 }}
               >
@@ -81,9 +55,11 @@ export default function PopulationGroupList({
               </button>
               <button
                 className="bg-red-600 px-2 py-1 rounded text-white"
-                onClick={async () => {
-                  if (confirm("¿Seguro que deseas eliminar permanentemente?")) {
-                    await deletePopulationGroupPermanent(g.id);
+                onClick={() => {
+                  if (
+                    confirm("¿Seguro que deseas eliminar permanentemente?")
+                  ) {
+                    deleteLineThematicPermanent(g.id);
                     refresh();
                   }
                 }}

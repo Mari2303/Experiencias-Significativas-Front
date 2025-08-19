@@ -1,4 +1,3 @@
-import React from "react";
 import {
   getGrades,
   deleteGradeLogical,
@@ -12,7 +11,7 @@ interface Props {
   refresh: () => void;
 }
 
-export default function GradeList({ setEditing, refreshFlag, refresh }: Props) {
+export default function GradeList({ setEditing, refresh }: Props) {
   const grades = getGrades();
 
   return (

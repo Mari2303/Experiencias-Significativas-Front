@@ -2,73 +2,97 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2"; 
+import { person } from "../Api/Types/Types";
+import { registerPerson } from "../Api/Services/Registro";
+import { codigosDane } from "../Api/Config/CodigosDane";
 
 const RegisterPage: React.FC = () => {
   const [PrimerNombre, setNombre] = useState("");
   const [SegundoNombre, setSegundoNombre] = useState("");
   const [PrimerApellido, setPrimerApellido] = useState("");
   const [SegundoApellido, setSegundoApellido] = useState("");
-  const [TipoDocumento, setTipoDocumento] = useState("");
+  const [TipoDocumento, setTipoDocumento] = useState<number>(0);
   const [NumeroDocumento, setNumeroDocumento] = useState("");
   const [CodigoDane, setCodigoDane] = useState("");
   const [NombreUsuario, setNombreUsuario] = useState("");
+  const [emailInstitucional, setEmailInstitucional] = useState("");
   const [email, setEmail] = useState("");
-  const [telefono, setTelefono] = useState("");
+  const [telefono, setTelefono] = useState<number>(0);
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
 
-    const personRequest = {
-      FirstName: PrimerNombre,
-      MiddleName: SegundoNombre,
-      FirstLastName: PrimerApellido,
-      SecondLastName: SegundoApellido,
-      DocumentType: TipoDocumento,
-      IdentificationNumber: NumeroDocumento,
-      CodeDane: CodigoDane,
-      Username: NombreUsuario,
-      Email: email,
-      Password: password,
-    };
+    const personPayload: person = {
+  FirstName: PrimerNombre,
+  MiddleName: SegundoNombre,
+  FirstLastName: PrimerApellido,
+  SecondLastName: SegundoApellido,
+  DocumentType: Number(TipoDocumento), 
+  IdentificationNumber: NumeroDocumento,
+  CodeDane: CodigoDane,
+  Username: NombreUsuario,
+  Email: email,
+  EmailInstitutional: emailInstitucional,
+  Phone: Number(telefono),
+  Password: password,
+};
 
-    try {
-      const response = await fetch("http://localhost:5062/api/Person", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        }, 
-        body: JSON.stringify(personRequest),
-    });
+    
 
-    if (response.ok) {
-      const data = await response.json();
-      console.log("Persona registrada:", data);
-            Swal.fire({
+
+   try {
+    // Llamada al backend para registrar la persona
+    const response = await registerPerson(personPayload);
+
+    // Solo mostrar éxito si la persona se guardó correctamente
+    if (response.success && (response.data.id || response.data.Id)) {
+      Swal.fire({
         title: "Registro Exitoso",
         icon: "success",
-        html: `
-          <p>Su cuenta ha sido creada correctamente.</p>
-          <p>Ahora puede iniciar sesión utilizando sus credenciales.</p>
-          <p>¡Bienvenido(a)!</p>
-        `,
+        text: "Su cuenta ha sido creada correctamente",
         confirmButtonText: "Iniciar sesión",
-        confirmButtonColor: "#3B82F6",
       }).then(() => {
-        navigate("/login");
+        navigate("/login"); // Redirige después de cerrar el alert
       });
     } else {
-      const error = await response.text();
-      console.error("Error del servidor:", error);
-      alert("Error al registrar");
+      Swal.fire({
+        title: "Error",
+        icon: "error",
+        text: "No se pudo registrar la persona",
+      });
     }
-  } catch (error) {
-    console.error("Error inesperado:", error);
-    alert("Error al registrar");
+  } catch (err: any) {
+    Swal.fire({
+      title: "Error",
+      icon: "error",
+      text: err.response?.data || err.message || "Error desconocido",
+    });
   }
-     
-  };
+};
+ 
+
+const tiposDocumentoList = [
+  { label: "Cédula de ciudadanía", value: 1 },
+  { label: "Tarjeta de identidad", value: 2 },
+  { label: "Cédula de extranjería", value: 3 },
+  { label: "Pasaporte", value: 4 }
+];
+
+
+
+const emailInstitucionalValues: number[] = [
+  1,  2,  3,  4,  5,
+  6,  7,  8,  9, 10,
+  11, 12, 13, 14, 15,
+  16, 17, 18, 19, 20,
+  21, 22, 23, 24, 25,
+  26, 27, 28, 29, 30,
+  31
+];
+
+
 
  
   
@@ -147,13 +171,18 @@ const RegisterPage: React.FC = () => {
 
           <div>
             <label className="block text-sm font-medium text-gray-700">Tipo de Documento:</label>
-            <input
-              type="text"
-              value={TipoDocumento}
-              onChange={(e) => setTipoDocumento(e.target.value)}
-              required
-              className="mt-1 block w-70 border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-            />
+            <select
+            value={TipoDocumento}
+            onChange={(e) => setTipoDocumento(Number(e.target.value))}
+            required
+          >
+            <option value="">Seleccione...</option>
+            {tiposDocumentoList.map((tipo) => (
+              <option key={tipo.value} value={tipo.value}>
+                {tipo.label}
+              </option>
+            ))}
+          </select>
           </div>
 
           <div>
@@ -169,13 +198,19 @@ const RegisterPage: React.FC = () => {
 
           <div>
             <label className="block text-sm font-medium text-gray-700">Código DANE:</label>
-            <input
-              type="text"
+            <select
               value={CodigoDane}
               onChange={(e) => setCodigoDane(e.target.value)}
               required
               className="mt-1 block w-70 border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-            />
+            >
+              <option value="">Seleccione...</option>
+              {codigosDane.map((codigo) => (
+                <option key={codigo} value={codigo}>
+                  {codigo}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div>
@@ -191,13 +226,19 @@ const RegisterPage: React.FC = () => {
 
           <div>
             <label className="block text-sm font-medium text-gray-700">Correo Institucional:</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+            <select
+              value={emailInstitucional}
+              onChange={(e) => setEmailInstitucional(e.target.value)}
               required
               className="mt-1 block w-70 border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-            />
+            >
+              <option value="">Seleccione...</option>
+              {emailInstitucionalValues.map((value) => (
+                <option key={value} value={value}>
+                  {value}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div>
@@ -214,9 +255,9 @@ const RegisterPage: React.FC = () => {
           <div>
             <label className="block text-sm font-medium text-gray-700">Teléfono:</label>
             <input
-              type="tel"
+              type="Number"
               value={telefono}
-              onChange={(e) => setTelefono(e.target.value)}
+              onChange={(e) => setTelefono(Number(e.target.value))}
               required
               className="mt-1 block w-70 border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
             />
