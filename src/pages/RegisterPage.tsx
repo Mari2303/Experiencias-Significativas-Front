@@ -1,25 +1,48 @@
 // src/pages/RegisterPage.tsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2"; 
 import { person } from "../Api/Types/Types";
 import { registerPerson } from "../Api/Services/Registro";
-import { codigosDane } from "../Api/Config/CodigosDane";
+import { getEnum } from "../Api/Services/Helper";
+import { DataSelectRequest } from "../Api/Types/HelperTypes";
 
 const RegisterPage: React.FC = () => {
   const [PrimerNombre, setNombre] = useState("");
   const [SegundoNombre, setSegundoNombre] = useState("");
   const [PrimerApellido, setPrimerApellido] = useState("");
   const [SegundoApellido, setSegundoApellido] = useState("");
-  const [TipoDocumento, setTipoDocumento] = useState<number>(0);
+  const [TipoDocumento, setTipoDocumento] = useState("");
   const [NumeroDocumento, setNumeroDocumento] = useState("");
   const [CodigoDane, setCodigoDane] = useState("");
   const [NombreUsuario, setNombreUsuario] = useState("");
   const [emailInstitucional, setEmailInstitucional] = useState("");
   const [email, setEmail] = useState("");
-  const [telefono, setTelefono] = useState<number>(0);
+  const [telefono, setTelefono] = useState<number>();
   const [password, setPassword] = useState("");
+  const [documentTypes, setDocumentTypes] = useState<DataSelectRequest[]>([]);
+  const [emailInstitucionalOptions, setEmailInstitucionalOptions] = useState<DataSelectRequest[]>([]);
   const navigate = useNavigate();
+
+
+
+useEffect(() => {
+  const fetchEnums = async () => {
+    const documentTypes = await getEnum("DocumentType");
+    setDocumentTypes(documentTypes);
+    console.log("DocumentTypes recibidos:", documentTypes);
+
+    const emailInstitucionalOptions = await getEnum("EmailInstitucional");
+    setEmailInstitucionalOptions(emailInstitucionalOptions);
+    console.log("EmailInstitutional recibidos:", emailInstitucionalOptions);
+  };
+
+  fetchEnums();
+}, []);
+
+
+
+
 
   const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
@@ -38,8 +61,6 @@ const RegisterPage: React.FC = () => {
   Phone: Number(telefono),
   Password: password,
 };
-
-    
 
 
    try {
@@ -71,32 +92,8 @@ const RegisterPage: React.FC = () => {
     });
   }
 };
- 
 
-const tiposDocumentoList = [
-  { label: "Cédula de ciudadanía", value: 1 },
-  { label: "Tarjeta de identidad", value: 2 },
-  { label: "Cédula de extranjería", value: 3 },
-  { label: "Pasaporte", value: 4 }
-];
-
-
-
-const emailInstitucionalValues: number[] = [
-  1,  2,  3,  4,  5,
-  6,  7,  8,  9, 10,
-  11, 12, 13, 14, 15,
-  16, 17, 18, 19, 20,
-  21, 22, 23, 24, 25,
-  26, 27, 28, 29, 30,
-  31
-];
-
-
-
- 
-  
-      return (
+  return (
 
         <div>        
       <img src= "/images/Cohete.png" alt="Descripción de la imagen" className="w-600" 
@@ -170,20 +167,21 @@ const emailInstitucionalValues: number[] = [
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Tipo de Documento:</label>
-            <select
-            value={TipoDocumento}
-            onChange={(e) => setTipoDocumento(Number(e.target.value))}
-            required
-          >
-            <option value="">Seleccione...</option>
-            {tiposDocumentoList.map((tipo) => (
-              <option key={tipo.value} value={tipo.value}>
-                {tipo.label}
-              </option>
-            ))}
-          </select>
-          </div>
+  <label className="block text-sm font-medium text-gray-700">Tipo de Documento:</label>
+  <select
+  value={TipoDocumento}
+  onChange={(e) => setTipoDocumento(e.target.value)}
+  required
+  className="mt-1 block w-70 border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+>
+  <option value="">Seleccione...</option>
+  {documentTypes.map((doc) => (
+    <option key={doc.id} value={doc.id}>
+      {doc.displayText}
+    </option>
+  ))}
+</select>
+</div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700">Número de Documento:</label>
@@ -198,19 +196,13 @@ const emailInstitucionalValues: number[] = [
 
           <div>
             <label className="block text-sm font-medium text-gray-700">Código DANE:</label>
-            <select
+            <input
+              type="text"
               value={CodigoDane}
               onChange={(e) => setCodigoDane(e.target.value)}
               required
               className="mt-1 block w-70 border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-            >
-              <option value="">Seleccione...</option>
-              {codigosDane.map((codigo) => (
-                <option key={codigo} value={codigo}>
-                  {codigo}
-                </option>
-              ))}
-            </select>
+            />
           </div>
 
           <div>
@@ -227,18 +219,18 @@ const emailInstitucionalValues: number[] = [
           <div>
             <label className="block text-sm font-medium text-gray-700">Correo Institucional:</label>
             <select
-              value={emailInstitucional}
-              onChange={(e) => setEmailInstitucional(e.target.value)}
-              required
-              className="mt-1 block w-70 border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-            >
-              <option value="">Seleccione...</option>
-              {emailInstitucionalValues.map((value) => (
-                <option key={value} value={value}>
-                  {value}
-                </option>
-              ))}
-            </select>
+    value={emailInstitucional}
+    onChange={(e) => setEmailInstitucional(e.target.value)}
+    required
+    className="mt-1 block w-70 border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+  >
+    <option value="">Seleccione...</option>
+    {emailInstitucionalOptions.map((email) => (
+      <option key={email.id} value={email.displayText}>
+        {email.displayText}
+      </option>
+    ))}
+  </select>
           </div>
 
           <div>
