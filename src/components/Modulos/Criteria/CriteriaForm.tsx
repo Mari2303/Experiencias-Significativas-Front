@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { addCriteria, Criteria, updateCriteria } from "../Services/Criteria";
+import { addCriteria, Criteria, updateCriteria } from "../../../Api/Services/Criteria";
 
 
 interface Props {

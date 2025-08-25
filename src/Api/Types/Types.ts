@@ -19,3 +19,10 @@ export interface user {
   Password: string;
   PersonId?: number;
 }
+
+export interface Criteria {
+  id: number;
+  nombre: string;
+  codigo: string;
+  activo: boolean;
+}

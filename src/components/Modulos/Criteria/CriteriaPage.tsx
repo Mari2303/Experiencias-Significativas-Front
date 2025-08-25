@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import CriteriaForm from "./CriteriaForm";
 import CriteriaList from "./CriteriaList";
-import { Criteria } from "../Services/Criteria";
+import { Criteria } from "../../../Api/Services/Criteria";
 
 export default function CriteriaPage() {
   const [editing, setEditing] = useState<Criteria | null>(null);

@@ -1,18 +1,29 @@
+import React, { useEffect, useState } from "react";
 import {
   getCriterias,
   deleteCriteriaLogical,
   deleteCriteriaPermanent,
   Criteria,
-} from "../Services/Criteria";
+} from "../../../Api/Services/Criteria";
 
 interface Props {
-  setEditing: (Criteria: Criteria) => void;
+  setEditing: (criteria: Criteria) => void;
   refreshFlag: boolean;
   refresh: () => void;
 }
 
 export default function CriteriaList({ setEditing, refresh }: Props) {
-  const Criterias = getCriterias();
+  const [criterias, setCriterias] = useState<Criteria[]>([]);
+
+  // Cargar datos desde la API
+  const fetchData = async () => {
+    const data = await getCriterias();
+    setCriterias(data);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [refresh]); // Se recarga cada vez que cambie "refresh"
 
   return (
     <table className="w-full border-collapse border">
@@ -25,14 +36,14 @@ export default function CriteriaList({ setEditing, refresh }: Props) {
         </tr>
       </thead>
       <tbody>
-        {Criterias.length === 0 && (
+        {criterias.length === 0 && (
           <tr>
             <td colSpan={4} className="text-center p-4">
-              No hay grados registrados
+              No hay criterios registrados
             </td>
           </tr>
         )}
-        {Criterias.map((g) => (
+        {criterias.map((g) => (
           <tr key={g.id}>
             <td className="border p-2">{g.nombre}</td>
             <td className="border p-2">{g.codigo}</td>
@@ -46,21 +57,19 @@ export default function CriteriaList({ setEditing, refresh }: Props) {
               </button>
               <button
                 className="bg-orange-500 px-2 py-1 rounded text-white"
-                onClick={() => {
-                  deleteCriteriaLogical(g.id);
-                  refresh();
+                onClick={async () => {
+                  await deleteCriteriaLogical(g.id);
+                  fetchData();
                 }}
               >
                 Inactivar
               </button>
               <button
                 className="bg-red-600 px-2 py-1 rounded text-white"
-                onClick={() => {
-                  if (
-                    confirm("¿Seguro que deseas eliminar permanentemente?")
-                  ) {
-                    deleteCriteriaPermanent(g.id);
-                    refresh();
+                onClick={async () => {
+                  if (confirm("¿Seguro que deseas eliminar permanentemente?")) {
+                    await deleteCriteriaPermanent(g.id);
+                    fetchData();
                   }
                 }}
               >
