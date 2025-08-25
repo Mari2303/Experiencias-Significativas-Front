@@ -150,7 +150,7 @@ const ResetPassword: React.FC = () => {
             <>
               <p className="text-sm text-gray-600 mb-6">
                 Ingresa el correo registrado para enviarte un código de
-                verificación. cambio
+                verificación. 
               </p>
 
               <div className="text-left mb-10">
