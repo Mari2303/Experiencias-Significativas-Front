@@ -1,7 +1,11 @@
-import React from "react";
+import React, { useState } from "react"; // 🔹 CAMBIO: agregado useState
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { XCircle } from "lucide-react"; 
 import coete from "../img/coete.png";
+
+import { login } from "../api/service/login";
+import { LoginRequest } from "../api/types/interfaces";
 
 type FormData = {
   CorreoElectronico: string;
@@ -16,9 +20,21 @@ const LoginPage: React.FC = () => {
   } = useForm<FormData>();
   const navigate = useNavigate();
 
-  const onSubmit = (data: FormData) => {
-    console.log(data);
-    navigate("/dashboard");
+  const [showError, setShowError] = useState(false); // 🔹 CAMBIO: estado del modal
+
+  const onSubmit = async (data: FormData) => {
+    try {
+      const loginData: LoginRequest = {
+        username: data.CorreoElectronico,
+        password: data.Contraseña,
+      };
+      const response = await login(loginData);
+      // console.log("Login exitoso:", response);
+      navigate("/dashboard");
+    } catch (error) {
+      setShowError(true); // 🔹 CAMBIO: reemplaza al alert()
+      // console.error("Error al iniciar sesión:", error);
+    }
   };
 
   return (
@@ -45,10 +61,14 @@ const LoginPage: React.FC = () => {
         }}
       >
         {/* Cuadro principal */}
-        <div className="w-[520px] h-[600px] p-10 bg-white/50 backdrop-blur-md rounded-xl shadow-2xl z-10 relative">
-          <h2 className="text-5xl font-bold mb-6 text-center pt-10 text-black">Iniciar Sesión</h2>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-10"
-          style={{
+        <div className="w-[450px] h-[530px] p-10 bg-white/50 backdrop-blur-md rounded-xl shadow-2xl z-10 relative">
+          <h2 className="text-5xl font-bold mb-6 text-center pt-10 text-black">
+            Iniciar Sesión
+          </h2>
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="space-y-10"
+            style={{
               top: "10%",
               position: "relative",
             }}
@@ -63,7 +83,9 @@ const LoginPage: React.FC = () => {
                 className="w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#009CFF] focus:border-[#009CFF] text-black bg-white"
               />
               {errors.CorreoElectronico && (
-                <p className="text-red-500 text-sm mt-1">{errors.CorreoElectronico.message}</p>
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.CorreoElectronico.message}
+                </p>
               )}
             </div>
             <div>
@@ -76,7 +98,9 @@ const LoginPage: React.FC = () => {
                 className="w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#009CFF] focus:border-[#009CFF] text-black bg-white"
               />
               {errors.Contraseña && (
-                <p className="text-red-500 text-sm mt-1">{errors.Contraseña.message}</p>
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.Contraseña.message}
+                </p>
               )}
             </div>
             <button
@@ -87,21 +111,39 @@ const LoginPage: React.FC = () => {
             </button>
           </form>
 
-          <p className="mt-6 text-center text-sm text-gray-700"
-          style={{
-              top: "15%",
-              position: "relative",
-              
-            }}
-          >
-            ¿Se te olvidó tu contraseña?
+          <p className="mt-20 text-center text-sm text-gray-700">
+            <Link
+              to="/reset-password"
+              className="text-[#009CFF] hover:underline"
+            >
+              ¿Se te olvidó tu contraseña?
+            </Link>
             <br />
-            <a href="/register" className="text-[#009CFF] hover:underline">
+            <Link to="/register" className="text-[#009CFF] hover:underline">
               Crea tu cuenta
-            </a>
+            </Link>
           </p>
         </div>
       </div>
+      {showError && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+          <div className="bg-white rounded-2xl shadow-lg p-6 w-96 text-center">
+            <XCircle className="text-red-600 w-16 h-16 mx-auto mb-4" />
+            <h2 className="text-lg font-semibold text-gray-800">
+              Error de autenticación
+            </h2>
+            <p className="text-gray-600 mb-6">
+              Usuario o contraseña incorrectos
+            </p>
+            <button
+              onClick={() => setShowError(false)}
+              className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg"
+            >
+              Listo
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
