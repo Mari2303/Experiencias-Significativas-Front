@@ -29,7 +29,7 @@ const LoginPage: React.FC = () => {
         password: data.Contraseña,
       };
       const response = await login(loginData);
-      // console.log("Login exitoso:", response);
+       console.log("Login exitoso:", response);
       navigate("/dashboard");
     } catch (error) {
       setShowError(true); // 🔹 CAMBIO: reemplaza al alert()
