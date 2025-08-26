@@ -133,7 +133,7 @@ const LoginPage: React.FC = () => {
               Error de autenticación
             </h2>
             <p className="text-gray-600 mb-6">
-              Usuario o contraseña incorrectos
+              Usuario o contraseña incorrecta
             </p>
             <button
               onClick={() => setShowError(false)}
