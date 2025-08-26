@@ -53,7 +53,7 @@ const LoginPage: React.FC = () => {
         }}
       />
 
-      {/* Fondo con gradiente */}
+      {/* Fondo del cuadro */}
       <div
         className="min-h-screen flex items-center justify-center"
         style={{

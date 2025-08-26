@@ -4,24 +4,24 @@ import flecha from "../img/flecha.png";
 import { Link } from "react-router-dom";
 
 const ResetPassword: React.FC = () => {
-  const [step, setStep] = useState(1); // paso actual
-  const [password, setPassword] = useState(""); // contraseña escrita
-  const [code, setCode] = useState(Array(5).fill("")); // código de verificación
-  const [email, setEmail] = useState(""); // correo electrónico
+  const [step, setStep] = useState(1); 
+  const [password, setPassword] = useState(""); 
+  const [code, setCode] = useState(Array(5).fill("")); 
+  const [email, setEmail] = useState("");
 
   // Validaciones de la contraseña
   const hasUpperLower = /[a-z]/.test(password) && /[A-Z]/.test(password);
   const hasNumber = /\d/.test(password);
   const hasMinLength = password.length >= 8;
 
-  // Ir al paso 2 limpiando inputs
+  // Ir al paso 2 limpiando 
   const goToStep2 = () => {
     setPassword("");
     setCode(Array(5).fill(""));
     setStep(2);
   };
 
-  // Volver al paso 1 limpiando inputs
+  // Volver al paso 1 limpiando 
   const goBackToStep1 = () => {
     setPassword("");
     setCode(Array(5).fill(""));
