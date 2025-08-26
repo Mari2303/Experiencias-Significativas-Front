@@ -16,7 +16,7 @@ export default function CriteriaPage() {
       <CriteriaList
         setEditing={setEditing}
         refreshFlag={refreshFlag}
-        refresh={refresh}
+      
       />
     </div>
   );

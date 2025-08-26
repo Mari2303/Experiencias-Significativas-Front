@@ -1,25 +1,19 @@
-import axios from "axios";
+// src/Services/CriteriaService.ts
+import api from "../../api"; // instancia con interceptor
 import { Criteria } from "../Types/Types";
-
-const API_URL = "https://localhost:7263/api/Criteria"; // Cambia al endpoint de tu API
-
-// Función para obtener el token desde localStorage
-const getToken = () => {
-  return localStorage.getItem("token");
-};
-
-// Configuración de headers con token
-const getAuthHeaders = () => ({
-  headers: {
-    Authorization: `Bearer ${getToken()}`,
-  },
-});
 
 // Obtener todas las criteria
 export const getCriterias = async (): Promise<Criteria[]> => {
   try {
-    const response = await axios.get<Criteria[]>(`${API_URL}/getAll`, getAuthHeaders());
-    return response.data;
+    const response = await api.get("/Criteria/getAll");
+
+    // Siempre vienen en response.data.data
+    if (Array.isArray(response.data.data)) {
+      return response.data.data;
+    }
+
+    console.error("getCriterias: formato de respuesta inesperado", response.data);
+    return [];
   } catch (error) {
     console.error("Error al obtener criterios:", error);
     return [];
@@ -29,8 +23,14 @@ export const getCriterias = async (): Promise<Criteria[]> => {
 // Crear un nuevo criteria
 export const addCriteria = async (criteria: Omit<Criteria, "id">): Promise<Criteria | null> => {
   try {
-    const response = await axios.post<Criteria>(API_URL, criteria, getAuthHeaders());
-    return response.data;
+    const response = await api.post("/Criteria", criteria);
+
+    if (response.data?.status && response.data?.data) {
+      return response.data.data; // El criterio creado
+    }
+
+    console.error("addCriteria: formato de respuesta inesperado", response.data);
+    return null;
   } catch (error) {
     console.error("Error al crear criteria:", error);
     return null;
@@ -38,32 +38,55 @@ export const addCriteria = async (criteria: Omit<Criteria, "id">): Promise<Crite
 };
 
 // Actualizar un criteria
-export const updateCriteria = async (id: number, updatedData: Partial<Criteria>): Promise<boolean> => {
+export const updateCriteria = async (id: number, updatedData: Partial<Criteria>): Promise<Criteria | null> => {
   try {
-    await axios.put(`${API_URL}/${id}`, updatedData, getAuthHeaders());
-    return true;
+    const response = await api.put(`/Criteria/${id}`, updatedData);
+
+    if (response.data?.status && response.data?.data) {
+      return response.data.data; // El criterio actualizado
+    }
+
+    console.error("updateCriteria: formato de respuesta inesperado", response.data);
+    return null;
   } catch (error) {
     console.error("Error al actualizar criteria:", error);
-    return false;
+    return null;
   }
 };
 
 // Eliminado lógico (inactivar)
 export const deleteCriteriaLogical = async (id: number): Promise<boolean> => {
   try {
-    await axios.patch(`${API_URL}/${id}/inactivate`, {}, getAuthHeaders());
-    return true;
+    const response = await api.patch(`/Criteria/${id}/inactivate`, {});
+
+    if (response.data?.status) {
+      return true;
+    }
+
+    console.error("deleteCriteriaLogical: formato de respuesta inesperado", response.data);
+    return false;
   } catch (error) {
     console.error("Error al inactivar criteria:", error);
     return false;
   }
 };
 
-// Eliminado permanente
 export const deleteCriteriaPermanent = async (id: number): Promise<boolean> => {
   try {
-    await axios.delete(`${API_URL}/${id}`, getAuthHeaders());
-    return true;
+    const response = await api.delete(`/Criteria/${id}`);
+
+    // Caso 1: backend devuelve objeto con status
+    if (response.data?.status) {
+      return true;
+    }
+
+    // Caso 2: backend devuelve 204 No Content
+    if (response.status === 204) {
+      return true;
+    }
+
+    console.error("deleteCriteriaPermanent: respuesta inesperada", response);
+    return false;
   } catch (error) {
     console.error("Error al eliminar criteria:", error);
     return false;

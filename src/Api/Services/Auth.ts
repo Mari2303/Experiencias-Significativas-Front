@@ -1,12 +1,49 @@
-import api from "../Config/Config";
-import { saveToken } from "./tokenService";
+// src/Api/Services/Auth.ts
+import api from "../../api"; // tu instancia de Axios
 
-export async function login(username: string, password: string) {
-  const res = await api.post("/Auth/login", { username, password });
+interface TokenData {
+  value: string;
+  expiresAt: number;
+}
 
-  if (res.data?.token) {
-    saveToken(res.data.token, 30); // guarda por 30 minutos
+export function saveToken(token: string, expirationMinutes: number = 60) {
+  const now = new Date();
+  const expirationTime = now.getTime() + expirationMinutes * 60 * 1000;
+
+  const tokenData: TokenData = {
+    value: token,
+    expiresAt: expirationTime,
+  };
+
+  localStorage.setItem("token", JSON.stringify(tokenData));
+}
+
+export function getToken(): string | null {
+  const tokenData = localStorage.getItem("token");
+  if (!tokenData) return null;
+
+  const parsed: TokenData = JSON.parse(tokenData);
+  if (new Date().getTime() > parsed.expiresAt) {
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    return null;
   }
 
-  return res.data;
+  return parsed.value;
 }
+
+export const login = async (username: string, password: string) => {
+  const response = await api.post("/auth/login", { username, password });
+
+  const token =
+    response.data?.token ||
+    response.data?.accessToken ||
+    response.data?.jwt ||
+    response.data?.data?.token;
+
+  if (!token) throw new Error("No se pudo iniciar sesión: token no recibido");
+
+  saveToken(token, 60);
+
+  return response.data;
+};

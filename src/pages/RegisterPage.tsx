@@ -7,6 +7,8 @@ import { registerPerson } from "../Api/Services/Registro";
 import { getEnum } from "../Api/Services/Helper";
 import { DataSelectRequest } from "../Api/Types/HelperTypes";
 
+
+
 const RegisterPage: React.FC = () => {
   const [PrimerNombre, setNombre] = useState("");
   const [SegundoNombre, setSegundoNombre] = useState("");
@@ -18,7 +20,7 @@ const RegisterPage: React.FC = () => {
   const [NombreUsuario, setNombreUsuario] = useState("");
   const [emailInstitucional, setEmailInstitucional] = useState("");
   const [email, setEmail] = useState("");
-  const [telefono, setTelefono] = useState<number>();
+  const [telefono, setTelefono] = useState<string>("");
   const [password, setPassword] = useState("");
   const [documentTypes, setDocumentTypes] = useState<DataSelectRequest[]>([]);
   const [emailInstitucionalOptions, setEmailInstitucionalOptions] = useState<DataSelectRequest[]>([]);
@@ -249,7 +251,7 @@ useEffect(() => {
             <input
               type="Number"
               value={telefono}
-              onChange={(e) => setTelefono(Number(e.target.value))}
+              onChange={(e) => setTelefono(String(e.target.value))}
               required
               className="mt-1 block w-70 border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
             />

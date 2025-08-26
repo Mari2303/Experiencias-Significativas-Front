@@ -10,9 +10,9 @@ interface Props {
 
 export default function CriteriaForm({ editing, setEditing, refresh }: Props) {
   const [formData, setFormData] = useState<Omit<Criteria, "id">>({
-    nombre: "",
-    codigo: "",
-    activo: true,
+    name: "",
+    code: "",
+    state: true,
   });
 
   useEffect(() => {
@@ -34,7 +34,7 @@ export default function CriteriaForm({ editing, setEditing, refresh }: Props) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.nombre || !formData.codigo) {
+    if (!formData.name || !formData.code) {
       alert("Nombre y código son requeridos");
       return;
     }
@@ -47,7 +47,7 @@ export default function CriteriaForm({ editing, setEditing, refresh }: Props) {
       alert("Criterio agregado con éxito");
     }
 
-    setFormData({ nombre: "", codigo: "", activo: true });
+    setFormData({ name: "", code: "", state: true });
     setEditing(null);
     refresh();
   };
@@ -59,25 +59,25 @@ export default function CriteriaForm({ editing, setEditing, refresh }: Props) {
       </h3>
       <input
         type="text"
-        name="nombre"
+        name="name"
         placeholder="Nombre"
-        value={formData.nombre}
+        value={formData.name}
         onChange={handleChange}
         className="border p-2 mr-2"
       />
       <input
         type="text"
-        name="codigo"
+        name="code"
         placeholder="Código"
-        value={formData.codigo}
+        value={formData.code}
         onChange={handleChange}
         className="border p-2 mr-2"
       />
       <label className="mr-2">
         <input
           type="checkbox"
-          name="activo"
-          checked={formData.activo}
+          name="state"
+          checked={formData.state}
           onChange={handleChange}
         />{" "}
         Activo

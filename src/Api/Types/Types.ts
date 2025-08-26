@@ -22,7 +22,7 @@ export interface user {
 
 export interface Criteria {
   id: number;
-  nombre: string;
-  codigo: string;
-  activo: boolean;
+  name: string;
+  code: string;
+  state: boolean;
 }

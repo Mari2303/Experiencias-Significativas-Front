@@ -1,17 +1,22 @@
 import Swal from "sweetalert2";
 import api from "../Config/Config";
-import { person } from "../Types/Types"; // Solo necesitamos person ahora
+import { person } from "../Types/Types";
+import { getToken } from "./Auth"; // función que obtiene el token
 
 export async function registerPerson(personData: person) {
   try {
-    // Registrar la persona (incluye username y password)
-    const personRes = await api.post("/Person", personData);
+    const token = getToken(); // obtenemos token del localStorage
 
-    // Verificar que se haya creado correctamente
+    const headers = token
+      ? { Authorization: `Bearer ${token}` }
+      : undefined;
+
+    // Registrar la persona (incluye username y password)
+    const personRes = await api.post("/Person", personData, { headers });
+
     const personId = personRes.data.id || personRes.data.Id;
     if (!personId) throw new Error("No se pudo obtener el ID de la persona");
 
-    // Notificación solo si se guardó
     Swal.fire({
       title: "Registro Exitoso",
       icon: "success",
