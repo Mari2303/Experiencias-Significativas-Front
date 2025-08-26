@@ -8,6 +8,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import Widgets from "./components/Widgets";
 import ProfileContent from "./components/ProfileContent";
 import SettingsContent from "./components/SettingsContent";
+import ResetPassword from "./pages/ResetPassword"; // 👈 Importamos la página
 
 const AppRoutes = () => {
   return (
@@ -16,6 +17,7 @@ const AppRoutes = () => {
         {/* Rutas públicas */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/reset-password" element={<ResetPassword />} /> {/* 👈 Nueva ruta */}
 
         {/* Rutas protegidas */}
         <Route element={<PrivateRoute />}>
