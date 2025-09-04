@@ -1,5 +1,5 @@
 // src/pages/PopulationGroupPage.tsx
-import React, { useState } from "react";
+import { useState } from "react";
 import { PopulationGroup } from "../Services/PopulationGroup";
 import PopulationGroupForm from "./PopulationGroupForm";
 import PopulationGroupList from "./PopulationGroup.List";

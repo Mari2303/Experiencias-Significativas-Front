@@ -9,10 +9,9 @@ interface Props {
 }
 
 export default function CriteriaForm({ editing, setEditing, refresh }: Props) {
-  const [formData, setFormData] = useState<Omit<Criteria, "id">>({
+  const [formData, setFormData] = useState<{ name: string; code: string }>({
     name: "",
     code: "",
-    state: true,
   });
 
   useEffect(() => {
@@ -47,7 +46,7 @@ export default function CriteriaForm({ editing, setEditing, refresh }: Props) {
       alert("Criterio agregado con éxito");
     }
 
-    setFormData({ name: "", code: "", state: true });
+  setFormData({ name: "", code: "" });
     setEditing(null);
     refresh();
   };
@@ -73,15 +72,7 @@ export default function CriteriaForm({ editing, setEditing, refresh }: Props) {
         onChange={handleChange}
         className="border p-2 mr-2"
       />
-      <label className="mr-2">
-        <input
-          type="checkbox"
-          name="state"
-          checked={formData.state}
-          onChange={handleChange}
-        />{" "}
-        Activo
-      </label>
+  {/* El backend maneja el campo 'state', no mostrar el checkbox */}
       <button
         type="submit"
         className="bg-sky-500 text-white px-4 py-2 rounded"

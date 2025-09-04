@@ -1,9 +1,9 @@
 // src/Api/Services/Auth.ts
-import api from "../../api"; // tu instancia de Axios
+import configApi from "../Config/Config"; // tu instancia de Axios
 
 interface TokenData {
   value: string;
-  expiresAt: number;
+  expiresAt: number;  
 }
 
 export function saveToken(token: string, expirationMinutes: number = 60) {
@@ -33,7 +33,7 @@ export function getToken(): string | null {
 }
 
 export const login = async (username: string, password: string) => {
-  const response = await api.post("/auth/login", { username, password });
+  const response = await configApi.post("/auth/login", { username, password });
 
   const token =
     response.data?.token ||

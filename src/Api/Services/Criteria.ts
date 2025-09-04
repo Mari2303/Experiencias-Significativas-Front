@@ -1,11 +1,11 @@
 // src/Services/CriteriaService.ts
-import api from "../../api"; // instancia con interceptor
+import configApi from "../Config/Config"; // instancia con interceptor
 import { Criteria } from "../Types/Types";
 
 // Obtener todas las criteria
 export const getCriterias = async (): Promise<Criteria[]> => {
   try {
-    const response = await api.get("/Criteria/getAll");
+    const response = await configApi.get("/Criteria/getAll");
 
     // Siempre vienen en response.data.data
     if (Array.isArray(response.data.data)) {
@@ -21,9 +21,9 @@ export const getCriterias = async (): Promise<Criteria[]> => {
 };
 
 // Crear un nuevo criteria
-export const addCriteria = async (criteria: Omit<Criteria, "id">): Promise<Criteria | null> => {
+export const addCriteria = async (criteria: { name: string; code: string }): Promise<Criteria | null> => {
   try {
-    const response = await api.post("/Criteria", criteria);
+    const response = await configApi.post("/Criteria", criteria);
 
     if (response.data?.status && response.data?.data) {
       return response.data.data; // El criterio creado
@@ -40,7 +40,7 @@ export const addCriteria = async (criteria: Omit<Criteria, "id">): Promise<Crite
 // Actualizar un criteria
 export const updateCriteria = async (id: number, updatedData: Partial<Criteria>): Promise<Criteria | null> => {
   try {
-    const response = await api.put(`/Criteria/${id}`, updatedData);
+    const response = await configApi.put(`/Criteria/${id}`, updatedData);
 
     if (response.data?.status && response.data?.data) {
       return response.data.data; // El criterio actualizado
@@ -57,7 +57,7 @@ export const updateCriteria = async (id: number, updatedData: Partial<Criteria>)
 // Eliminado lógico (inactivar)
 export const deleteCriteriaLogical = async (id: number): Promise<boolean> => {
   try {
-    const response = await api.patch(`/Criteria/${id}/inactivate`, {});
+    const response = await configApi.patch(`/Criteria/${id}/inactivate`, {});
 
     if (response.data?.status) {
       return true;
@@ -73,7 +73,7 @@ export const deleteCriteriaLogical = async (id: number): Promise<boolean> => {
 
 export const deleteCriteriaPermanent = async (id: number): Promise<boolean> => {
   try {
-    const response = await api.delete(`/Criteria/${id}`);
+    const response = await configApi.delete(`/Criteria/${id}`);
 
     // Caso 1: backend devuelve objeto con status
     if (response.data?.status) {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import StatePage from "./States/StatePage";
 import GradePage from "./Grades/GradePage";
 import PopulationGroupPage from "./PopulationGroup/PopulationGroupPage";

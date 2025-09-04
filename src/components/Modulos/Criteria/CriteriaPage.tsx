@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import CriteriaForm from "./CriteriaForm";
 import CriteriaList from "./CriteriaList";
 import { Criteria } from "../../../Api/Services/Criteria";

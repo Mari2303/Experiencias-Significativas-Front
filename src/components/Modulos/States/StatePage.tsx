@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import StateForm from "./StateForm";
 import StateList from "./StateList";
 import { IState } from "../Services/State";

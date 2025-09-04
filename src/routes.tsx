@@ -7,7 +7,7 @@ import DashboardPage from "./pages/DashboardAdmin";
 import PrivateRoute from "./components/PrivateRoute";
 import Widgets from "./components/Widgets";
 import ProfileContent from "./components/Seguimiento";
-import SettingsContent from "./components/Evalucion";
+import SettingsContent from "./components/Evaluacion";    
 
 const AppRoutes = () => {
   return (

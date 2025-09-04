@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import GradeForm from "./GradeForm";
 import GradeList from "./GradeList";
 import { Grade } from "../Services/Grade";

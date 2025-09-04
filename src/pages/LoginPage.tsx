@@ -3,7 +3,8 @@ import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import { login, saveToken } from "../Api/Services/Auth";
+import { login, saveToken } from "../Api/Config/Config";
+
 
 type FormData = {
   username: string;

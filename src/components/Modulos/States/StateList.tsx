@@ -1,4 +1,3 @@
-import React from "react";
 import {
   IState,
   getStates,
@@ -12,7 +11,7 @@ interface StateListProps {
   refresh: () => void;
 }
 
-export default function StateList({ setEditing, refreshFlag, refresh }: StateListProps) {
+export default function StateList({ setEditing, refresh }: StateListProps) {
   const states: IState[] = getStates();
 
   return (

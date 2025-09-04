@@ -3,8 +3,12 @@ import React from "react";
 
 const Widgets: React.FC = () => {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-3">
-      {/* Widget 1 */}
+    <div>
+      <div className="font-bold text-[#00aaff] text-[28.242px] w-full">
+          <p>Ejes temáticos</p>
+        </div>
+      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-3">
+        {/* Widget 1 */}
       <div className="bg-white p-9 rounded-lg shadow-md w-70 h-35 text-center">
         <h6 className="text-lg font-semibold text-gray-800">
           <img src="/images/EducacionAmbiental.png" alt="" className="mx-auto mb-2 w-15" />
@@ -66,6 +70,10 @@ const Widgets: React.FC = () => {
           <img src="/images/deporte.png" alt="" className="mx-auto mb-2 w-20" />
           Danza, Deporte y Recreación
         </h6>
+      </div>
+      </div>
+      <div className="mt-10 font-bold text-[#00aaff] text-[28.359px] w-full">
+        <p>Experiencias</p>
       </div>
     </div>
   );

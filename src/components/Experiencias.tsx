@@ -1,5 +1,5 @@
-import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { useState } from "react";
 import { Modal, Button, Form, Row, Col } from "react-bootstrap";
 
 interface ExperienciasProps {
@@ -28,9 +28,9 @@ const Experiencias = ({ onAgregar }: ExperienciasProps) => {
 
   return (
     <div className="p-8 bg-white min-h-screen">
-      <h2 className="text-xl font-bold text-sky-600 mb-4">
-        Actualizar Experiencia
-      </h2>
+      <div className="font-bold text-[#00aaff] text-[28.242px] w-full">
+          <p>Actualizar Experiencia</p>
+      </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-10">
         {experiencias.map((exp) => (
           <div
@@ -52,9 +52,9 @@ const Experiencias = ({ onAgregar }: ExperienciasProps) => {
         ))}
       </div>
 
-      <h2 className="text-xl font-bold text-sky-600 mb-4">
-        Registro de Experiencias Nuevas
-      </h2>
+      <div className="font-bold text-[#00aaff] text-[28.242px] w-full">
+          <p>Registro de Nuevas Experiencias</p>
+        </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {nuevas.map((n) => (
           <div
