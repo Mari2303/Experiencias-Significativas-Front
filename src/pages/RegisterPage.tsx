@@ -2,8 +2,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2"; 
-import { person } from "../Api/Types/Types";
-import { registerPerson } from "../Api/Services/Registro";
+import { person, user } from "../Api/Types/Types";
+import { registerPerson, registerUser } from "../Api/Services/Registro";
 import { getEnum } from "../Api/Services/Helper";
 import { DataSelectRequest } from "../Api/Types/HelperTypes";
 
@@ -23,6 +23,7 @@ const RegisterPage: React.FC = () => {
   const [telefono, setTelefono] = useState<string>("");
   const [password, setPassword] = useState("");
   const [documentTypes, setDocumentTypes] = useState<DataSelectRequest[]>([]);
+  const [codigoDaneOptions, setCodigoDaneOptions] = useState<DataSelectRequest[]>([]);
   const [emailInstitucionalOptions, setEmailInstitucionalOptions] = useState<DataSelectRequest[]>([]);
   const navigate = useNavigate();
 
@@ -37,6 +38,10 @@ useEffect(() => {
     const emailInstitucionalOptions = await getEnum("EmailInstitucional");
     setEmailInstitucionalOptions(emailInstitucionalOptions);
     console.log("EmailInstitutional recibidos:", emailInstitucionalOptions);
+
+    const codigoDaneOptions = await getEnum("CodeDane");
+    setCodigoDaneOptions(codigoDaneOptions);
+    console.log("CodeDane recibidos:", codigoDaneOptions);
   };
 
   fetchEnums();
@@ -49,50 +54,86 @@ useEffect(() => {
   const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
 
-    const personPayload: person = {
-  FirstName: PrimerNombre,
-  MiddleName: SegundoNombre,
-  FirstLastName: PrimerApellido,
-  SecondLastName: SegundoApellido,
-  DocumentType: Number(TipoDocumento), 
-  IdentificationNumber: NumeroDocumento,
-  CodeDane: CodigoDane,
-  Username: NombreUsuario,
-  Email: email,
-  EmailInstitutional: emailInstitucional,
-  Phone: Number(telefono),
-  Password: password,
-};
+    const personPayload = {
+      DocumentType: String(TipoDocumento),
+      IdentificationNumber: NumeroDocumento,
+      FirstName: PrimerNombre,
+      MiddleName: SegundoNombre,
+      FirstLastName: PrimerApellido,
+      SecondLastName: SegundoApellido,
+      FullName: `${PrimerNombre} ${SegundoNombre} ${PrimerApellido} ${SegundoApellido}`.trim(),
+      CodeDane: CodigoDane,
+      EmailInstitutional: emailInstitucional,
+      Email: email,
+      Phone: telefono ? Number(telefono) : 0
+    };
 
 
-   try {
-    // Llamada al backend para registrar la persona
-    const response = await registerPerson(personPayload);
+    try {
+      // Paso 1: Registrar persona
+      const response = await registerPerson(personPayload);
+      console.log("Respuesta de /Person/create:", response);
 
-    // Solo mostrar éxito si la persona se guardó correctamente
-    if (response.success && (response.data.id || response.data.Id)) {
-      Swal.fire({
-        title: "Registro Exitoso",
-        icon: "success",
-        text: "Su cuenta ha sido creada correctamente",
-        confirmButtonText: "Iniciar sesión",
-      }).then(() => {
-        navigate("/login"); // Redirige después de cerrar el alert
-      });
-    } else {
+      // Ajustar condición según la respuesta real del backend
+      let personId = null;
+      if (response && (response.id || response.Id)) {
+        personId = response.id || response.Id;
+      } else if (response.data && (response.data.id || response.data.Id)) {
+        personId = response.data.id || response.data.Id;
+      }
+
+      if (personId) {
+        // Paso 2: Registrar usuario (solo campos requeridos por el backend)
+        const userPayload = {
+          Code: "USR-" + Date.now(),
+          Username: NombreUsuario,
+          Password: password,
+          PersonId: personId,
+          Person: ""
+        };
+        console.log("Payload enviado a /User/register:", userPayload);
+        try {
+          const userResponse = await registerUser(userPayload);
+          console.log("Respuesta de /User/register:", userResponse);
+          // Considera exitoso si userResponse tiene un id, code o username
+          if (userResponse && (userResponse.id || userResponse.Id || userResponse.username || userResponse.Username)) {
+            Swal.fire({
+              title: "Registro Exitoso",
+              icon: "success",
+              text: "Su cuenta ha sido creada correctamente",
+              confirmButtonText: "Iniciar sesión",
+            }).then(() => {
+              navigate("/login");
+            });
+          } else {
+            Swal.fire({
+              title: "Error",
+              icon: "error",
+              text: userResponse?.message || "No se pudo registrar el usuario",
+            });
+          }
+        } catch (userErr: any) {
+          console.error("Error en /User/register:", userErr);
+          Swal.fire({
+            title: "Error",
+            icon: "error",
+            text: userErr.response?.data?.message || userErr.message || "Error desconocido al registrar usuario",
+          });
+        }
+      } else {
+        Swal.fire({
+          title: "Error",
+          icon: "error",
+          text: "No se pudo registrar la persona",
+        });
+      }
+    } catch (err: any) {
       Swal.fire({
         title: "Error",
         icon: "error",
-        text: "No se pudo registrar la persona",
+        text: err.response?.data?.message || err.message || "Error desconocido",
       });
     }
-  } catch (err: any) {
-    Swal.fire({
-      title: "Error",
-      icon: "error",
-      text: err.response?.data || err.message || "Error desconocido",
-    });
-  }
 };
 
   return (
@@ -198,13 +239,19 @@ useEffect(() => {
 
           <div>
             <label className="block text-sm font-medium text-gray-700">Código DANE:</label>
-            <input
-              type="text"
+            <select
               value={CodigoDane}
               onChange={(e) => setCodigoDane(e.target.value)}
               required
               className="mt-1 block w-70 border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-            />
+            >
+              <option value="">Seleccione...</option>
+              {codigoDaneOptions.map((option) => (
+                <option key={option.id} value={option.id}>
+                  {option.id}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div>

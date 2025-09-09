@@ -1,6 +1,7 @@
 // src/components/Sidebar.tsx
-import React, { useState } from "react";
-import { FaBars, FaHome, FaUser, FaUsers, FaCog } from "react-icons/fa";
+import React, { useState, useEffect } from "react";
+import { FaBars } from "react-icons/fa";
+import { fetchMenu, MenuItem } from "../Api/Services/menuService";
 
 interface SidebarProps {
   setActiveContent: (content: string) => void;
@@ -8,7 +9,17 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ setActiveContent }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [activeContent, setActive] = useState("dashboard");
+  const [activeContent, setActive] = useState("");
+  const [menu, setMenu] = useState<MenuItem[]>([]);
+
+  useEffect(() => {
+    const userId = Number(localStorage.getItem("userId"));
+    const token = localStorage.getItem("token");
+    if (!userId || !token) return;
+    fetchMenu(userId, token)
+      .then(setMenu)
+      .catch(() => setMenu([]));
+  }, []);
 
   const handleSelect = (content: string) => {
     setActive(content);
@@ -40,61 +51,27 @@ const Sidebar: React.FC<SidebarProps> = ({ setActiveContent }) => {
         ${isOpen ? "translate-x-0" : "translate-x-full"}`}
       >
         <nav className="mt-14">
-          <button
-            onClick={() => handleSelect("dashboard")}
-            className={`flex items-center p-4 w-full hover:bg-gray-200 hover:text-indigo-600 ${
-              activeContent === "dashboard"
-                ? "bg-gray-100 text-indigo-600"
-                : "text-gray-700"
-            }`}
-          >
-            <FaHome className="mr-3" /> Inicio
-          </button>
-
-          <button
-            onClick={() => handleSelect("seguimiento")}
-            className={`flex items-center p-4 w-full hover:bg-gray-200 hover:text-indigo-600 ${
-              activeContent === "seguimiento"
-                ? "bg-gray-100 text-indigo-600"
-                : "text-gray-700"
-            }`}
-          >
-            <FaUser className="mr-3" /> Seguimiento
-          </button>
-
-          <button
-            onClick={() => handleSelect("experiencias")}
-            className={`flex items-center p-4 w-full hover:bg-gray-200 hover:text-indigo-600 ${
-              activeContent === "experiencias"
-                ? "bg-gray-100 text-indigo-600"
-                : "text-gray-700"
-            }`}
-          >
-            <FaUsers className="mr-3" /> Experiencia
-          </button>
-
-          <button
-            onClick={() => handleSelect("evaluacion")}
-            className={`flex items-center p-4 w-full hover:bg-gray-200 hover:text-indigo-600 ${
-              activeContent === "evaluacion"
-                ? "bg-gray-100 text-indigo-600"
-                : "text-gray-700"
-            }`}
-          >
-            <FaCog className="mr-3" /> Evaluación
-          </button>
-
-
-          <button
-            onClick={() => handleSelect("modulos")}
-            className={`flex items-center p-4 w-full hover:bg-gray-200 hover:text-indigo-600 ${
-              activeContent === "modulos"
-                ? "bg-gray-100 text-indigo-600"
-                : "text-gray-700"
-            }`}
-          >
-            <FaCog className="mr-3" /> Modulos
-          </button>
+          {menu.length === 0 && (
+            <div className="text-gray-400 text-center py-8">Sin opciones de menú</div>
+          )}
+          {menu.map((item) => (
+            <button
+              key={item.formId}
+              onClick={() => handleSelect(item.path)}
+              className={`flex items-center p-4 w-full hover:bg-gray-200 hover:text-sky-600 transition-colors ${
+                activeContent === item.path
+                  ? "bg-gray-100 text-sky-600"
+                  : "text-gray-700"
+              }`}
+            >
+              {/* Si tienes un sistema de íconos, puedes mapear item.icon aquí */}
+              <span className="mr-3">
+                {/* Ejemplo: <Icon name={item.icon} /> */}
+                <svg width="20" height="20" fill="none"><circle cx="10" cy="10" r="8" stroke="#00aaff" strokeWidth="2" /></svg>
+              </span>
+              {item.form}
+            </button>
+          ))}
         </nav>
       </aside>
     </>

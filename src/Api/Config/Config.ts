@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Instancia de Axios
 const configApi = axios.create({
-  baseURL: "http://localhost:5001/api/",
+  baseURL: "http://localhost:5173/api/",
   headers: {
     "Content-Type": "application/json",
   },

@@ -1,13 +1,26 @@
-import axios from "axios";
 
-const API_URL = "https://localhost:7263/api/Menu"; // 👉 cambia por tu endpoint real
+// Servicio para obtener el menú dinámico usando fetch
+export interface MenuItem {
+	formId: number;
+	form: string;
+	path: string;
+	icon: string;
+	order: number;
+	moduleId: number;
+	module: string;
+}
 
-// Obtiene el menú desde el backend
-export const getMenu = async (token: string) => {
-  const response = await axios.get(API_URL, {
+export async function fetchMenu(userId: number, token: string): Promise<MenuItem[]> {
+  const response = await fetch(`/api/User/${userId}/menu`, {
+    method: 'GET',
     headers: {
-      Authorization: `Bearer ${token}`, // si usas JWT
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
     },
+    credentials: 'include', // si usas cookies
   });
-  return response.data;
-};
+  if (!response.ok) {
+    throw new Error('Error al obtener el menú');
+  }
+  return response.json();
+}

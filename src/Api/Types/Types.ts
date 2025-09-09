@@ -15,14 +15,12 @@ export interface person {
 
 
 export interface user {
-  Username: string;
-  Password: string;
-  PersonId?: number;
+  id: number;         // siempre se envía 0 en el registro
+  code: string;       // puedes generar un código, ej: "USR-123"
+  username: string;   // ojo: minúscula según contrato
+  password: string;
+  personId: number;   // obligatorio, lo asignas del response de persona
+  person: string;     // lo puedes mandar vacío ""
 }
 
-export interface Criteria {
-  id: number;
-  name: string;
-  code: string;
-  state: boolean;
-}
+

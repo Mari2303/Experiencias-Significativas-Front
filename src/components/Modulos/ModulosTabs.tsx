@@ -2,7 +2,6 @@ import { useState } from "react";
 import StatePage from "./States/StatePage";
 import GradePage from "./Grades/GradePage";
 import PopulationGroupPage from "./PopulationGroup/PopulationGroupPage";
-import CriteriaPage from "./Criteria/CriteriaPage";
 import LineThematicPage from "./LineThematic/LineThematicPage";
 
 // Aquí podrías importar otras páginas CRUD de tu módulo
@@ -86,7 +85,6 @@ export default function ModuloTabs() {
         {activeTab === "states" && <StatePage />}
         {activeTab === "grades" && <GradePage />}
         {activeTab === "populationGroup" && <PopulationGroupPage />}
-        {activeTab === "criteria" && <CriteriaPage />}
         {activeTab === "lineThematic" && <LineThematicPage />}
       </div>
     </div>

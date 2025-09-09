@@ -26,9 +26,13 @@ const LoginPage: React.FC = () => {
       const response = await login(data.username, data.password);
       console.log("Respuesta login:", response);
 
-      // 🔹 Verificar si el login devolvió un token
-      const token = response.data?.token || response.accessToken || response.jwt || response.token;
-      if (!token) {
+      // Extraer datos del backend (ajusta los nombres de campos si es necesario)
+      const apiData = response.data?.data || response.data || response;
+      const token = apiData.token || apiData.accessToken || apiData.jwt;
+      const userId = apiData.userId || apiData.id || apiData.userID;
+      const role = apiData.role || "";
+
+      if (!token || !userId) {
         Swal.fire({
           title: "Error",
           text: "Usuario o contraseña incorrectos",
@@ -37,12 +41,11 @@ const LoginPage: React.FC = () => {
         return;
       }
 
-      // Guardar token con expiración de 60 min usando la función central
+      // Guardar token y userId
       saveToken(token, 60);
-
-      // Guardar rol según username
-      const role = data.username.toLowerCase() === "mariaalejan1080@gmail.com" ? "admin" : "teacher";
-      localStorage.setItem("role", role);
+      localStorage.setItem("userId", userId.toString());
+      // Opcional: guardar el rol si lo necesitas para mostrarlo en UI, pero no para lógica de menú
+      if (role) localStorage.setItem("role", role);
 
       Swal.fire({
         title: "Éxito",
@@ -50,8 +53,8 @@ const LoginPage: React.FC = () => {
         icon: "success",
         confirmButtonText: "Continuar",
       }).then(() => {
-        // Redirigir según rol
-        navigate(role === "admin" ? "/dashboard" : "/dashboardTeacher");
+        // Redirigir a dashboard genérico, el menú y UI se adaptan según backend
+        navigate("/dashboard");
       });
 
     } catch (err: any) {

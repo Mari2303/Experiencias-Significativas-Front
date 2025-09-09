@@ -1,6 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useState } from "react";
-import { Modal, Button, Form, Row, Col } from "react-bootstrap";
+import ExperienciaModal from "./ExperienciaModal";
 
 interface ExperienciasProps {
   onAgregar: () => void;
@@ -27,8 +27,8 @@ const Experiencias = ({ onAgregar }: ExperienciasProps) => {
   };
 
   return (
-    <div className="p-8 bg-white min-h-screen">
-      <div className="font-bold text-[#00aaff] text-[28.242px] w-full">
+    <div className="p-8 min-h-screen">
+      <div className="font-bold text-[#00aaff] text-[28.242px] ">
           <p>Actualizar Experiencia</p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-10">
@@ -62,7 +62,7 @@ const Experiencias = ({ onAgregar }: ExperienciasProps) => {
             onClick={onAgregar}
             className="border-2 border-dashed border-sky-200 bg-sky-50 rounded-xl p-6 flex flex-col items-center justify-center cursor-pointer hover:bg-sky-100 transition"
           >
-            <div className="bg-gray-100 rounded-full p-3 mb-2">
+            <div className="bg-gray-100 rounded-xl p-3 mb-2">
               <span className="text-sky-500 text-2xl font-bold">+</span>
             </div>
             <p className="text-sm text-gray-600">Agregar Nueva Experiencia</p>
@@ -70,86 +70,8 @@ const Experiencias = ({ onAgregar }: ExperienciasProps) => {
         ))}
       </div>
 
-      {/* Modal con el formulario */}
-      <Modal show={showModal} onHide={handleClose} size="lg" centered>
-        <Modal.Header closeButton>
-          <Modal.Title className="text-sky-600 fw-bold">
-            Información de la Experiencia
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <Form.Group className="mb-3">
-              <Form.Label>Título de la experiencia</Form.Label>
-              <Form.Control placeholder="Ingrese el título de la experiencia" />
-            </Form.Group>
-
-            <Form.Group className="mb-3">
-              <Form.Label>Nombre del establecimiento educativo</Form.Label>
-              <Form.Control placeholder="Ingrese el nombre del establecimiento" />
-            </Form.Group>
-
-            <Form.Group className="mb-3">
-              <Form.Label>Nombre completo del líder</Form.Label>
-              <Form.Control placeholder="Ingrese el nombre completo del líder" />
-            </Form.Group>
-
-            <Row className="mb-3">
-              <Col>
-                <Form.Label>Departamento</Form.Label>
-                <Form.Control placeholder="Ingrese el departamento" />
-              </Col>
-              <Col>
-                <Form.Label>Fecha</Form.Label>
-                <Form.Control type="date" />
-              </Col>
-            </Row>
-
-            <Row className="mb-3">
-              <Col>
-                <Form.Label>Municipio</Form.Label>
-                <Form.Control placeholder="Ingrese el municipio" />
-              </Col>
-              <Col>
-                <Form.Label>Criterios evaluados</Form.Label>
-                <Form.Select>
-                  <option>Seleccione los criterios</option>
-                </Form.Select>
-              </Col>
-            </Row>
-
-            <Row className="mb-3">
-              <Col>
-                <Form.Label>Código DANE</Form.Label>
-                <Form.Control placeholder="Ingrese el código DANE" />
-              </Col>
-              <Col>
-                <Form.Label>Tipo de experiencia</Form.Label>
-                <Form.Select>
-                  <option>Seleccione el tipo</option>
-                </Form.Select>
-              </Col>
-            </Row>
-
-            <Row className="mb-3">
-              <Col>
-                <Form.Label>Descripción</Form.Label>
-                <Form.Control as="textarea" rows={2} placeholder="Ingrese la descripción de la experiencia" />
-              </Col>
-              <Col>
-                <Form.Label>Estado actual</Form.Label>
-                <Form.Control placeholder="Ingrese el estado actual" />
-              </Col>
-            </Row>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Cerrar
-          </Button>
-          <Button variant="primary">Listo</Button>
-        </Modal.Footer>
-      </Modal>
+  {/* Modal reutilizable */}
+  <ExperienciaModal show={showModal} onClose={handleClose} />
     </div>
   );
 };

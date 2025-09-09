@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import DashboardPage from "./pages/DashboardAdmin";
+import DashboardTeacher from "./pages/DashboardTeacher";
 import PrivateRoute from "./components/PrivateRoute";
 import Widgets from "./components/Widgets";
 import ProfileContent from "./components/Seguimiento";
@@ -17,6 +18,7 @@ const AppRoutes = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
 
+
         {/* Rutas protegidas */}
         <Route element={<PrivateRoute />}>
           <Route path="/dashboard" element={<DashboardPage />}>
@@ -24,6 +26,7 @@ const AppRoutes = () => {
             <Route path="profile" element={<ProfileContent />} />
             <Route path="settings" element={<SettingsContent />} />
           </Route>
+          <Route path="/dashboardTeacher" element={<DashboardTeacher />} />
         </Route>
 
         {/* Redirigir la ruta raíz al login */}
