@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2"; 
-import { person, user } from "../Api/Types/Types";
 import { registerPerson, registerUser } from "../Api/Services/Registro";
 import { getEnum } from "../Api/Services/Helper";
 import { DataSelectRequest } from "../Api/Types/HelperTypes";
@@ -97,6 +96,8 @@ useEffect(() => {
           console.log("Respuesta de /User/register:", userResponse);
           // Considera exitoso si userResponse tiene un id, code o username
           if (userResponse && (userResponse.id || userResponse.Id || userResponse.username || userResponse.Username)) {
+            // Guardar solo el primer nombre en localStorage para mostrarlo en el TopBar
+            localStorage.setItem("userName", PrimerNombre);
             Swal.fire({
               title: "Registro Exitoso",
               icon: "success",

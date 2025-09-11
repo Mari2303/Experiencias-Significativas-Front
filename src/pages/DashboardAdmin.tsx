@@ -7,7 +7,6 @@ import Seguimiento from "../components/Seguimiento";
 import Experiencias from "../components/Experiencias";
 import AgregarExperiencia from "../components/AgregarExperiencia"; // <-- nuevo
 import Evaluacion from "../components/Evaluacion";
-import ModulosTabs from "../components/Modulos/ModulosTabs";
 
 const DashboardAdmin: React.FC = () => {
   const [activeContent, setActiveContent] = useState("dashboard");
@@ -27,7 +26,6 @@ const DashboardAdmin: React.FC = () => {
         {activeContent === "agregar-experiencia" && (
           <AgregarExperiencia onVolver={() => setActiveContent("experiencias")} />
         )}
-        {activeContent === "modulos" && <ModulosTabs />}
       </main>
     </div>
   );

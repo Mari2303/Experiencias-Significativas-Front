@@ -9,6 +9,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import Widgets from "./components/Widgets";
 import ProfileContent from "./components/Seguimiento";
 import SettingsContent from "./components/Evaluacion";    
+import ResetPassword from "./pages/ResetPassword";
 
 const AppRoutes = () => {
   return (
@@ -17,6 +18,7 @@ const AppRoutes = () => {
         {/* Rutas públicas */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
 
 
         {/* Rutas protegidas */}

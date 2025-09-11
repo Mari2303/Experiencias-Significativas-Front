@@ -1,7 +1,7 @@
 // src/pages/LoginPage.tsx
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { login, saveToken } from "../Api/Config/Config";
 
@@ -31,6 +31,8 @@ const LoginPage: React.FC = () => {
       const token = apiData.token || apiData.accessToken || apiData.jwt;
       const userId = apiData.userId || apiData.id || apiData.userID;
       const role = apiData.role || "";
+      const userName = apiData.userName || "";
+      if (userName) localStorage.setItem("userName", userName);
 
       if (!token || !userId) {
         Swal.fire({
@@ -47,15 +49,23 @@ const LoginPage: React.FC = () => {
       // Opcional: guardar el rol si lo necesitas para mostrarlo en UI, pero no para lógica de menú
       if (role) localStorage.setItem("role", role);
 
+
       Swal.fire({
-        title: "Éxito",
-        text: "Has iniciado sesión correctamente",
-        icon: "success",
-        confirmButtonText: "Continuar",
-      }).then(() => {
-        // Redirigir a dashboard genérico, el menú y UI se adaptan según backend
-        navigate("/dashboard");
-      });
+  title: "Éxito",
+  text: "Has iniciado sesión correctamente",
+  icon: "success",
+  confirmButtonText: "Continuar",
+}).then(() => {
+  // Redirigir según el rol
+  role.forEach((role: string) => {
+    if (role && role.toLowerCase() === "profesor") {
+    navigate("/dashboardTeacher");
+  } else {
+    navigate("/dashboard");
+  }
+  });
+  
+});
 
     } catch (err: any) {
       Swal.fire({
@@ -67,7 +77,25 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-400 to-blue-100">
+     <div>        
+      <img src= "/images/Cohete.png" alt="Descripción de la imagen" className="w-600" 
+      style={{
+        top: "-20%",
+        left: "-12%",
+        height: "200%",
+        position: "absolute",
+        rotate: "10deg",
+        
+      }} />
+
+    <div
+      className="min-h-screen flex items-center justify-center"
+      style={{
+        background: "linear-gradient(50deg, #009CFF 20%, #FFFFFF 80%)",
+      }}
+    >
+    
+    <div className="relative min-h-screen flex items-center justify-center bg-gradient-to-b">
       <div className="bg-white p-8 rounded-lg shadow-md w-90 h-90">
         <h2 className="text-2xl font-bold mb-6 text-center">Iniciar Sesión</h2>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -99,12 +127,16 @@ const LoginPage: React.FC = () => {
           </button>
         </form>
         <p className="mt-4 text-center text-sm text-gray-600">
-          Se te olvidó tu contraseña? <br />
-          <a href="/register" className="text-indigo-600 hover:text-indigo-500">
+          <Link to="/reset-password" className="text-indigo-600 hover:text-indigo-500">
+            ¿Se te olvidó tu contraseña? <br />
+          </Link>
+          <Link to="/register" className="text-indigo-600 hover:text-indigo-500">
             Crea tu cuenta
-          </a>
+          </Link>
         </p>
       </div>
+    </div>
+    </div>
     </div>
   );
 };

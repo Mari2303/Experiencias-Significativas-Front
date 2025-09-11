@@ -47,9 +47,11 @@ const Sidebar: React.FC<SidebarProps> = ({ setActiveContent }) => {
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-13 rounded-t-lg right-0 h-full w-64 bg-white shadow-md transform transition-transform duration-300 ease-in-out z-30
+        className={`fixed top-24 rounded-t-lg right-4 h-full w-90 bg-gray-200 shadow-md transform transition-transform duration-300 ease-in-out z-30
         ${isOpen ? "translate-x-0" : "translate-x-full"}`}
       >
+        <p className="text-[#00aaff] text-3xl ml-38 font-semibold py-15">Gestión de Experiencias Significativas</p>
+
         <nav className="mt-14">
           {menu.length === 0 && (
             <div className="text-gray-400 text-center py-8">Sin opciones de menú</div>
