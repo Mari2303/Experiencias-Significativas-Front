@@ -50,6 +50,12 @@ const Sidebar: React.FC<SidebarProps> = ({ setActiveContent }) => {
         className={`fixed top-24 rounded-t-lg right-4 h-full w-90 bg-gray-200 shadow-md transform transition-transform duration-300 ease-in-out z-30
         ${isOpen ? "translate-x-0" : "translate-x-full"}`}
       >
+
+        <img
+          src="../../public/images/CoheteEx.png" // Cambia la ruta según tu imagen
+          alt="Logo"
+          className="mx-auto mt-8 mb-4 w-35 h-40 object-contain"
+        />
         <p className="text-[#00aaff] text-3xl ml-38 font-semibold py-15">Gestión de Experiencias Significativas</p>
 
         <nav className="mt-14">
