@@ -98,6 +98,18 @@ useEffect(() => {
           if (userResponse && (userResponse.id || userResponse.Id || userResponse.username || userResponse.Username)) {
             // Guardar solo el primer nombre en localStorage para mostrarlo en el TopBar
             localStorage.setItem("userName", PrimerNombre);
+            // Guardar los datos de la persona en localStorage para auto-llenar otros formularios
+            localStorage.setItem("person", JSON.stringify({
+              FirstName: PrimerNombre,
+              SecondName: SegundoNombre,
+              FirstLastName: PrimerApellido,
+              SecondLastName: SegundoApellido,
+              IdentificationNumber: NumeroDocumento,
+              Email: email,
+              EmailInstitutional: emailInstitucional,
+              Phone: telefono,
+              CodeDane: CodigoDane
+            }));
             Swal.fire({
               title: "Registro Exitoso",
               icon: "success",

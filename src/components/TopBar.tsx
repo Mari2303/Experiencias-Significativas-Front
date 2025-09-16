@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { FaSearch, FaChevronDown, FaChevronUp, FaUserMinus } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { updatePassword } from "../Api/Services/ChangePassword";
-
 const TopBar: React.FC = () => {
   const [openMenu, setOpenMenu] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -86,6 +85,9 @@ const TopBar: React.FC = () => {
             />
             <span>{userName}</span>
             {openMenu ? <FaChevronUp /> : <FaChevronDown />}
+
+      
+            
             {/* Menú desplegable */}
             {openMenu && (
               <div className="absolute top-12 right-0 bg-white shadow-lg rounded-lg overflow-hidden w-44 z-10 flex flex-col">
@@ -114,6 +116,8 @@ const TopBar: React.FC = () => {
               </div>
             )}
           </div>
+
+          
         </div>
 
       {/* Modal personalizado */}
@@ -143,61 +147,125 @@ const TopBar: React.FC = () => {
       {/* Modal Cambiar Contraseña */}
   {showPasswordModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1000]">
-          <div className="bg-white p-10 rounded-2xl text-center w-[32rem] max-w-full">
-            <h5 className="font-bold text-3xl mb-8">Cambiar contraseña</h5>
-            <form className="flex flex-col gap-6" onSubmit={handlePasswordChange}>
-              <input
-                type="password"
-                placeholder="Ingresa tu contraseña actual"
-                className="border border-gray-300 rounded px-6 py-3 focus:outline-none focus:ring-2 focus:ring-blue-200 text-lg"
-                value={currentPassword}
-                onChange={e => setCurrentPassword(e.target.value)}
-                autoComplete="current-password"
-              />
-              <input
-                type="password"
-                placeholder="Ingresa tu nueva contraseña"
-                className="border border-gray-300 rounded px-6 py-3 focus:outline-none focus:ring-2 focus:ring-blue-200 text-lg"
-                value={newPassword}
-                onChange={e => setNewPassword(e.target.value)}
-                autoComplete="new-password"
-              />
-              <input
-                type="password"
-                placeholder="Confirma tu nueva contraseña"
-                className="border border-gray-300 rounded px-6 py-3 focus:outline-none focus:ring-2 focus:ring-blue-200 text-lg"
-                value={confirmPassword}
-                onChange={e => setConfirmPassword(e.target.value)}
-                autoComplete="new-password"
-              />
-              {(passwordError || passwordSuccess) && (
-                <div className={
-                  passwordError
-                    ? "text-red-500 font-bold bg-red-100 rounded p-2"
-                    : "text-green-600 font-bold bg-green-100 rounded p-2"
-                }>
-                  {passwordError || passwordSuccess}
-                </div>
-              )}
-              <div className="flex justify-between mt-6">
-                <button
-                  type="submit"
-                  className="bg-blue-600 text-white rounded-xl px-8 py-3 font-bold hover:bg-blue-700 text-lg py-30"
-                >
-                  Guardar
-                </button>
-                <button
-                  type="button"
-                  className="bg-gray-400 text-white rounded-xl px-8 py-3 font-bold hover:bg-gray-500 text-lg"
-                  onClick={() => setShowPasswordModal(false)}
-                >
-                  Cancelar
-                </button>
-              </div>
-            </form>
+          <div className="bg-white p-8 rounded-2xl w-full max-w-lg relative">
+      {/* Icono de candado */}
+      <div className="flex flex-col items-center -mt-12 mb-4">
+        <div className="bg-blue-100 rounded-full p-4 mb-2">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-10 w-10 text-blue-500"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 11c1.657 0 3-1.343 3-3V7a3 3 0 10-6 0v1c0 1.657 1.343 3 3 3zm6 2v6a2 2 0 01-2 2H8a2 2 0 01-2-2v-6a2 2 0 012-2h8a2 2 0 012 2z"
+            />
+          </svg>
+        </div>
+      </div>
+      {/* Botón cerrar */}
+      <button
+        className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-2xl font-bold"
+        onClick={() => setShowPasswordModal(false)}
+        aria-label="Cerrar"
+      >
+        ×
+      </button>
+      <h2 className="font-bold text-2xl mb-1 text-left">Cambiar contraseña</h2>
+      <p className="text-gray-500 mb-6 text-left">
+        Ingresa tu contraseña actual y crea una nueva
+      </p>
+      <form className="flex flex-col gap-4" onSubmit={handlePasswordChange}>
+        <div className="text-left">
+          <label className="font-semibold mb-1 block">Contraseña actual</label>
+          <input
+            type="password"
+            placeholder="Ingresa tu contraseña actual"
+            className="border border-gray-300 rounded px-4 py-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-200 text-base"
+            value={currentPassword}
+            onChange={e => setCurrentPassword(e.target.value)}
+            autoComplete="current-password"
+          />
+        </div>
+        <div className="text-left">
+          <label className="font-semibold mb-1 block">Nueva contraseña</label>
+          <input
+            type="password"
+            placeholder="Ingresa tu nueva contraseña"
+            className="border border-gray-300 rounded px-4 py-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-200 text-base"
+            value={newPassword}
+            onChange={e => setNewPassword(e.target.value)}
+            autoComplete="new-password"
+          />
+        </div>
+        <div className="text-left">
+          <label className="font-semibold mb-1 block">Confirmar nueva contraseña</label>
+          <input
+            type="password"
+            placeholder="Confirma tu nueva contraseña"
+            className="border border-gray-300 rounded px-4 py-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-200 text-base"
+            value={confirmPassword}
+            onChange={e => setConfirmPassword(e.target.value)}
+            autoComplete="new-password"
+          />
+        </div>
+        {/* Seguridad */}
+        <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 flex items-start gap-3">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6 text-blue-400 mt-1"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 11c1.657 0 3-1.343 3-3V7a3 3 0 10-6 0v1c0 1.657 1.343 3 3 3zm6 2v6a2 2 0 01-2 2H8a2 2 0 01-2-2v-6a2 2 0 012-2h8a2 2 0 012 2z"
+            />
+          </svg>
+          <div>
+            <span className="font-semibold text-gray-700">Seguridad:</span>
+            <ul className="text-gray-500 text-sm mt-1 list-disc list-inside">
+              <li>Usa al menos 8 caracteres</li>
+              <li>Incluye mayúsculas, minúsculas y números</li>
+              <li>Al menos un numero</li>
+            </ul>
           </div>
         </div>
-      )}
+        {(passwordError || passwordSuccess) && (
+          <div className={
+            passwordError
+              ? "text-red-500 font-bold bg-red-100 rounded p-2"
+              : "text-green-600 font-bold bg-green-100 rounded p-2"
+          }>
+            {passwordError || passwordSuccess}
+          </div>
+        )}
+        <div className="flex justify-between mt-6">
+          <button
+            type="button"
+            className="bg-gray-100 text-gray-700 rounded-xl px-8 py-3 font-bold hover:bg-gray-200 text-lg"
+            onClick={() => setShowPasswordModal(false)}
+          >
+            Cancelar
+          </button>
+          <button
+            type="submit"
+            className="bg-blue-500 text-white rounded-xl px-8 py-3 font-bold hover:bg-blue-600 text-lg"
+          >
+            Guardar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+)}
 
       {/* Modal resultado cambio contraseña */}
       {showResultModal && (
