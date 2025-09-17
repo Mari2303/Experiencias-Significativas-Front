@@ -71,7 +71,8 @@ const Sidebar: React.FC<SidebarProps> = ({ setActiveContent }) => {
           {menu.length === 0 && (
             <div className="text-gray-400 text-center py-8">Sin opciones de menú</div>
           )}
-          {menu.filter(item => item.form !== "Evaluación").map((item) => (
+          {menu.filter(item => !["Evaluación", "Users", "Roles", "Persons"].includes(item.form)).map((item) => (
+            
             <button
               key={item.formId}
               onClick={() => handleSelect(item.path)}

@@ -14,7 +14,7 @@ import CriteriaTransformation from "./EvaluationC.tsx/CriteriaTransformation";
 import CriteriaSustainability from "./EvaluationC.tsx/CriteriaSustainability ";
 import CriteriaTransfer from "./EvaluationC.tsx/CriteriaTransfer";
 import CriteriaFinalConcept from "./EvaluationC.tsx/CriteriaFinalConcept";
-
+           
 const Evaluation: React.FC = () => {
 	return (
 		<div className="min-h-screen bg-white-700 flex flex-col items-center justify-center pb-30" style={{ maxHeight: '100vh' }}>
@@ -34,14 +34,14 @@ const Evaluation: React.FC = () => {
 				   <div className="h-12" />
 				   <CriterioPertinencia />
 				   <CriteriaFoundation />
-           <CriteriaInnovation />
-           <CriteriaResults />
-           <CriteriaEmpowerment />
-           <CriteriaMonitoring />
-           <CriteriaTransformation />
-           <CriteriaSustainability />
-           <CriteriaTransfer />
-           <CriteriaFinalConcept />
+                   <CriteriaInnovation />
+                   <CriteriaResults />
+                   <CriteriaEmpowerment />
+                   <CriteriaMonitoring />
+                   <CriteriaTransformation />
+                   <CriteriaSustainability />
+                   <CriteriaTransfer />
+                   <CriteriaFinalConcept />
 			</div>
           
 		</div>

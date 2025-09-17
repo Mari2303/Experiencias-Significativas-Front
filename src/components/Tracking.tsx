@@ -1,7 +1,52 @@
+import React, { useEffect, useState } from "react";
+import configApi from "../Api/Config/Config";
+import { FollowUp } from "../Api/Types/FollowUp";
 
-const Seguimiento = () => {
+const Tracking = () => {
+  const [trackingData, setTrackingData] = useState<FollowUp>({
+    totalExperiences: 0,
+    experiencesNaciente: 0,
+    experiencesCreciente: 0,
+    experiencesInspiradora: 0,
+    totalExperiencesRegistradas: 0,
+    totalExperiencesCreadas: 0,
+    totalInstitutionsWithExperiences: 0,
+    totalTeachersWithExperiences: 0,
+    totalExperiencesWithComments: 0,
+    totalExperiencesTestsKnow: 0,
+  });
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchTrackingSummary = async () => {
+      try {
+        const body = {
+          pageSize: 0,
+          pageNumber: 0,
+          filter: "",
+          columnFilter: "",
+          columnOrder: "",
+          directionOrder: "",
+          foreignKey: 0,
+          nameForeignKey: "",
+          aplyPagination: true
+        };
+        const response = await configApi.post("/HistoryExperience/tracking-summary", body);
+        setTrackingData(response.data);
+      } catch (err) {
+        setError("Error al obtener datos");
+      }
+    };
+    fetchTrackingSummary();
+  }, []);
+
+  if (error) return <div className="text-center py-10 text-red-500">{error}</div>;
+
+  // Puedes mapear trackingData aquí si la estructura lo permite
+  // Ejemplo: trackingData?.totalExperiences, etc.
+
   return (
-    <div className="grid grid-cols-3 gap-3 ml-15">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 ml-0">
       {/* Tarjeta 1 */}
       <div className="bg-white shadow rounded-lg p-4 flex flex-col space-y-2 w-full h-40">
         {/* Icono */}
@@ -24,9 +69,8 @@ const Seguimiento = () => {
 
         {/* Texto */}
         <div>
-          <p className="text-gray-500 text-sm">
-            Número de experiencias registradas en la vigencia
-          </p>
+          <p className="text-gray-500 text-sm">Número de experiencias registradas en la vigencia</p>
+          <p className="text-2xl font-bold text-blue-600">{trackingData?.totalExperiencesRegistradas}</p>
         </div>
       </div>
 
@@ -53,10 +97,8 @@ const Seguimiento = () => {
 
         {/* Texto */}
         <div>
-          <p className="text-gray-500 text-sm">
-            Crecimiento en la inscripción de experiencias nuevas en el proceso
-          </p>
-
+          <p className="text-gray-500 text-sm">Crecimiento en la inscripción de experiencias nuevas en el proceso</p>
+          <p className="text-2xl font-bold text-green-600">{trackingData?.totalExperiencesCreadas}</p>
         </div>
       </div>
     
@@ -83,10 +125,8 @@ const Seguimiento = () => {
 
         {/* Texto */}
         <div>
-          <p className="text-gray-500 text-sm">
-            Crecimiento en la inscripción de experiencias. Actualización que continúan en el proceso.
-          </p>
-
+          <p className="text-gray-500 text-sm">Crecimiento en la inscripción de experiencias. Actualización que continúan en el proceso.</p>
+          <p className="text-2xl font-bold text-blue-600"></p>
         </div>
       </div>
 
@@ -120,10 +160,8 @@ const Seguimiento = () => {
 
         {/* Texto */}
         <div>
-          <p className="text-gray-500 text-sm">
-            Número de experiencias con plan de mejoramiento
-          </p>
-
+          <p className="text-gray-500 text-sm">Número de experiencias con plan de mejoramiento</p>
+          <p className="text-2xl font-bold text-orange-600">{trackingData?.totalExperiencesWithComments}</p>
         </div>
       </div>
 
@@ -153,10 +191,8 @@ const Seguimiento = () => {
 
         {/* Texto */}
         <div>
-          <p className="text-gray-500 text-sm">
-            Cantidad de docentes formados mediante las rutas a la significación
-          </p>
-
+          <p className="text-gray-500 text-sm">Cantidad de docentes formados mediante las rutas a la significación</p>
+          <p className="text-2xl font-bold text-blue-600">{trackingData?.totalTeachersWithExperiences}</p>
         </div>
       </div>
 
@@ -183,10 +219,8 @@ const Seguimiento = () => {
 
         {/* Texto */}
         <div>
-          <p className="text-gray-500 text-sm">
-            Número de experiencias que participan en eventos o convocatorias en la actual vigencia
-          </p>
-
+          <p className="text-gray-500 text-sm">Número de experiencias que participan en eventos o convocatorias en la actual vigencia</p>
+          <p className="text-2xl font-bold text-blue-600">{trackingData?.totalExperiencesTestsKnow}</p>
         </div>
       </div>
 
@@ -197,18 +231,8 @@ const Seguimiento = () => {
         
         {/* Texto */}
         <div>
-          <p className="text-gray-500 text-sm">
-            Experiencias significativas en estado de desarrollo naciente
-          </p>
-          <p className="text-gray-500 text-sm">
-            <span className="text-indigo-100 text-m mr-2">✔</span>
-            Experiencias significativas en estado 
-          </p>
-          <p className="text-gray-500 text-sm">
-            <span className="text-indigo-100 text-m mr-2">🔵</span>
-            de desarrollo naciente 
-          </p>  
-
+          <p className="text-gray-500 text-sm">Experiencias significativas en estado de desarrollo naciente</p>
+          <p className="text-2xl font-bold text-indigo-600">{trackingData?.experiencesNaciente}</p>
         </div>
       </div>
       
@@ -218,18 +242,8 @@ const Seguimiento = () => {
 
         {/* Texto */}
         <div>
-          <p className="text-gray-500 text-sm">
-            Experiencias significativas en estado de desarrollo creciente
-          </p>
-          <p className="text-gray-500 text-sm">
-            <span className="text-indigo-100 text-m mr-2">○</span>
-            Experiencias significativas en estado 
-          </p>
-          <p className="text-gray-500 text-sm">
-            <span className="text-indigo-100 text-m mr-2">✔️</span>
-            de desarrollo creciente 
-          </p>  
-
+          <p className="text-gray-500 text-sm">Experiencias significativas en estado de desarrollo creciente</p>
+          <p className="text-2xl font-bold text-indigo-600">{trackingData?.experiencesCreciente}</p>
         </div>
       </div>
 
@@ -239,22 +253,8 @@ const Seguimiento = () => {
 
         {/* Texto */}
         <div>
-          <p className="text-gray-500 text-sm">
-            Experiencias significativas en estado de desarrollo inspiradora
-          </p>
-          <p className="text-gray-500 text-sm">
-            <span className="text-indigo-100 text-m mr-2">✔</span>
-            Experiencias significativas en 
-          </p>
-          <p className="text-gray-500 text-sm">
-            <span className="text-indigo-100 text-m mr-2">✔️</span>
-            estado de desarrollo
-          </p>  
-          <p className="text-gray-500 text-sm">
-            <span className="text-indigo-100 text-m mr-2">✔️</span>
-            inspiradora
-          </p>  
-
+          <p className="text-gray-500 text-sm">Experiencias significativas en estado de desarrollo inspiradora</p>
+          <p className="text-2xl font-bold text-indigo-600">{trackingData?.experiencesInspiradora}</p>
         </div>
       </div>
 
@@ -281,10 +281,8 @@ const Seguimiento = () => {
 
         {/* Texto */}
         <div>
-          <p className="text-gray-500 text-sm">
-            Instituciones educativas que registraron experiencias
-          </p>
-
+          <p className="text-gray-500 text-sm">Instituciones educativas que registraron experiencias</p>
+          <p className="text-2xl font-bold text-blue-600">{trackingData?.totalInstitutionsWithExperiences}</p>
         </div>
       </div>
 
@@ -311,10 +309,8 @@ const Seguimiento = () => {
 
         {/* Texto */}
         <div>
-          <p className="text-gray-500 text-sm">
-            Participación de eventos SEM
-          </p>
-
+          <p className="text-gray-500 text-sm">Participación de eventos SEM</p>
+          <p className="text-2xl font-bold text-green-600"></p>
         </div>
       </div>
     </div>
@@ -325,4 +321,4 @@ const Seguimiento = () => {
   );
 };
 
-export default Seguimiento;
+export default Tracking;

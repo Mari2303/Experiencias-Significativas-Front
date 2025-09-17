@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Lider } from "../../Api/Types/experienceTypes";
 
 interface LideresFormProps {
@@ -7,6 +7,22 @@ interface LideresFormProps {
 }
 
 const LideresForm: React.FC<LideresFormProps> = ({ lideres, setLideres }) => {
+  useEffect(() => {
+    // Autocompletar datos de la persona al montar el componente
+    const person = JSON.parse(localStorage.getItem("person") || "{}");
+    if (person && (person.nombre || person.documento || person.correo)) {
+      setLideres([
+        {
+          nombre: person.nombre || "",
+          documento: person.documento || "",
+          correo: person.correo || "",
+          cargo: person.cargo || "",
+          telefono: person.telefono || ""
+        }
+      ]);
+    }
+  }, [setLideres]);
+
   const handleChange = (index: number, field: keyof Lider, value: string) => {
     const nuevosLideres = [...lideres];
     nuevosLideres[index][field] = value;

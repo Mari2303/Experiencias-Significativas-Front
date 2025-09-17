@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import TopBar from "../components/TopBar";
 import Sidebar from "../components/Sidebar";
-import Experiencias from "../components/Experiencias";
+import Experiences from "../components/Experiences";
 import StarT from "../components/starT";
-import AgregarExperiencia from "../components/AgregarExperiencia"; // <-- nuevo
+import AgregarExperiencia from "../components/AddExperience"; // <-- nuevo
 
 
 const DashboardTeacher: React.FC = () => {
@@ -17,7 +17,7 @@ const DashboardTeacher: React.FC = () => {
       <main className="flex-1 p-8 transition-all duration-300 ease-in-out overflow-hidden bg-transparent">
         {activeContent === "dashboardTeacher" && <StarT />}
         {activeContent === "experiencias" && (
-          <Experiencias onAgregar={() => setActiveContent("agregar-experiencia")} />
+          <Experiences onAgregar={() => setActiveContent("agregar-experiencia")} />
         )}
         {activeContent === "agregar-experiencia" && (
           <AgregarExperiencia onVolver={() => setActiveContent("experiencias")} />

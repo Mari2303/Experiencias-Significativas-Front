@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { Institution } from "../../Api/Types/experienceTypes";
+import { Institution, Experience } from "../../Api/Types/experienceTypes";
 
 
 interface Props {
-  value: Institution;
-  onChange: (value: Institution) => void;
+  value: Institution & Partial<Experience>; // Permite usar campos de ambos types
+  onChange: (value: Institution & Partial<Experience>) => void;
 }
 
 const person = JSON.parse(localStorage.getItem("person") || "{}");
@@ -20,8 +20,8 @@ const IdentificacionInstitucional: React.FC<Props> = ({ value, onChange }) => (
           <input
             type="text"
             name="nombreExperiencia"
-            value={value.name}
-            onChange={e => onChange({ ...value, name: e.target.value })}
+            value={value.nameExperiences}
+            onChange={e => onChange({ ...value, nameExperiences: e.target.value })}
             required
             className="w-full border rounded p-2 mt-1"
           />

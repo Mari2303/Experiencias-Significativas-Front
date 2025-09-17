@@ -1,13 +1,13 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useState } from "react";
-import ExperienciaModal from "./ExperienciaModal";
-import Evaluation from "./Evaluacion";
+import ExperienceModal from "./ExperienceModal";
+import Evaluation from "./Evaluation";
 
-interface ExperienciasProps {
+interface ExperiencesProps {
   onAgregar: () => void;
 }
 
-const Experiencias = ({ onAgregar }: ExperienciasProps) => {
+const Experiences = ({ onAgregar }: ExperiencesProps) => {
   const [showModal, setShowModal] = useState(false);
   const [showEvaluation, setShowEvaluation] = useState(false);
   const role = localStorage.getItem("role");
@@ -124,7 +124,7 @@ const Experiencias = ({ onAgregar }: ExperienciasProps) => {
       <div className="font-bold text-[#00aaff] text-[28.242px] ">
           <p>Actualizar Experiencia</p>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-10">
         {experiencias.map((exp) => (
           <div
             key={exp.id}
@@ -183,7 +183,7 @@ const Experiencias = ({ onAgregar }: ExperienciasProps) => {
       </div>
 
       {/* Modal reutilizable para agregar experiencia */}
-      <ExperienciaModal show={showModal} onClose={handleClose} />
+  <ExperienceModal show={showModal} onClose={handleClose} />
       {/* Modal de Evaluación */}
       {showEvaluation && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1100]">
@@ -203,4 +203,4 @@ const Experiencias = ({ onAgregar }: ExperienciasProps) => {
   );
 };
 
-export default Experiencias;
+export default Experiences;

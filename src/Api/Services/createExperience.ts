@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const crearExperiencia = async (data: any) => {
+export const createExperience = async (data: any) => {
   const token = localStorage.getItem("token"); 
   const response = await axios.post("/api/Experience/register", 
   data,

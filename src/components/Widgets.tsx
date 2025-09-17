@@ -7,7 +7,7 @@ const Widgets: React.FC = () => {
       <div className="font-bold text-[#00aaff] text-[28.242px] w-full">
           <p>Ejes temáticos</p>
         </div>
-      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-3">
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-3">
         {/* Widget 1 */}
       <div className="bg-white p-9 rounded-lg shadow-md w-70 h-35 text-center">
         <h6 className="text-lg font-semibold text-gray-800">

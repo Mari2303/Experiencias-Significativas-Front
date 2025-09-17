@@ -6,10 +6,10 @@ import RegisterPage from "./pages/RegisterPage";
 import DashboardPage from "./pages/DashboardAdmin";
 import DashboardTeacher from "./pages/DashboardTeacher";
 import PrivateRoute from "./components/PrivateRoute";
-import Widgets from "./components/Widgets";
-import ProfileContent from "./components/Seguimiento";
-import SettingsContent from "./components/Evaluacion";    
+import ProfileContent from "./components/Tracking";
+import SettingsContent from "./components/Evaluation";    
 import ResetPassword from "./pages/ResetPassword";
+import Widgets from "./components/Widgets";
 
 const AppRoutes = () => {
   return (

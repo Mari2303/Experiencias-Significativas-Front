@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2"; 
-import { registerPerson, registerUser } from "../Api/Services/Registro";
+import { registerPerson, registerUser } from "../Api/Services/Register";
 import { getEnum } from "../Api/Services/Helper";
 import { DataSelectRequest } from "../Api/Types/HelperTypes";
 

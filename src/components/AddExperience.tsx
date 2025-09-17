@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { crearExperiencia } from "../Api/Services/crearExperiencia";
+import { createExperience } from "../Api/Services/createExperience";
 import LideresForm from "./Experience/LideresForm";
 import IdentificacionForm from "./Experience/IdentificacionForm";
 import TematicaForm from "./Experience/TematicaForm";
@@ -10,15 +10,16 @@ import Componentes from "./Experience/Componentes";
 import SeguimientoEvaluacion from "./Experience/SeguimientoEvaluacion";
 import InformacionApoyoForm from "./Experience/InformacionApoyoForm";
 import NivelesForm from "./Experience/NivelesForm";
+import PDFUploader from "./Experience/PDF";
 
 
-interface AgregarExperienciaProps {
+interface AddExperienceProps {
   onVolver: () => void;
 }
 
 
 
-const AgregarExperiencia: React.FC<AgregarExperienciaProps> = ({ onVolver }) => {
+const AddExperience: React.FC<AddExperienceProps> = ({ onVolver }) => {
   // Estado para los datos del formulario
   const [formData, setFormData] = useState({
     nameExperiences: "",
@@ -76,7 +77,8 @@ const AgregarExperiencia: React.FC<AgregarExperienciaProps> = ({ onVolver }) => 
     eZone: "",
     caracteristic: "",
     territorialEntity: "",
-    testsKnow: ""
+    testsKnow: "",
+    codeDane: "" // Added missing property
   });
 
   // Estado para IdentificacionForm
@@ -90,10 +92,61 @@ const AgregarExperiencia: React.FC<AgregarExperienciaProps> = ({ onVolver }) => 
     otroTema: ""
   });
 
-  // Función handleSubmit (vacía por ahora)
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  // Validación de campos obligatorios
+  const validateForm = () => {
+    const errors = [];
+    if (!formData.nameExperiences) errors.push('El título de la experiencia es obligatorio');
+    if (!formData.code) errors.push('El código es obligatorio');
+    if (!lideres[0]?.nombre) errors.push('El nombre del líder es obligatorio');
+    if (!lideres[0]?.documento) errors.push('El documento del líder es obligatorio');
+    if (!lideres[0]?.correo) errors.push('El correo del líder es obligatorio');
+    if (!lideres[0]?.cargo) errors.push('El cargo del líder es obligatorio');
+    if (!lideres[0]?.telefono) errors.push('El teléfono del líder es obligatorio');
+    if (!identificacionInstitucional.name) errors.push('El nombre de la institución es obligatorio');
+    if (!identificacionInstitucional.codeDane) errors.push('El código DANE es obligatorio');
+    if (!formData.developmenttime) errors.push('La fecha de desarrollo es obligatoria');
+    if (!formData.stateId) errors.push('El estado es obligatorio');
+    if (!pdfFile) errors.push('Debes adjuntar un PDF');
+    // Puedes agregar más validaciones según tu modelo
+    return errors;
+  };
+
+  // Función handleSubmit para enviar el registro a la API
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Lógica de envío aquí
+    const errors = validateForm();
+    if (errors.length > 0) {
+      alert(errors.join('\n'));
+      return;
+    }
+    const experiencia: any = {
+      ...formData,
+      institution: identificacionInstitucional,
+      lideres,
+      tematicaForm,
+      nivelesForm,
+      grupoPoblacional,
+      tiempo,
+      componentes,
+      seguimientoEvaluacion,
+      informacionApoyo,
+      documents: pdfFile ? [{ name: pdfFile.name, urlPdf: '', urlLink: '' }] : [],
+    };
+    try {
+      // Consumir el endpoint correcto
+      const res = await fetch('/api/Experience/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(experiencia),
+      });
+      if (!res.ok) throw new Error('Error al registrar la experiencia');
+      alert('Experiencia registrada correctamente');
+      onVolver();
+    } catch (err) {
+      alert('Error al registrar la experiencia');
+    }
   };
   const [tematicaForm, setTematicaForm] = useState({
     area: "",
@@ -129,6 +182,9 @@ const AgregarExperiencia: React.FC<AgregarExperienciaProps> = ({ onVolver }) => 
   // Estado para InformacionApoyoForm
   const [informacionApoyo, setInformacionApoyo] = useState<any>({});
 
+  // Estado para PDF
+  const [pdfFile, setPdfFile] = useState<File | null>(null);
+
   // Manejar cambios en los inputs
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
@@ -146,7 +202,7 @@ const AgregarExperiencia: React.FC<AgregarExperienciaProps> = ({ onVolver }) => 
         ← Volver
       </button>
 
-      <form onSubmit={handleSubmit}>
+  <form onSubmit={handleSubmit}>
         {/* Secciones como componentes */}
         <IdentificacionInstitucional
           value={identificacionInstitucional}
@@ -189,31 +245,16 @@ const AgregarExperiencia: React.FC<AgregarExperienciaProps> = ({ onVolver }) => 
           onChange={setInformacionApoyo}
         />
 
-        <input
-          name="nameExperiences"
-          value={formData.nameExperiences}
-          onChange={handleChange}
-          placeholder="Nombre de la experiencia"
-        />
-        <input
-          type="text"
-          name="address"
-          value={identificacionInstitucional.address}
-          onChange={e => setIdentificacionInstitucional({ ...identificacionInstitucional, address: e.target.value })}
-          required
-          className="w-full border rounded p-2 mt-1"
-          placeholder="Dirección de la institución"
-        />
-        <input
-          type="text"
-          name="emailInstitucional"
-          value={identificacionInstitucional.emailInstitucional}
-          onChange={e => setIdentificacionInstitucional({ ...identificacionInstitucional, emailInstitucional: e.target.value })}
-          className="w-full border rounded p-2 mt-1"
-          placeholder="Correo institucional"
-        />
-        {/* Agrega aquí los demás campos según el DTO actualizado */}
-        {/* Agrega aquí los demás campos según tu necesidad */}
+        {/* PDF Uploader */}
+        <div className="my-6">
+          <PDFUploader onFileSelect={setPdfFile} />
+          {pdfFile && (
+            <div className="mt-2 text-center">
+              <span className="font-semibold">PDF seleccionado:</span> {pdfFile.name}
+            </div>
+          )}
+        </div>
+
 
         {/* Botón de enviar */}
         <div className="mt-6 text-center">
@@ -229,4 +270,4 @@ const AgregarExperiencia: React.FC<AgregarExperienciaProps> = ({ onVolver }) => 
   );
 };
 
-export default AgregarExperiencia;
+export default AddExperience;

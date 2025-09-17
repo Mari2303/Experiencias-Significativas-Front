@@ -46,8 +46,17 @@ const LoginPage: React.FC = () => {
       // Guardar token y userId
       saveToken(token, 60);
       localStorage.setItem("userId", userId.toString());
-      // Opcional: guardar el rol si lo necesitas para mostrarlo en UI, pero no para lógica de menú
       if (role) localStorage.setItem("role", role);
+
+      // Guardar solo los datos disponibles de la persona
+      const personData = {
+        nombre: apiData.userName || "",
+        correo: apiData.email || "",
+        cargo: role,
+        documento: apiData.personId || "",
+        telefono: "" // No disponible en la respuesta
+      };
+      localStorage.setItem("person", JSON.stringify(personData));
 
 
       Swal.fire({
@@ -121,7 +130,7 @@ const LoginPage: React.FC = () => {
 
           <button
             type="submit"
-            className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mt-4"
+            className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mt-4 "
           >
             Iniciar Sesión
           </button>

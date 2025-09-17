@@ -1,10 +1,10 @@
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import Experiencias from '../components/Experiencias';
+import Experiences from '../components/Experiences';
 
-describe('Experiencias', () => {
+describe('Experiences', () => {
   it('renderiza el título Actualizar Experiencia', () => {
-    render(<Experiencias onAgregar={() => {}} />);
+  render(<Experiences onAgregar={() => {}} />);
     expect(screen.getByText('Actualizar Experiencia')).toBeInTheDocument();
   });
 });

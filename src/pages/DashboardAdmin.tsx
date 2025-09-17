@@ -3,10 +3,10 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Widgets from "../components/Widgets";
 import TopBar from "../components/TopBar";
 import Sidebar from "../components/Sidebar";
-import Seguimiento from "../components/Seguimiento";
-import Experiencias from "../components/Experiencias";
-import AgregarExperiencia from "../components/AgregarExperiencia"; // <-- nuevo
-import Evaluacion from "../components/Evaluacion";
+import Tracking from "../components/Tracking";
+import Experiences from "../components/Experiences";
+import AddExperience from "../components/AddExperience"; // <-- nuevo
+import Evaluation from "../components/Evaluation";
 
 const DashboardAdmin: React.FC = () => {
   const [activeContent, setActiveContent] = useState("dashboard");
@@ -18,13 +18,13 @@ const DashboardAdmin: React.FC = () => {
 
       <main className="flex-1 p-8 transition-all duration-300 ease-in-out overflow-hidden">
         {activeContent === "dashboard" && <Widgets />}
-        {activeContent === "seguimiento" && <Seguimiento />}
-        {activeContent === "evaluacion" && <Evaluacion />}
+  {activeContent === "seguimiento" && <Tracking />}
+        {activeContent === "evaluacion" && <Evaluation />}
         {activeContent === "experiencias" && (
-          <Experiencias onAgregar={() => setActiveContent("agregar-experiencia")} />
+          <Experiences onAgregar={() => setActiveContent("agregar-experiencia")} />
         )}
         {activeContent === "agregar-experiencia" && (
-          <AgregarExperiencia onVolver={() => setActiveContent("experiencias")} />
+            <AddExperience onVolver={() => setActiveContent("experiencias")} />
         )}
       </main>
     </div>

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { FaSearch, FaChevronDown, FaChevronUp, FaUserMinus } from "react-icons/fa";
+import { FaSearch, FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { BiLogOut } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 import { updatePassword } from "../Api/Services/ChangePassword";
 const TopBar: React.FC = () => {
@@ -125,7 +126,9 @@ const TopBar: React.FC = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1000]">
           <div className="bg-white p-6 rounded-xl text-center w-72">
             <h5 className="font-bold text-2xl mb-4">¿Estas seguro de cerrar sesión?</h5>
-            <FaUserMinus className="text-6xl text-black mx-auto mb-4" />
+            <div className="flex ml-20 items-center mb-10">
+              <BiLogOut className="text-6xl text-black" />
+            </div>
             <div className="flex justify-around mt-4">
               <button
                 onClick={handleLogoutConfirm}
