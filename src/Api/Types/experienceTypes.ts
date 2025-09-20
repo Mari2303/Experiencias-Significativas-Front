@@ -1,11 +1,3 @@
-// Interface para los líderes de la experiencia
-export interface Lider {
-	nombre: string;
-	documento: string;
-	correo: string;
-	cargo: string;
-	telefono: string;
-}
 // DTOs para crear experiencia alineados al backend
 export interface Institution {
   name: string;
@@ -23,7 +15,7 @@ export interface Institution {
   testsKnow: string;
 }
 
-export interface Document {
+export interface ExperienceDocument {
   name: string;
   urlPdf: string;
   urlLink: string;
@@ -84,7 +76,8 @@ export interface Experience {
   socialization: string;
   userId: number;
   institution: Institution;
-  documents: Document[];
+  documents: ExperienceDocument[]; // <- corregido aquí
   objectives: Objective[];
   historyExperiences: HistoryExperience[];
 }
+

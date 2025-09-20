@@ -67,8 +67,8 @@ const Componentes: React.FC<Props> = ({ value, onChange }) => {
         <textarea
           rows={4}
           className="w-full border rounded p-2"
-          value={value.innovationExperience || ""}
-          onChange={e => onChange({ ...value, innovationExperience: e.target.value })}
+          value={value.methodologias || ""}
+          onChange={e => onChange({ ...value, methodologias: e.target.value })}
         />
       </div>
 

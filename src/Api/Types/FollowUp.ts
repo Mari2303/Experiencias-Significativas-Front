@@ -6,7 +6,7 @@ export interface FollowUp {
 	totalExperiencesRegistradas: number;
 	totalExperiencesCreadas: number;
 	totalInstitutionsWithExperiences: number;
-	totalTeachersWithExperiences: number;
+	totalTeachersRegistered: number;
 	totalExperiencesWithComments: number;
 	totalExperiencesTestsKnow: number;
 }

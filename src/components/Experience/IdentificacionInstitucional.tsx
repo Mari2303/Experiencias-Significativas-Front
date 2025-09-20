@@ -1,204 +1,314 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Institution, Experience } from "../../Api/Types/experienceTypes";
-
+import { getEnum } from "../../Api/Services/Helper";
+import { DataSelectRequest } from "../../Api/Types/HelperTypes";
 
 interface Props {
-  value: Institution & Partial<Experience>; // Permite usar campos de ambos types
-  onChange: (value: Institution & Partial<Experience>) => void;
+  value: (Institution & Partial<Experience>) & {
+    _codigoDaneFocus?: boolean;
+    _emailInstitucionalFocus?: boolean;
+  };
+  onChange: (
+    value: (Institution & Partial<Experience>) & {
+      _codigoDaneFocus?: boolean;
+      _emailInstitucionalFocus?: boolean;
+    }
+  ) => void;
 }
 
-const person = JSON.parse(localStorage.getItem("person") || "{}");
-const IdentificacionInstitucional: React.FC<Props> = ({ value, onChange }) => (
-  <div className="border rounded-lg p-4 mb-6">
-    <h2 className="font-semibold mb-4">IDENTIFICACIÓN INSTITUCIONAL</h2>
+const IdentificacionInstitucional: React.FC<Props> = ({ value, onChange }) => {
+  const [codigoDaneOptions, setCodigoDaneOptions] = useState<DataSelectRequest[]>([]);
+  const [emailInstitucionalOptions, setEmailInstitucionalOptions] = useState<DataSelectRequest[]>([]);
 
-    <div className="space-y-4">
-      {/* Fila 1 */}
-      <div className="grid grid-cols-2 gap-6">
+  useEffect(() => {
+    const fetchEnums = async () => {
+      const dane = await getEnum("CodeDane");
+      setCodigoDaneOptions(dane);
+
+      const emails = await getEnum("EmailInstitucional");
+      setEmailInstitucionalOptions(emails);
+    };
+    fetchEnums();
+  }, []);
+
+  return (
+    <div className="border rounded-lg p-4 mb-6">
+      <h2 className="font-semibold mb-4">IDENTIFICACIÓN INSTITUCIONAL</h2>
+
+      {/* Primera fila: Nombre experiencia */}
+      <div className="grid grid-cols-1 gap-4 mb-4">
         <div>
           <label>Nombre con que se conoce la experiencia</label>
           <input
             type="text"
-            name="nombreExperiencia"
-            value={value.nameExperiences}
+            name="nameExperiences"
+            value={value.nameExperiences || ""}
             onChange={e => onChange({ ...value, nameExperiences: e.target.value })}
-            required
             className="w-full border rounded p-2 mt-1"
+            placeholder="Nombre de la experiencia"
           />
+        </div>
+      </div>
+
+      {/* Segunda fila: Código DANE y Nombre EE */}
+      <div className="grid grid-cols-2 gap-4 mb-4">
+        <div>
+          <label>Código DANE del establecimiento educativo</label>
+          <div className="relative">
+            <input
+              type="text"
+              name="codigoDane"
+              value={value.codeDane || ""}
+              onChange={(e) => onChange({ ...value, codeDane: e.target.value })}
+              onFocus={() => onChange({ ...value, _codigoDaneFocus: true })}
+              onBlur={() =>
+                setTimeout(() => onChange({ ...value, _codigoDaneFocus: false }), 100)
+              }
+              className="w-full border rounded p-2 mt-1"
+              placeholder="Seleccione o escriba..."
+              autoComplete="off"
+            />
+            {value._codigoDaneFocus && (
+              <ul className="absolute left-0 z-10 bg-white border border-gray-300 rounded-md w-full mt-1 max-h-40 overflow-y-auto shadow-lg">
+                {(value.codeDane
+                  ? codigoDaneOptions.filter((opt) =>
+                      String(opt.id)
+                        .toLowerCase()
+                        .includes(value.codeDane?.toLowerCase())
+                    )
+                  : codigoDaneOptions
+                ).map((opt) => (
+                  <li
+                    key={opt.id}
+                    className="px-3 py-2 cursor-pointer hover:bg-indigo-100"
+                    onMouseDown={() =>
+                      onChange({
+                        ...value,
+                        codeDane: String(opt.id),
+                        _codigoDaneFocus: false,
+                      })
+                    }
+                  >
+                    {opt.id}
+                  </li>
+                ))}
+                {value.codeDane &&
+                  codigoDaneOptions.filter((opt) =>
+                    String(opt.id)
+                      .toLowerCase()
+                      .includes(value.codeDane?.toLowerCase())
+                  ).length === 0 && (
+                    <li className="px-3 py-2 text-gray-400">Sin coincidencias</li>
+                  )}
+              </ul>
+            )}
+          </div>
         </div>
         <div>
           <label>Nombre del establecimiento educativo</label>
           <input
             type="text"
-            name="nombreEstablecimiento"
-            value={value.name}
+            name="name"
+            value={value.name || ""}
             onChange={e => onChange({ ...value, name: e.target.value })}
-            required
             className="w-full border rounded p-2 mt-1"
+            placeholder="Nombre del establecimiento"
           />
         </div>
       </div>
 
-      {/* Fila 2 */}
-      <div className="grid grid-cols-2 gap-6">
-        <div>
-          <label>Código DANE del establecimiento educativo</label>
-          <input
-            type="text"
-            name="codigoDane"
-            value={person.CodeDane || ""}
-            readOnly
-            className="w-full border rounded p-2 mt-1 bg-gray-100"
-          />
-        </div>
+      {/* Tercera fila: Rector y Departamento */}
+      <div className="grid grid-cols-2 gap-4 mb-4">
         <div>
           <label>Nombre del rector (a) o director (a)</label>
           <input
             type="text"
             name="nameRector"
-            value={value.nameRector}
+            value={value.nameRector || ""}
             onChange={e => onChange({ ...value, nameRector: e.target.value })}
-            required
             className="w-full border rounded p-2 mt-1"
-          />
-        </div>
-      </div>
-
-      {/* Fila 3 */}
-      <div className="grid grid-cols-2 gap-6">
-        <div>
-          <label>Municipio / Ciudad</label>
-          <input
-            type="text"
-            name="municipio"
-            value={value.municipality}
-            onChange={e => onChange({ ...value, municipality: e.target.value })}
-            required
-            className="w-full border rounded p-2 mt-1"
+            placeholder="Nombre del rector o director"
           />
         </div>
         <div>
           <label>Departamento</label>
           <input
             type="text"
-            name="departamento"
-            value={value.departament}
+            name="departament"
+            value={value.departament || ""}
             onChange={e => onChange({ ...value, departament: e.target.value })}
-            required
             className="w-full border rounded p-2 mt-1"
+            placeholder="Departamento"
           />
         </div>
       </div>
 
-      {/* Fila 4 */}
-      <div className="grid grid-cols-2 gap-6">
+      {/* Cuarta fila: Municipio y Dirección */}
+      <div className="grid grid-cols-2 gap-4 mb-4">
         <div>
-          <label>Zona del EE</label>
+          <label>Municipio / Ciudad</label>
           <input
             type="text"
-            name="zona"
-            value={value.eZone}
-            onChange={e => onChange({ ...value, eZone: e.target.value })}
-            required
+            name="municipality"
+            value={value.municipality || ""}
+            onChange={e => onChange({ ...value, municipality: e.target.value })}
             className="w-full border rounded p-2 mt-1"
+            placeholder="Municipio o ciudad"
           />
         </div>
         <div>
           <label>Dirección</label>
           <input
             type="text"
-            name="direccion"
-            value={value.address}
+            name="address"
+            value={value.address || ""}
             onChange={e => onChange({ ...value, address: e.target.value })}
-            required
             className="w-full border rounded p-2 mt-1"
+            placeholder="Dirección"
           />
         </div>
       </div>
 
-      {/* Fila 5 */}
-      <div>
-        <label>Teléfonos de contacto</label>
-        <input
-          type="text"
-          name="telefonos"
-          value={value.phone}
-          onChange={e => onChange({ ...value, phone: Number(e.target.value) })}
-          required
-          className="w-full border rounded p-2 mt-1"
-        />
+      {/* Quinta fila: Zona y Teléfonos */}
+      <div className="grid grid-cols-2 gap-4 mb-4">
+        <div>
+          <label>Zona del EE</label>
+          <input
+            type="text"
+            name="eZone"
+            value={value.eZone || ""}
+            onChange={e => onChange({ ...value, eZone: e.target.value })}
+            className="w-full border rounded p-2 mt-1"
+            placeholder="Zona del EE"
+          />
+        </div>
+        <div>
+          <label>Teléfonos de contacto</label>
+          <input
+            type="text"
+            name="phone"
+            value={value.phone || ""}
+            onChange={e => onChange({ ...value, phone: Number(e.target.value) })}
+            className="w-full border rounded p-2 mt-1"
+            placeholder="Teléfonos de contacto"
+          />
+        </div>
       </div>
 
-      {/* Fila 6 */}
-      <div>
+      {/* Sexta fila: Correos institucionales */}
+      <div className="mb-4">
         <label>Correos electrónicos institucionales</label>
-        <input
-          type="email"
-          name="correos"
-          value={value.emailInstitucional}
-          onChange={e => onChange({ ...value, emailInstitucional: e.target.value })}
-          required
-          className="w-full border rounded p-2 mt-1"
-        />
+        <div className="relative">
+          <input
+            type="email"
+            name="correos"
+            value={value.emailInstitucional || ""}
+            onChange={(e) =>
+              onChange({ ...value, emailInstitucional: e.target.value })
+            }
+            onFocus={() =>
+              onChange({ ...value, _emailInstitucionalFocus: true })
+            }
+            onBlur={() =>
+              setTimeout(
+                () =>
+                  onChange({ ...value, _emailInstitucionalFocus: false }),
+                100
+              )
+            }
+            className="w-full border rounded p-2 mt-1"
+            placeholder="Seleccione o escriba..."
+            autoComplete="off"
+          />
+          {value._emailInstitucionalFocus && (
+            <ul className="absolute left-0 z-10 bg-white border border-gray-300 rounded-md w-full mt-1 max-h-40 overflow-y-auto shadow-lg">
+              {(value.emailInstitucional
+                ? emailInstitucionalOptions.filter((opt) =>
+                    opt.displayText
+                      .toLowerCase()
+                      .includes(value.emailInstitucional?.toLowerCase())
+                  )
+                : emailInstitucionalOptions
+              ).map((opt) => (
+                <li
+                  key={opt.id}
+                  className="px-3 py-2 cursor-pointer hover:bg-indigo-100"
+                  onMouseDown={() =>
+                    onChange({
+                      ...value,
+                      emailInstitucional: opt.displayText,
+                      _emailInstitucionalFocus: false,
+                    })
+                  }
+                >
+                  {opt.displayText}
+                </li>
+              ))}
+              {value.emailInstitucional &&
+                emailInstitucionalOptions.filter((opt) =>
+                  opt.displayText
+                    .toLowerCase()
+                    .includes(value.emailInstitucional?.toLowerCase())
+                ).length === 0 && (
+                  <li className="px-3 py-2 text-gray-400">Sin coincidencias</li>
+                )}
+            </ul>
+          )}
+        </div>
       </div>
 
-      {/* Fila 7 */}
-      <div>
+      {/* Séptima fila: Características del EE */}
+      <div className="mb-4">
         <label>Características del EE</label>
         <textarea
-          rows={3}
-          name="caracteristicas"
-          value={value.caracteristic}
+          name="caracteristic"
+          value={value.caracteristic || ""}
           onChange={e => onChange({ ...value, caracteristic: e.target.value })}
-          required
-          placeholder="Describa en máximo cuatro líneas el establecimiento educativo..."
           className="w-full border rounded p-2 mt-1"
+          placeholder="Describa en máximo cuatro líneas el establecimiento educativo..."
         />
       </div>
 
-      {/* Fila 8 */}
-      <div className="grid grid-cols-2 gap-6 items-center">
+      {/* Octava fila: ETC y radios */}
+      <div className="grid grid-cols-2 gap-4 items-end mb-2">
         <div>
           <label>Entidad Territorial Certificada (ETC)</label>
           <input
             type="text"
-            name="entidadTerritorial"
-            value={value.territorialEntity}
+            name="territorialEntity"
+            value={value.territorialEntity || ""}
             onChange={e => onChange({ ...value, territorialEntity: e.target.value })}
-            required
             className="w-full border rounded p-2 mt-1"
+            placeholder="Entidad Territorial Certificada"
           />
         </div>
-        <div>
-          <p>¿Participará en el Evento Compartir de Saberes?</p>
-          <div className="flex space-x-4 mt-1">
-            <label>
+        <div className="flex flex-col">
+          <label className="mb-1">¿Participará en el Evento Compartir de Saberes?</label>
+          <div className="flex items-center gap-4 mt-1">
+            <label className="flex items-center">
               <input
                 type="radio"
-                name="participacion"
-                value="si"
-                checked={value.testsKnow === "si"}
-                onChange={e => onChange({ ...value, testsKnow: e.target.value })}
-                required
-              />{" "}
-              Sí
+                name="participaEvento"
+                checked={value.testsKnow === "Sí"}
+                onChange={() => onChange({ ...value, testsKnow: "Sí" })}
+              />
+              <span className="ml-2">Sí</span>
             </label>
-            <label>
+            <label className="flex items-center">
               <input
                 type="radio"
-                name="participacion"
-                value="no"
-                checked={value.testsKnow === "no"}
-                onChange={e => onChange({ ...value, testsKnow: e.target.value })}
-                required
-              />{" "}
-              No
+                name="participaEvento"
+                checked={value.testsKnow === "No"}
+                onChange={() => onChange({ ...value, testsKnow: "No" })}
+              />
+              <span className="ml-2">No</span>
             </label>
           </div>
         </div>
       </div>
-  </div>
-  </div>
-);
+    </div>
+  );
+};
 
 export default IdentificacionInstitucional;
+

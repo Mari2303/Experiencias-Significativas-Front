@@ -182,18 +182,7 @@ const TopBar: React.FC = () => {
       <p className="text-gray-500 mb-6 text-left">
         Ingresa tu contraseña actual y crea una nueva
       </p>
-      <form className="flex flex-col gap-4" onSubmit={handlePasswordChange}>
-        <div className="text-left">
-          <label className="font-semibold mb-1 block">Contraseña actual</label>
-          <input
-            type="password"
-            placeholder="Ingresa tu contraseña actual"
-            className="border border-gray-300 rounded px-4 py-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-200 text-base"
-            value={currentPassword}
-            onChange={e => setCurrentPassword(e.target.value)}
-            autoComplete="current-password"
-          />
-        </div>
+  <form className="flex flex-col gap-4" onSubmit={handlePasswordChange}>
         <div className="text-left">
           <label className="font-semibold mb-1 block">Nueva contraseña</label>
           <input
@@ -203,6 +192,7 @@ const TopBar: React.FC = () => {
             value={newPassword}
             onChange={e => setNewPassword(e.target.value)}
             autoComplete="new-password"
+            required
           />
         </div>
         <div className="text-left">
@@ -214,6 +204,7 @@ const TopBar: React.FC = () => {
             value={confirmPassword}
             onChange={e => setConfirmPassword(e.target.value)}
             autoComplete="new-password"
+            required
           />
         </div>
         {/* Seguridad */}
@@ -251,19 +242,21 @@ const TopBar: React.FC = () => {
           </div>
         )}
         <div className="flex justify-between mt-6">
-          <button
-            type="button"
-            className="bg-gray-100 text-gray-700 rounded-xl px-8 py-3 font-bold hover:bg-gray-200 text-lg"
-            onClick={() => setShowPasswordModal(false)}
-          >
-            Cancelar
-          </button>
-          <button
-            type="submit"
-            className="bg-blue-500 text-white rounded-xl px-8 py-3 font-bold hover:bg-blue-600 text-lg"
-          >
-            Guardar
-          </button>
+          <div className="flex gap-2 w-full justify-center">
+            <button
+              type="button"
+              className="bg-gray-100 text-gray-700 !rounded-xl px-8 py-3 font-bold hover:bg-gray-200 text-lg"
+              onClick={() => setShowPasswordModal(false)}
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              className="bg-blue-500 text-white !rounded-xl px-8 py-3 font-bold hover:bg-blue-600 text-lg"
+            >
+              Guardar
+            </button>
+          </div>
         </div>
       </form>
     </div>

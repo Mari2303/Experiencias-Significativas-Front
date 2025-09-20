@@ -1,7 +1,8 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ExperienceModal from "./ExperienceModal";
 import Evaluation from "./Evaluation";
+import { set } from "react-hook-form";
 
 interface ExperiencesProps {
   onAgregar: () => void;
@@ -10,6 +11,9 @@ interface ExperiencesProps {
 const Experiences = ({ onAgregar }: ExperiencesProps) => {
   const [showModal, setShowModal] = useState(false);
   const [showEvaluation, setShowEvaluation] = useState(false);
+
+  const [experienceList, setExperienceList] = useState([]); // Lista de experiencias
+
   const role = localStorage.getItem("role");
 
   const experiencias = [
@@ -36,6 +40,29 @@ const Experiences = ({ onAgregar }: ExperiencesProps) => {
   const handleClose = () => {
     setShowModal(false);
   };
+
+  useEffect(() => {
+    const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "";
+    const endpoint = `${API_BASE}/api/Experience/List`;
+    const token = localStorage.getItem("token");
+
+    const fetchExperiencias = async () => {
+      const res = await fetch(endpoint, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+      });
+
+      if (!res.ok) throw new Error("Error al obtener experiencias");
+
+      let data = await res.json();
+      setExperienceList(data);
+    };
+
+    fetchExperiencias();
+  }, []);
 
   return (
     <div className="p-8 min-h-screen">
@@ -122,10 +149,10 @@ const Experiences = ({ onAgregar }: ExperiencesProps) => {
       )}
 
       <div className="font-bold text-[#00aaff] text-[28.242px] ">
-          <p>Actualizar Experiencia</p>
+        <p>Actualizar Experiencia</p>
       </div>
-  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-10">
-        {experiencias.map((exp) => (
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-10">
+        {experienceList ? experienceList.map((exp) => (
           <div
             key={exp.id}
             className="relative border rounded-xl p-10 flex flex-col items-center justify-center shadow-sm hover:shadow-lg transition duration-200 cursor-pointer"
@@ -161,12 +188,14 @@ const Experiences = ({ onAgregar }: ExperiencesProps) => {
               Visitar Experiencia
             </button>
           </div>
-        ))}
+        )) : (
+          <p>Cargando experiencias...</p>
+        )}
       </div>
 
       <div className="font-bold text-[#00aaff] text-[28.242px] w-full">
-          <p>Registro de Nuevas Experiencias</p>
-        </div>
+        <p>Registro de Nuevas Experiencias</p>
+      </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {nuevas.map((n) => (
           <div
@@ -183,7 +212,7 @@ const Experiences = ({ onAgregar }: ExperiencesProps) => {
       </div>
 
       {/* Modal reutilizable para agregar experiencia */}
-  <ExperienceModal show={showModal} onClose={handleClose} />
+      <ExperienceModal show={showModal} onClose={handleClose} />
       {/* Modal de Evaluación */}
       {showEvaluation && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1100]">
@@ -202,5 +231,6 @@ const Experiences = ({ onAgregar }: ExperiencesProps) => {
     </div>
   );
 };
+
 
 export default Experiences;

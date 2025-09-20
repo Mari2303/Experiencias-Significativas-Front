@@ -1,10 +1,11 @@
 // src/components/AgregarExperiencia/SeguimientoEvaluacion.tsx
 import React from "react";
+import type { Objective } from "../../Api/Types/experienceTypes";
 
 
 interface SeguimientoEvaluacionProps {
-  value: any;
-  onChange: (val: any) => void;
+  value: Objective;
+  onChange: (val: Objective) => void;
 }
 
 const SeguimientoEvaluacion: React.FC<SeguimientoEvaluacionProps> = ({ value, onChange }) => {
@@ -22,8 +23,8 @@ const SeguimientoEvaluacion: React.FC<SeguimientoEvaluacionProps> = ({ value, on
           required
           rows={4}
           className="w-full border rounded p-2"
-          value={value.seguimiento || ""}
-          onChange={e => onChange({ ...value, seguimiento: e.target.value })}
+          value={value.followEvaluation || ""}
+          onChange={e => onChange({ ...value, followEvaluation: e.target.value })}
         />
       </div>
 
@@ -37,8 +38,8 @@ const SeguimientoEvaluacion: React.FC<SeguimientoEvaluacionProps> = ({ value, on
           required
           rows={3}
           className="w-full border rounded p-2"
-          value={value.resultados || ""}
-          onChange={e => onChange({ ...value, resultados: e.target.value })}
+          value={value.resulsExperience || ""}
+          onChange={e => onChange({ ...value, resulsExperience: e.target.value })}
         />
       </div>
 
@@ -52,8 +53,8 @@ const SeguimientoEvaluacion: React.FC<SeguimientoEvaluacionProps> = ({ value, on
           required
           rows={3}
           className="w-full border rounded p-2"
-          value={value.sostenibilidad || ""}
-          onChange={e => onChange({ ...value, sostenibilidad: e.target.value })}
+          value={value.sustainabilityExperience || ""}
+          onChange={e => onChange({ ...value, sustainabilityExperience: e.target.value })}
         />
       </div>
 
@@ -67,8 +68,8 @@ const SeguimientoEvaluacion: React.FC<SeguimientoEvaluacionProps> = ({ value, on
           required
           rows={3}
           className="w-full border rounded p-2"
-          value={value.transferencia || ""}
-          onChange={e => onChange({ ...value, transferencia: e.target.value })}
+          value={value.tranfer || ""}
+          onChange={e => onChange({ ...value, tranfer: e.target.value })}
         />
       </div>
     </div>

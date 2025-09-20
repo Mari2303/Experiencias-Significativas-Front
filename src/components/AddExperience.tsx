@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { createExperience } from "../Api/Services/createExperience";
 import LideresForm from "./Experience/LideresForm";
 import IdentificacionForm from "./Experience/IdentificacionForm";
 import TematicaForm from "./Experience/TematicaForm";
@@ -12,15 +11,17 @@ import InformacionApoyoForm from "./Experience/InformacionApoyoForm";
 import NivelesForm from "./Experience/NivelesForm";
 import PDFUploader from "./Experience/PDF";
 
+import type { Grade } from "../Api/Types/experienceTypes";
+import type { NivelesFormValue, Nivel } from "./Experience/NivelesForm";
 
 interface AddExperienceProps {
   onVolver: () => void;
 }
 
-
-
 const AddExperience: React.FC<AddExperienceProps> = ({ onVolver }) => {
-  // Estado para los datos del formulario
+  const [errorMessage, setErrorMessage] = useState("");
+
+  // Estados principales
   const [formData, setFormData] = useState({
     nameExperiences: "",
     summary: "",
@@ -38,216 +39,217 @@ const AddExperience: React.FC<AddExperienceProps> = ({ onVolver }) => {
     userId: 0,
     institucionId: 0,
     stateId: 0,
-    thematicLineIds: [],
-    gradeIds: [],
-    populationGradeIds: [],
-    documents: [],
-    objectives: [],
-    historyExperiences: []
+    thematicLineIds: [] as number[],
+    gradeIds: [] as number[],
+    populationGradeIds: [] as number[],
+    documents: [] as any[],
+    objectives: [] as any[],
+    historyExperiences: [] as any[],
   });
 
-  // Obtener datos de la persona desde localStorage y preparar el estado inicial de líderes
-  const getInitialLideres = () => {
-    const person = JSON.parse(localStorage.getItem("person") || "{}");
-    const role = localStorage.getItem("role") || "";
-    if (person && (person.FirstName || person.IdentificationNumber || person.Email)) {
-      return [{
-        nombre: `${person.FirstName || ""} ${person.SecondName || ""} ${person.FirstLastName || ""} ${person.SecondLastName || ""}`.replace(/\s+/g, " ").trim(),
-        documento: person.IdentificationNumber || "",
-        correo: person.Email || "",
-        cargo: role,
-        telefono: person.Phone || ""
-      }];
-    }
-    return [{ nombre: "", documento: "", correo: "", cargo: "", telefono: "" }];
-  };
-
-  const [lideres, setLideres] = useState(getInitialLideres());
-
-  // Estado para IdentificacionInstitucional
-  const [identificacionInstitucional, setIdentificacionInstitucional] = useState({
-    name: "",
-    address: "",
-    phone: 0,
-    emailInstitucional: "",
-    departament: "",
-    commune: "",
-    municipality: "",
-    nameRector: "",
-    eZone: "",
-    caracteristic: "",
-    territorialEntity: "",
-    testsKnow: "",
-    codeDane: "" // Added missing property
-  });
-
-  // Estado para IdentificacionForm
-  const [identificacionForm, setIdentificacionForm] = useState<{
-    estado: string;
-    ubicaciones: string[];
-    otroTema: string;
-  }>({
+  // Estados de subformularios
+  const [lideres, setLideres] = useState<any[]>([{}, {}]); // Array para 2 líderes
+  const [identificacionForm, setIdentificacionForm] = useState<any>({
     estado: "",
     ubicaciones: [],
-    otroTema: ""
+    otroTema: "",
+    thematicLocation: ""
   });
-
-  // Validación de campos obligatorios
-  const validateForm = () => {
-    const errors = [];
-    if (!formData.nameExperiences) errors.push('El título de la experiencia es obligatorio');
-    if (!formData.code) errors.push('El código es obligatorio');
-    if (!lideres[0]?.nombre) errors.push('El nombre del líder es obligatorio');
-    if (!lideres[0]?.documento) errors.push('El documento del líder es obligatorio');
-    if (!lideres[0]?.correo) errors.push('El correo del líder es obligatorio');
-    if (!lideres[0]?.cargo) errors.push('El cargo del líder es obligatorio');
-    if (!lideres[0]?.telefono) errors.push('El teléfono del líder es obligatorio');
-    if (!identificacionInstitucional.name) errors.push('El nombre de la institución es obligatorio');
-    if (!identificacionInstitucional.codeDane) errors.push('El código DANE es obligatorio');
-    if (!formData.developmenttime) errors.push('La fecha de desarrollo es obligatoria');
-    if (!formData.stateId) errors.push('El estado es obligatorio');
-    if (!pdfFile) errors.push('Debes adjuntar un PDF');
-    // Puedes agregar más validaciones según tu modelo
-    return errors;
-  };
-
-  // Función handleSubmit para enviar el registro a la API
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const errors = validateForm();
-    if (errors.length > 0) {
-      alert(errors.join('\n'));
-      return;
-    }
-    const experiencia: any = {
-      ...formData,
-      institution: identificacionInstitucional,
-      lideres,
-      tematicaForm,
-      nivelesForm,
-      grupoPoblacional,
-      tiempo,
-      componentes,
-      seguimientoEvaluacion,
-      informacionApoyo,
-      documents: pdfFile ? [{ name: pdfFile.name, urlPdf: '', urlLink: '' }] : [],
-    };
-    try {
-      // Consumir el endpoint correcto
-      const res = await fetch('/api/Experience/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(experiencia),
-      });
-      if (!res.ok) throw new Error('Error al registrar la experiencia');
-      alert('Experiencia registrada correctamente');
-      onVolver();
-    } catch (err) {
-      alert('Error al registrar la experiencia');
-    }
-  };
-  const [tematicaForm, setTematicaForm] = useState({
-    area: "",
-    estrategias: "",
-    articulacion: "",
-    cobertura: "",
-    poblaciones: "",
-    pandemia: ""
-  });
-
-  // Estado para NivelesForm
-  const [nivelesForm, setNivelesForm] = useState({
+  const [tematicaForm, setTematicaForm] = useState<any>({});
+  const [nivelesForm, setNivelesForm] = useState<NivelesFormValue>({
     niveles: {
       Primaria: { checked: false, grados: [] },
       Secundaria: { checked: false, grados: [] },
-      Media: { checked: false, grados: [] },
-      "Otro(s)": { checked: false, grados: [], otro: "" }
-    }
+      Media: { checked: false, grados: [] }
+    },
   });
-
-  // Estado para GrupoPoblacionalForm
-  const [grupoPoblacional, setGrupoPoblacional] = useState<any>({});
-
-  // Estado para TiempoForm
+  const [grupoPoblacional, setGrupoPoblacional] = useState<number[]>([]);
   const [tiempo, setTiempo] = useState<any>({});
-
-  // Estado para Componentes
-  const [componentes, setComponentes] = useState<any>({});
-
-  // Estado para SeguimientoEvaluacion
+  const [objectiveExperience, setObjectiveExperience] = useState<any>({});
   const [seguimientoEvaluacion, setSeguimientoEvaluacion] = useState<any>({});
-
-  // Estado para InformacionApoyoForm
   const [informacionApoyo, setInformacionApoyo] = useState<any>({});
+  const [identificacionInstitucional, setIdentificacionInstitucional] = useState<any>({});
+  const [pdfFile, setPdfFile] = useState<any>({});
 
-  // Estado para PDF
-  const [pdfFile, setPdfFile] = useState<File | null>(null);
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-  // Manejar cambios en los inputs
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    // 1) DEVELOPMENTTIME -> ISO string
+    const developmenttimeIso = formData.developmenttime
+      ? new Date(formData.developmenttime).toISOString()
+      : "";
+
+    // 2) GRADES -> convertimos nivelesForm a array y filtramos solo los grados válidos
+    const nivelesArray: Nivel[] = Object.values(nivelesForm.niveles);
+
+    const grades: { gradeId: number; description: string }[] = nivelesArray
+      .flatMap((nivel) => nivel.grados)
+      .filter((g): g is Grade => g !== undefined && typeof g.gradeId === "number")
+      .map((g) => ({
+        gradeId: g.gradeId,
+        description: g.description || "",
+      }));
+
+    // 3) POPULATION GRADE IDS
+    const populationGradeIds = Array.isArray(grupoPoblacional) ? grupoPoblacional : [];
+
+    // 4) OBJECTIVES
+    const objectives = [
+      {
+        descriptionProblem: objectiveExperience.descriptionProblem || "",
+        objectiveExperience: objectiveExperience.objectiveExperience || "",
+        enfoqueExperience: objectiveExperience.enfoqueExperience || "",
+        methodologias: objectiveExperience.methodologias || "",
+        innovationExperience: objectiveExperience.innovationExperience || "",
+        resulsExperience: seguimientoEvaluacion.resulsExperience || "",
+        sustainabilityExperience: seguimientoEvaluacion.sustainabilityExperience || "",
+        tranfer: seguimientoEvaluacion.tranfer || "",
+        summary: informacionApoyo.summary || "",
+        metaphoricalPhrase: informacionApoyo.metaphoricalPhrase || "",
+        testimony: informacionApoyo.testimony || "",
+        followEvaluation: seguimientoEvaluacion.followEvaluation || "",
+      },
+    ];
+
+    // 5) DOCUMENTS
+    const documents = pdfFile
+      ? [
+        {
+          name: pdfFile.name || "Documento PDF",
+          urlPdf: pdfFile.urlLink || "",
+          urlLink: pdfFile.urlLink || "",
+        },
+      ]
+      : [];
+
+    // 6) HISTORY EXPERIENCES
+    const historyExperiences = [
+      {
+        action: "Creación",
+        tableName: "Experience",
+        userId: formData.userId || 1,
+        stateId: 1,
+      },
+    ];
+
+    // 7) PAYLOAD FINAL
+    const payload = {
+      nameExperiences: identificacionInstitucional.nameExperiences,
+      code: formData.code,
+      nameFirstLeader: lideres[0]?.nameFirstLeader || "",
+      firstIdentityDocument: lideres[0]?.firstIdentityDocument || "",
+      firdtEmail: lideres[0]?.firdtEmail || "",
+      firstPosition: lideres[0]?.firstPosition || "",
+      firstPhone: lideres[0]?.firstPhone || 0,
+
+      nameSecondLeader: lideres[1]?.nameFirstLeader || "",
+      secondIdentityDocument: lideres[1]?.firstIdentityDocument || "",
+      secondEmail: lideres[1]?.firdtEmail || "",
+      secondPosition: lideres[1]?.firstPosition || "",
+      secondPhone: lideres[1]?.firstPhone || 0,
+
+      thematicLocation: identificacionForm.thematicLocation || "",
+      stateId: formData.stateId || 0,
+      thematicLineIds: formData.thematicLineIds?.length
+        ? formData.thematicLineIds
+        : tematicaForm.thematicLineIds || [],
+
+      grades: grades,
+      populationGradeIds: populationGradeIds,
+      developmenttime: tiempo.developmenttime || "",
+      recognition: tiempo.recognition || "",
+      socialization: tiempo.socialization || "",
+      userId: localStorage.getItem("userId") || 0,
+
+      institution: {
+        name: identificacionInstitucional.name || "",
+        address: identificacionInstitucional.address || "",
+        phone: identificacionInstitucional.phone || 0,
+        codeDane: identificacionInstitucional.codeDane || "",
+        emailInstitucional: identificacionInstitucional.emailInstitucional || "",
+        departament: identificacionInstitucional.departament || "",
+        municipality: identificacionInstitucional.municipality || "",
+        commune: identificacionInstitucional.commune || "",
+        nameRector: identificacionInstitucional.nameRector || "",
+        eZone: identificacionInstitucional.eZone || "",
+        caracteristic: identificacionInstitucional.caracteristic || "",
+        territorialEntity: identificacionInstitucional.territorialEntity || "",
+        testsKnow: identificacionInstitucional.testsKnow || "",
+      },
+
+      documents: documents,
+      objectives: objectives,
+      historyExperiences: historyExperiences,
+
+
+    };
+
+    console.log("Objeto enviado al backend:", JSON.stringify(payload, null, 2));
+
+    try {
+      setErrorMessage("");
+      const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "";
+      const endpoint = `${API_BASE}/api/Experience/register`;
+
+      const token = localStorage.getItem("token");
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        let errorText = "Error al registrar la experiencia";
+        try {
+          const errorData = await res.json();
+          errorText =
+            errorData?.message ?? errorData?.error ?? (typeof errorData === "string" ? errorData : errorText);
+        } catch {
+          try {
+            const text = await res.text();
+            if (text) errorText = text;
+          } catch { }
+        }
+        setErrorMessage(errorText);
+        return;
+      }
+
+      alert("Experiencia registrada correctamente");
+      onVolver();
+    } catch (err: any) {
+      setErrorMessage(err?.message || "Error inesperado al registrar la experiencia");
+    }
   };
 
   return (
     <div className="p-6 bg-white rounded-lg shadow max-h-[80vh] overflow-y-auto">
-      <button
-        onClick={onVolver}
-        className="mb-4 text-sky-600 hover:underline"
-      >
+      {errorMessage && (
+        <div className="mb-4 p-3 bg-red-100 text-red-700 rounded border border-red-300">
+          <strong>Error:</strong> {errorMessage}
+        </div>
+      )}
+
+      <button onClick={onVolver} className="mb-4 text-sky-600 hover:underline">
         ← Volver
       </button>
 
-  <form onSubmit={handleSubmit}>
-        {/* Secciones como componentes */}
-        <IdentificacionInstitucional
-          value={identificacionInstitucional}
-          onChange={setIdentificacionInstitucional}
-        />
-        <LideresForm
-          lideres={lideres}
-          setLideres={setLideres}
-        />
-        <IdentificacionForm
-          value={identificacionForm}
-          onChange={setIdentificacionForm}
-        />
-        <TematicaForm
-          value={tematicaForm}
-          onChange={setTematicaForm}
-        />
-        <NivelesForm
-          value={nivelesForm}
-          onChange={setNivelesForm}
-        />
-        <GrupoPoblacionalForm
-          value={grupoPoblacional}
-          onChange={setGrupoPoblacional}
-        />
-        <TiempoForm
-          value={tiempo}
-          onChange={setTiempo}
-        />
-        <Componentes
-          value={componentes}
-          onChange={setComponentes}
-        />
-        <SeguimientoEvaluacion
-          value={seguimientoEvaluacion}
-          onChange={setSeguimientoEvaluacion}
-        />
-        <InformacionApoyoForm
-          value={informacionApoyo}
-          onChange={setInformacionApoyo}
-        />
+      <form onSubmit={handleSubmit}>
+        <IdentificacionInstitucional value={identificacionInstitucional} onChange={setIdentificacionInstitucional} />
+        <LideresForm value={lideres} onChange={setLideres} />
+        <IdentificacionForm value={identificacionForm} onChange={setIdentificacionForm} />
+        <TematicaForm value={tematicaForm} onChange={setTematicaForm} />
+        <NivelesForm value={nivelesForm} onChange={setNivelesForm} />
+        <GrupoPoblacionalForm value={grupoPoblacional} onChange={setGrupoPoblacional} />
+        <TiempoForm value={tiempo} onChange={setTiempo} />
+        <Componentes value={objectiveExperience} onChange={setObjectiveExperience} />
+        <SeguimientoEvaluacion value={seguimientoEvaluacion} onChange={setSeguimientoEvaluacion} />
+        <InformacionApoyoForm value={informacionApoyo} onChange={setInformacionApoyo} />
 
-        {/* PDF Uploader */}
         <div className="my-6">
-          <PDFUploader onFileSelect={setPdfFile} />
+          <PDFUploader value={pdfFile} onChange={setPdfFile} />
           {pdfFile && (
             <div className="mt-2 text-center">
               <span className="font-semibold">PDF seleccionado:</span> {pdfFile.name}
@@ -255,13 +257,8 @@ const AddExperience: React.FC<AddExperienceProps> = ({ onVolver }) => {
           )}
         </div>
 
-
-        {/* Botón de enviar */}
         <div className="mt-6 text-center">
-          <button
-            type="submit"
-            className="bg-sky-500 text-white px-4 py-2 rounded hover:bg-sky-600 "
-          >
+          <button type="submit" className="bg-sky-500 text-white px-4 py-2 rounded hover:bg-sky-600">
             Guardar Experiencia
           </button>
         </div>
@@ -271,3 +268,6 @@ const AddExperience: React.FC<AddExperienceProps> = ({ onVolver }) => {
 };
 
 export default AddExperience;
+
+
+

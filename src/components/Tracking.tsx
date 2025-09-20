@@ -3,18 +3,7 @@ import configApi from "../Api/Config/Config";
 import { FollowUp } from "../Api/Types/FollowUp";
 
 const Tracking = () => {
-  const [trackingData, setTrackingData] = useState<FollowUp>({
-    totalExperiences: 0,
-    experiencesNaciente: 0,
-    experiencesCreciente: 0,
-    experiencesInspiradora: 0,
-    totalExperiencesRegistradas: 0,
-    totalExperiencesCreadas: 0,
-    totalInstitutionsWithExperiences: 0,
-    totalTeachersWithExperiences: 0,
-    totalExperiencesWithComments: 0,
-    totalExperiencesTestsKnow: 0,
-  });
+  const [trackingData, setTrackingData] = useState<FollowUp | undefined>(undefined);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -41,6 +30,7 @@ const Tracking = () => {
   }, []);
 
   if (error) return <div className="text-center py-10 text-red-500">{error}</div>;
+  if (!trackingData) return <div className="text-center py-10 text-gray-500">Cargando...</div>;
 
   // Puedes mapear trackingData aquí si la estructura lo permite
   // Ejemplo: trackingData?.totalExperiences, etc.
@@ -192,7 +182,7 @@ const Tracking = () => {
         {/* Texto */}
         <div>
           <p className="text-gray-500 text-sm">Cantidad de docentes formados mediante las rutas a la significación</p>
-          <p className="text-2xl font-bold text-blue-600">{trackingData?.totalTeachersWithExperiences}</p>
+          <p className="text-2xl font-bold text-blue-600">{trackingData?.totalTeachersRegistered}</p>
         </div>
       </div>
 

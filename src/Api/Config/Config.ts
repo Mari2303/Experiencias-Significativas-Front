@@ -22,14 +22,18 @@ export const saveToken = (token: string, p0: number) => {
   localStorage.setItem("token", token);
 };
 
+export const saveUserId = (userId: number) => {
+  localStorage.setItem("userId", userId.toString());
+}
+
 // Login: obtiene el token y lo guarda en localStorage con expiración
 export const login = async (username: string, password: string) => {
   const response = await configApi.post("/auth/login", { username, password });
-  const token =
-    response.data?.token ||
-    response.data?.accessToken ||
-    response.data?.jwt ||
-    response.data?.data?.token;
+  const token = response.data?.token;
+  const userId = response.data?.userId;
+  if (userId) {
+    saveUserId(userId);
+  }
   if (token) {
     saveToken(token, 60);
   }

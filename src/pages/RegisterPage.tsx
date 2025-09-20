@@ -9,6 +9,9 @@ import { DataSelectRequest } from "../Api/Types/HelperTypes";
 
 
 const RegisterPage: React.FC = () => {
+  // ...existing code...
+  const [codigoDaneFocus, setCodigoDaneFocus] = useState(false);
+  const [emailInstitucionalFocus, setEmailInstitucionalFocus] = useState(false);
   const [PrimerNombre, setNombre] = useState("");
   const [SegundoNombre, setSegundoNombre] = useState("");
   const [PrimerApellido, setPrimerApellido] = useState("");
@@ -171,9 +174,9 @@ useEffect(() => {
 
 {/* Sección derecha con formulario */}
       <div className="relative z-20 flex items-center justify-center w-167 h-full ">
-      <div className="bg-white/70 p-10 rounded-lg shadow-md w-full max-w-3xl">
+  <div className="bg-white/70 p-6 md:p-10 rounded-lg shadow-md w-full max-w-3xl">
         <h2 className="text-5xl font-bold text-center mb-6">Registro</h2>
-        <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
+  <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
             
      
           {/* Campos individuales */}
@@ -243,28 +246,50 @@ useEffect(() => {
             <label className="block text-sm font-medium text-gray-700">Número de Documento:</label>
             <input
               type="text"
+              inputMode="numeric"
+              pattern="[0-9]*"
               value={NumeroDocumento}
-              onChange={(e) => setNumeroDocumento(e.target.value)}
+              onChange={(e) => {
+                const val = e.target.value.replace(/[^0-9]/g, "");
+                setNumeroDocumento(val);
+              }}
               required
               className="mt-1 block w-70 border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
             />
           </div>
 
-          <div>
+          <div className="relative">
             <label className="block text-sm font-medium text-gray-700">Código DANE:</label>
-            <select
+            <input
+              type="text"
               value={CodigoDane}
-              onChange={(e) => setCodigoDane(e.target.value)}
+              onChange={e => setCodigoDane(e.target.value)}
+              onFocus={() => setCodigoDaneFocus(true)}
+              onBlur={() => setTimeout(() => setCodigoDaneFocus(false), 100)}
               required
               className="mt-1 block w-70 border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-            >
-              <option value="">Seleccione...</option>
-              {codigoDaneOptions.map((option) => (
-                <option key={option.id} value={option.id}>
-                  {option.id}
-                </option>
-              ))}
-            </select>
+              placeholder="Seleccione o escriba..."
+              autoComplete="off"
+            />
+            {codigoDaneFocus && (
+              <ul className="absolute left-0 z-10 bg-white border border-gray-300 rounded-md w-70 mt-1 max-h-40 overflow-y-auto shadow-lg" style={{ minWidth: '100%' }}>
+                {(CodigoDane
+                  ? codigoDaneOptions.filter(opt => String(opt.id).toLowerCase().includes(CodigoDane.toLowerCase()))
+                  : codigoDaneOptions
+                ).map(opt => (
+                  <li
+                    key={opt.id}
+                    className="px-3 py-2 cursor-pointer hover:bg-indigo-100"
+                    onMouseDown={() => { setCodigoDane(String(opt.id)); setCodigoDaneFocus(false); }}
+                  >
+                    {opt.id}
+                  </li>
+                ))}
+                {(CodigoDane && codigoDaneOptions.filter(opt => String(opt.id).toLowerCase().includes(CodigoDane.toLowerCase())).length === 0) && (
+                  <li className="px-3 py-2 text-gray-400">Sin coincidencias</li>
+                )}
+              </ul>
+            )}
           </div>
 
           <div>
@@ -278,21 +303,38 @@ useEffect(() => {
             />
           </div>
 
-          <div>
+          <div className="relative">
             <label className="block text-sm font-medium text-gray-700">Correo Institucional:</label>
-            <select
-    value={emailInstitucional}
-    onChange={(e) => setEmailInstitucional(e.target.value)}
-    required
-    className="mt-1 block w-70 border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-  >
-    <option value="">Seleccione...</option>
-    {emailInstitucionalOptions.map((email) => (
-      <option key={email.id} value={email.displayText}>
-        {email.displayText}
-      </option>
-    ))}
-  </select>
+            <input
+              type="text"
+              value={emailInstitucional}
+              onChange={e => setEmailInstitucional(e.target.value)}
+              onFocus={() => setEmailInstitucionalFocus(true)}
+              onBlur={() => setTimeout(() => setEmailInstitucionalFocus(false), 100)}
+              required
+              className="mt-1 block w-70 border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+              placeholder="Seleccione o escriba..."
+              autoComplete="off"
+            />
+            {emailInstitucionalFocus && (
+              <ul className="absolute left-0 z-10 bg-white border border-gray-300 rounded-md w-70 mt-1 max-h-40 overflow-y-auto shadow-lg" style={{ minWidth: '100%' }}>
+                {(emailInstitucional
+                  ? emailInstitucionalOptions.filter(opt => opt.displayText.toLowerCase().includes(emailInstitucional.toLowerCase()))
+                  : emailInstitucionalOptions
+                ).map(opt => (
+                  <li
+                    key={opt.id}
+                    className="px-3 py-2 cursor-pointer hover:bg-indigo-100"
+                    onMouseDown={() => { setEmailInstitucional(opt.displayText); setEmailInstitucionalFocus(false); }}
+                  >
+                    {opt.displayText}
+                  </li>
+                ))}
+                {(emailInstitucional && emailInstitucionalOptions.filter(opt => opt.displayText.toLowerCase().includes(emailInstitucional.toLowerCase())).length === 0) && (
+                  <li className="px-3 py-2 text-gray-400">Sin coincidencias</li>
+                )}
+              </ul>
+            )}
           </div>
 
           <div>
@@ -309,9 +351,14 @@ useEffect(() => {
           <div>
             <label className="block text-sm font-medium text-gray-700">Teléfono:</label>
             <input
-              type="Number"
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]*"
               value={telefono}
-              onChange={(e) => setTelefono(String(e.target.value))}
+              onChange={(e) => {
+                const val = e.target.value.replace(/[^0-9]/g, "");
+                setTelefono(val);
+              }}
               required
               className="mt-1 block w-70 border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
             />
@@ -334,7 +381,7 @@ useEffect(() => {
           <div className="md:col-span-2 flex justify-center">
             <button
               type="submit"
-              className="w-120 bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500"
+              className="w-120 bg-indigo-600 text-white py-2 px-4 !rounded-xl hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500"
             >
               Registrarse
             </button>
