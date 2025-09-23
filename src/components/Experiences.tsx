@@ -215,7 +215,7 @@ const Experiences = ({ onAgregar }: ExperiencesProps) => {
       <ExperienceModal show={showModal} onClose={handleClose} />
       {/* Modal de Evaluación */}
       {showEvaluation && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1100]">
+  <div className="fixed inset-0 flex justify-center items-center z-[1100]">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl mx-2 md:mx-0 p-0 relative flex flex-col overflow-y-auto max-h-[90vh]">
             <button
               onClick={handleCloseEvaluation}

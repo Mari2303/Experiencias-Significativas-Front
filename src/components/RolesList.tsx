@@ -50,7 +50,7 @@ const EditRoleForm: React.FC<EditRoleFormProps> = ({ role, onClose, onUpdated })
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+  <div className="fixed inset-0 flex items-center justify-center z-50">
       <form onSubmit={handleSubmit} className="bg-white p-6 rounded-xl shadow-lg w-full max-w-md">
         <h3 className="text-xl font-bold mb-4 text-sky-700">Editar Rol</h3>
         <label className="block mb-2 font-semibold">Código</label>
@@ -110,7 +110,7 @@ const AddRoleForm: React.FC<AddRoleFormProps> = ({ onClose, onAdded }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+  <div className="fixed inset-0 flex items-center justify-center z-50">
       <form onSubmit={handleSubmit} className="bg-white p-6 rounded-xl shadow-lg w-full max-w-md">
         <h3 className="text-xl font-bold mb-4 text-sky-700">Agregar Rol</h3>
         <label className="block mb-2 font-semibold">Código</label>
@@ -175,7 +175,7 @@ const RolesList: React.FC = () => {
           onClick={() => setAddRoleOpen(true)}
         >Agregar Rol</button>
       </div>
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto ">
         <table className="min-w-full border border-gray-200 rounded-lg">
           <thead className="bg-sky-100">
             <tr>

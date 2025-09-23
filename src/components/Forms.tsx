@@ -57,7 +57,7 @@ const EditForm: React.FC<EditFormProps> = ({ form, onClose, onUpdated }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+  <div className="fixed inset-0 flex items-center justify-center z-50">
       <form onSubmit={handleSubmit} className="bg-white p-6 rounded-xl shadow-lg w-full max-w-md">
         <h3 className="text-xl font-bold mb-4 text-sky-700">Editar Formulario</h3>
         <label className="block mb-2 font-semibold">Nombre</label>
@@ -120,7 +120,7 @@ const AddForm: React.FC<{ onClose: () => void; onAdded: () => void }> = ({ onClo
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+  <div className="fixed inset-0 flex items-center justify-center z-50">
       <form onSubmit={handleSubmit} className="bg-white p-6 rounded-xl shadow-lg w-full max-w-md">
         <h3 className="text-xl font-bold mb-4 text-sky-700">Agregar Formulario</h3>
         <label className="block mb-2 font-semibold">Nombre</label>
@@ -188,6 +188,7 @@ const Forms: React.FC = () => {
       fetchForms();
     } catch (err: any) {
       setDeleteError("No se puede eliminar el formulario porque tiene registros relacionados.");
+      setLoading(false); // Asegura que no se muestre el loader ni cambie de vista
     }
   };
 
@@ -268,7 +269,7 @@ const Forms: React.FC = () => {
         />
       )}
       {deleteError && (
-        <div className="fixed inset-0 bg-white bg-opacity-70 flex justify-center items-center z-[1100] overflow-auto p-2 sm:p-4">
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1100] overflow-auto p-2 sm:p-4">
           <div className="bg-white rounded-xl shadow-lg p-6 max-w-md w-full text-center">
             <h3 className="text-xl font-bold mb-4 text-red-600">Error al eliminar</h3>
             <p className="mb-4 text-gray-700">{deleteError}</p>

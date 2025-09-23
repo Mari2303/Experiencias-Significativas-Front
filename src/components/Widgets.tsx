@@ -75,13 +75,24 @@ const Widgets: React.FC = () => {
           ) : experiencias.length === 0 ? (
             <div className="text-gray-500">No hay experiencias para este eje temático.</div>
           ) : (
-            <ul className="space-y-2">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
               {experiencias.map(exp => (
-                <li key={exp.id} className="bg-white rounded-xl shadow p-4 border border-sky-100">
-                  <span className="font-semibold text-sky-700">ID Experiencia:</span> {exp.experienceId}
-                </li>
+                <div
+                  key={exp.id}
+                  className="relative border rounded-xl p-6 flex flex-col items-center justify-center shadow-sm hover:shadow-lg transition duration-200 cursor-pointer bg-white w-70 h-56"
+                >
+                  <img
+                    src="/images/Experiencias.png"
+                    alt="icono"
+                    className="w-40 h-16 mb-3"
+                  />
+                  <div className="mb-2 font-semibold text-sky-700 text-base">ID: {exp.experienceId}</div>
+                  <button className="bg-gray-100 rounded px-4 py-2 mt-2 text-sm font-semibold">
+                    Visitar Experiencia
+                  </button>
+                </div>
               ))}
-            </ul>
+            </div>
           )}
         </div>
       )}

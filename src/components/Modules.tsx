@@ -46,7 +46,7 @@ const AddModuleForm: React.FC<AddModuleFormProps> = ({ onClose, onAdded }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+  <div className="fixed inset-0 flex items-center justify-center z-50">
       <form onSubmit={handleSubmit} className="bg-white p-6 rounded-xl shadow-lg w-full max-w-md">
         <h3 className="text-xl font-bold mb-4 text-sky-700">Agregar Módulo</h3>
         <label className="block mb-2 font-semibold">Nombre</label>
@@ -103,7 +103,7 @@ const EditModuleForm: React.FC<EditModuleFormProps> = ({ module, onClose, onUpda
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+  <div className="fixed inset-0 flex items-center justify-center z-50">
       <form onSubmit={handleSubmit} className="bg-white p-6 rounded-xl shadow-lg w-full max-w-md">
         <h3 className="text-xl font-bold mb-4 text-sky-700">Editar Módulo</h3>
         <label className="block mb-2 font-semibold">Nombre</label>
