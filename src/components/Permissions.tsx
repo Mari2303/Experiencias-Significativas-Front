@@ -134,6 +134,7 @@ const Permissions: React.FC = () => {
   const [addPermissionOpen, setAddPermissionOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   const fetchPermissions = () => {
     const token = localStorage.getItem("token");
@@ -194,11 +195,34 @@ const Permissions: React.FC = () => {
                   <td className="py-2 px-4 border-b">{permission.code}</td>
                   <td className="py-2 px-4 border-b">{permission.name}</td>
                   <td className="py-2 px-4 border-b">{permission.description}</td>
-                  <td className="py-2 px-4 border-b">
+                  <td className="py-2 px-4 border-b flex gap-2">
                     <button
                       className="px-3 py-1 rounded bg-sky-600 text-white hover:bg-sky-700 text-sm"
                       onClick={() => setEditPermission(permission)}
                     >Editar</button>
+                    <button
+                      className="px-3 py-1 rounded bg-red-500 text-white hover:bg-red-700 text-sm"
+                      onClick={async () => {
+                        const token = localStorage.getItem("token");
+                        try {
+                          await axios.put(`/api/Permission/${permission.id}`, {
+                            ...permission,
+                            state: false,
+                            deletedAt: new Date().toISOString(),
+                          }, {
+                            headers: { Authorization: `Bearer ${token}` },
+                          });
+                          setLoading(true);
+                          fetchPermissions();
+                        } catch (err: any) {
+                          if (err?.response?.status === 400 && err?.response?.data?.message) {
+                            setDeleteError(err.response.data.message);
+                          } else {
+                            setDeleteError("No se puede eliminar este Permiso porque todavía tiene registros relacionados activos. Por favor, desactiva primero sus datos asociados antes de eliminarlo.");
+                          }
+                        }
+                      }}
+                    >Eliminar</button>
                   </td>
                 </tr>
               ))
@@ -224,6 +248,19 @@ const Permissions: React.FC = () => {
             fetchPermissions();
           }}
         />
+      )}
+      {/* Modal de error al eliminar permiso */}
+      {deleteError && (
+        <div className="fixed inset-0 bg-white bg-opacity-50 flex justify-center items-center z-[1100] overflow-auto p-2 sm:p-4">
+          <div className="bg-white p-6 rounded-xl shadow-lg w-full max-w-md text-center">
+            <h3 className="text-xl font-bold mb-4 text-red-700">No se puede eliminar el Permiso</h3>
+            <p className="mb-6 text-gray-700">{deleteError}</p>
+            <button
+              className="px-4 py-2 rounded bg-sky-600 text-white hover:bg-sky-700"
+              onClick={() => setDeleteError(null)}
+            >Cerrar</button>
+          </div>
+        </div>
       )}
     </div>
   );

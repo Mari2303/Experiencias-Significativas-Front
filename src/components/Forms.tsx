@@ -149,6 +149,7 @@ const Forms: React.FC = () => {
   const [addFormOpen, setAddFormOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   const fetchForms = () => {
     const token = localStorage.getItem("token");
@@ -160,7 +161,7 @@ const Forms: React.FC = () => {
       })
       .then((res) => {
         if (Array.isArray(res.data.data)) {
-          setForms(res.data.data);
+          setForms(res.data.data.filter((f: Form) => f.state !== false));
         } else {
           setForms([]);
         }
@@ -171,6 +172,24 @@ const Forms: React.FC = () => {
         setLoading(false);
       });
   };
+  const handleDelete = async (form: Form) => {
+    const token = localStorage.getItem("token");
+    try {
+      await axios.put(`/api/Form/${form.id}`, {
+        ...form,
+        state: false,
+        deletedAt: new Date().toISOString(),
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setLoading(true);
+      fetchForms();
+    } catch (err: any) {
+      setDeleteError("No se puede eliminar el formulario porque tiene registros relacionados.");
+    }
+  };
 
   useEffect(() => {
     fetchForms();
@@ -180,7 +199,7 @@ const Forms: React.FC = () => {
   if (error) return <div>{error}</div>;
 
   return (
-    <div className="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-lg overflow-y-auto scrollbar-hide" style={{maxHeight: '80vh'}}>
+  <div className="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-lg overflow-y-auto scrollbar-hide" style={{maxHeight: '80vh'}}>
       <h2 className="text-2xl font-bold text-sky-700 mb-6 text-center">Lista de Formularios</h2>
       <div className="flex justify-end mb-4">
         <button
@@ -213,11 +232,15 @@ const Forms: React.FC = () => {
                   <td className="py-2 px-4 border-b">{form.description}</td>
                   <td className="py-2 px-4 border-b">{form.icon}</td>
                   <td className="py-2 px-4 border-b">{form.order}</td>
-                  <td className="py-2 px-4 border-b">
+                  <td className="py-2 px-4 border-b flex gap-2">
                     <button
                       className="px-3 py-1 rounded bg-sky-600 text-white hover:bg-sky-700 text-sm"
                       onClick={() => setEditForm(form)}
                     >Editar</button>
+                    <button
+                      className="px-3 py-1 rounded bg-red-500 text-white hover:bg-red-600 text-sm"
+                      onClick={() => handleDelete(form)}
+                    >Eliminar</button>
                   </td>
                 </tr>
               ))
@@ -243,6 +266,18 @@ const Forms: React.FC = () => {
             fetchForms();
           }}
         />
+      )}
+      {deleteError && (
+        <div className="fixed inset-0 bg-white bg-opacity-70 flex justify-center items-center z-[1100] overflow-auto p-2 sm:p-4">
+          <div className="bg-white rounded-xl shadow-lg p-6 max-w-md w-full text-center">
+            <h3 className="text-xl font-bold mb-4 text-red-600">Error al eliminar</h3>
+            <p className="mb-4 text-gray-700">{deleteError}</p>
+            <button
+              className="px-4 py-2 rounded bg-sky-600 text-white hover:bg-sky-700"
+              onClick={() => setDeleteError(null)}
+            >Cerrar</button>
+          </div>
+        </div>
       )}
     </div>
   );

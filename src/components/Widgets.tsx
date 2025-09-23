@@ -1,80 +1,90 @@
 // src/components/Widgets.tsx
-import React from "react";
+import React, { useState } from "react";
 
 const Widgets: React.FC = () => {
+  const [selectedEje, setSelectedEje] = useState<number | null>(null);
+  const [experiencias, setExperiencias] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  React.useEffect(() => {
+    if (selectedEje === null) return;
+    setLoading(true);
+    setError(null);
+    const token = localStorage.getItem("token");
+    fetch("/api/ExperienceLineThematic/getAll", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data.data)) {
+          setExperiencias(data.data.filter((item: any) => item.lineThematicId === selectedEje));
+        } else {
+          setExperiencias([]);
+        }
+        setLoading(false);
+      })
+      .catch(() => {
+        setError("Error al cargar experiencias");
+        setLoading(false);
+      });
+  }, [selectedEje]);
+  const ejes = [
+    { id: 1, label: "Educación Ambiental", img: "/images/EducacionAmbiental.png", imgClass: "w-15" },
+    { id: 2, label: "Ciencia y Tecnología", img: "/images/Ciencia.png", imgClass: "w-20" },
+    { id: 3, label: "Interculturalidad Bilingüismo", img: "/images/books.png", imgClass: "w-15" },
+    { id: 4, label: "Arte, Cultura y Patrimonio", img: "/images/Arte.png", imgClass: "w-20" },
+    { id: 5, label: "Habilidades Comunicativas", img: "/images/Habilidades.png", imgClass: "w-15" },
+    { id: 6, label: "Acádemica Curricular", img: "/images/Acádemica.png", imgClass: "w-15" },
+    { id: 7, label: "Inclusión Diversidad", img: "/images/inclusion.png", imgClass: "w-15" },
+    { id: 8, label: "Convivencia Escolar (Ciencias Sociales y Políticas)", img: "/images/convivencia.png", imgClass: "w-15" },
+    { id: 9, label: "Danza, Deporte y Recreación", img: "/images/deporte.png", imgClass: "w-20" },
+  ];
   return (
     <div>
       <div className="font-bold text-[#00aaff] text-[28.242px] w-full">
-          <p>Ejes temáticos</p>
-        </div>
-  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-3">
-        {/* Widget 1 */}
-      <div className="bg-white p-9 rounded-lg shadow-md w-70 h-35 text-center">
-        <h6 className="text-lg font-semibold text-gray-800">
-          <img src="/images/EducacionAmbiental.png" alt="" className="mx-auto mb-2 w-15" />
-          Educación Ambiental
-        </h6>
+        <p>Ejes temáticos</p>
       </div>
-
-      <div className="bg-white p-9 rounded-lg shadow-md w-70 h-35 text-center">
-        <h6 className="text-lg font-semibold text-gray-800">
-          <img src="/images/Ciencia.png" alt="" className="mx-auto mb-2 w-20 " />
-          Ciencia y Tecnología
-        </h6>
-      </div>
-
-      <div className="bg-white p-7 rounded-lg shadow-md w-70 h-35 text-center">
-        <h6 className="text-lg font-semibold text-gray-800">
-          <img src="/images/books.png" alt="" className="mx-auto mb-2 w-15" />
-          Interculturalidad Bilingüismo
-        </h6>
-      </div>
-
-      <div className="bg-white p-4 rounded-lg shadow-md w-70 h-35 text-center">
-        <h6 className="text-lg font-semibold text-gray-800">
-          <img src="/images/Arte.png" alt="" className="mx-auto mb-2 w-20" />
-          Arte, Cultura y Patrimonio
-        </h6>
-      </div>
-
-      <div className="bg-white p-4 rounded-lg shadow-md w-70 h-35 text-center">
-        <h6 className="text-lg font-semibold text-gray-800">
-          <img src="/images/Habilidades.png" alt="" className="mx-auto mb-2 w-15" />
-          Habilidades Comunicativas
-        </h6>
-      </div>
-
-      <div className="bg-white p-10 rounded-lg shadow-md w-70 h-35 text-center">
-        <h6 className="text-lg font-semibold text-gray-800">
-          <img src="/images/Acádemica.png" alt="" className="mx-auto mb-2 w-15" />
-          Acádemica Curricular
-        </h6>
-      </div>
-
-      <div className="bg-white p-8 rounded-lg shadow-md w-70 h-35 text-center">
-        <h6 className="text-lg font-semibold text-gray-800">
-          <img src="/images/inclusion.png" alt="" className="mx-auto mb-2 w-15" />
-          Inclusión Diversidad
-        </h6>
-      </div>
-
-      <div className="bg-white p-6 rounded-lg shadow-md w-70 h-35 text-center">
-        <h6 className="text-lg font-semibold text-gray-800">
-          <img src="/images/convivencia.png" alt="" className="mx-auto mb-2 w-15" />
-          Convivencia Escolar (Ciencias Sociales y Políticas)
-        </h6>
-      </div>
-
-      <div className="bg-white p-8 rounded-lg shadow-md w-70 h-35 text-center">
-        <h6 className="text-lg font-semibold text-gray-800">
-          <img src="/images/deporte.png" alt="" className="mx-auto mb-2 w-20" />
-          Danza, Deporte y Recreación
-        </h6>
-      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-3">
+        {ejes.map(eje => (
+          <button
+            key={eje.id}
+            className={`bg-white p-6 rounded-lg shadow-md w-70 h-35 text-center border-2 ${selectedEje === eje.id ? 'border-[#00aaff]' : 'border-transparent'}`}
+            onClick={() => setSelectedEje(eje.id)}
+          >
+            <h6 className="text-lg font-semibold text-gray-800">
+              <img src={eje.img} alt="" className={`mx-auto mb-2 ${eje.imgClass}`} />
+              {eje.label}
+            </h6>
+          </button>
+        ))}
       </div>
       <div className="mt-10 font-bold text-[#00aaff] text-[28.359px] w-full">
         <p>Experiencias</p>
       </div>
+      {selectedEje && (
+        <div className="mt-4">
+          {loading ? (
+            <div>Cargando experiencias...</div>
+          ) : error ? (
+            <div className="text-red-500">{error}</div>
+          ) : experiencias.length === 0 ? (
+            <div className="text-gray-500">No hay experiencias para este eje temático.</div>
+          ) : (
+            <ul className="space-y-2">
+              {experiencias.map(exp => (
+                <li key={exp.id} className="bg-white rounded-xl shadow p-4 border border-sky-100">
+                  <span className="font-semibold text-sky-700">ID Experiencia:</span> {exp.experienceId}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
     </div>
   );
 };

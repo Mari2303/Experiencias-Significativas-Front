@@ -135,6 +135,7 @@ const RolesList: React.FC = () => {
   const [addRoleOpen, setAddRoleOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   const fetchRoles = () => {
     const token = localStorage.getItem("token");
@@ -195,11 +196,45 @@ const RolesList: React.FC = () => {
                   <td className="py-2 px-4 border-b">{role.code}</td>
                   <td className="py-2 px-4 border-b">{role.name}</td>
                   <td className="py-2 px-4 border-b">{role.description}</td>
-                  <td className="py-2 px-4 border-b">
+                  <td className="py-2 px-4 border-b flex gap-2">
                     <button
                       className="px-3 py-1 rounded bg-sky-600 text-white hover:bg-sky-700 text-sm"
                       onClick={() => setEditRole(role)}
                     >Editar</button>
+                    <button
+                      className="px-3 py-1 rounded bg-red-500 text-white hover:bg-red-700 text-sm"
+                      onClick={async () => {
+                        const token = localStorage.getItem("token");
+                        try {
+                          const res = await axios.get(`/api/User/getAll`, {
+                            headers: { Authorization: `Bearer ${token}` },
+                          });
+                          const users = Array.isArray(res.data.data) ? res.data.data : [];
+                          console.log("Usuarios:", users);
+                          console.log("Rol a eliminar:", role);
+                          const hasRelation = users.some((u: any) => u.roleId === role.id);
+                          if (hasRelation) {
+                            setDeleteError("No se puede eliminar este Rol porque todavía tiene usuarios vinculados. Por favor, desactiva primero sus datos asociados antes de eliminarlo.");
+                            return;
+                          }
+                          await axios.put(`/api/Role/${role.id}`, {
+                            ...role,
+                            state: false,
+                            deletedAt: new Date().toISOString(),
+                          }, {
+                            headers: { Authorization: `Bearer ${token}` },
+                          });
+                          setLoading(true);
+                          fetchRoles();
+                        } catch (err: any) {
+                          if (err?.response?.data?.message) {
+                            setDeleteError(err.response.data.message);
+                          } else {
+                            setDeleteError("No se puede eliminar este Rol por un error inesperado.");
+                          }
+                        }
+                      }}
+                    >Eliminar</button>
                   </td>
                 </tr>
               ))
@@ -226,6 +261,19 @@ const RolesList: React.FC = () => {
           }}
         />
       )}
+    {/* Modal de error al eliminar rol */}
+    {deleteError && (
+      <div className="fixed inset-0 bg-white bg-opacity-50 flex justify-center items-center z-[1100] overflow-auto p-2 sm:p-4">
+        <div className="bg-white p-6 rounded-xl shadow-lg w-full max-w-md text-center">
+          <h3 className="text-xl font-bold mb-4 text-red-700">No se puede eliminar el Rol</h3>
+          <p className="mb-6 text-gray-700">{deleteError}</p>
+          <button
+            className="px-4 py-2 rounded bg-sky-600 text-white hover:bg-sky-700"
+            onClick={() => setDeleteError(null)}
+          >Cerrar</button>
+        </div>
+      </div>
+    )}
     </div>
   );
 };
