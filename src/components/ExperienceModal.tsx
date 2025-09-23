@@ -21,7 +21,7 @@ const ExperienceModal: React.FC<ExperienceModalProps> = ({ show, onClose, experi
       })
         .then(res => {
           // Buscar la experiencia por id
-          setExperience(res.data?.data ?? null);
+          setExperience(res?.data ?? null);
           console.log(res);
         })
         .catch(() => setExperience(null));
