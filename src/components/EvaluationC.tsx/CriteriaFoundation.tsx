@@ -17,7 +17,7 @@ const CriteriaFoundation: React.FC = () => {
 				<p className="mb-6 text-gray-800">
 					Aún es incipiente o se está ampliando la relación de la experiencia con los elementos del PEI o de los PEC, los planes de vida y de etnodesarrollo, así como con el PMI. Los referentes teóricos y metodológicos están en proceso de formulación, consolidación o validación.
 				</p>
-                <div className="flex flex-col gap-4">
+			<div className="flex flex-row gap-8">
 						<label className="inline-flex items-center cursor-pointer">
 							<input type="radio" name="fundamentacion1" className="custom-radio" value="0" />
 							<span className="ml-2">0</span>
@@ -36,7 +36,7 @@ const CriteriaFoundation: React.FC = () => {
 					<p className="mb-6 text-gray-800">
 						La experiencia se relaciona claramente con alguno o varios elementos del PEI o PEC, los planes de vida y de etnodesarrollo y del PMI fortaleciendo así al EE. En la descripción de los referentes conceptuales y metodológicos, se evidencia cómo se fortalece la orientación teórica y metodológica.
 					</p>
-					<div className="flex flex-col gap-4">
+					<div className="flex flex-row gap-8">
 						<label className="inline-flex items-center cursor-pointer">
 							<input type="radio" name="fundamentacion1" className="custom-radio" value="3" />
 							<span className="ml-2">3</span>
@@ -57,7 +57,7 @@ const CriteriaFoundation: React.FC = () => {
 					<p className="mb-6 text-gray-800">
 						Es clara la relación lograda por la experiencia con el PEI o el PEC, los planes de vida y de etnodesarrollo y con el PMI, y ha sido o puede ser referente para otros establecimientos educativos. Se han validado los elementos de soporte teórico y las metodologías de la experiencia con los pares académicos y la comunidad.
 					</p>
-					<div className="flex flex-col gap-4">
+					<div className="flex flex-row gap-8">
 						<label className="inline-flex items-center cursor-pointer">
 							<input type="radio" name="fundamentacion2" className="custom-radio" value="6" />
 							<span className="ml-2">6</span>

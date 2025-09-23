@@ -7,6 +7,12 @@ import Tracking from "../components/Tracking";
 import Experiences from "../components/Experiences";
 import AddExperience from "../components/AddExperience"; // <-- nuevo
 import Evaluation from "../components/Evaluation";
+import UserList from "../components/UserList";
+import RolesList from "../components/RolesList";
+import Permissions from "../components/Permissions";
+import Modules from "../components/Modules";
+import Forms from "../components/Forms";
+import UsersRol from "../components/UsersRol";
 
 const DashboardAdmin: React.FC = () => {
   const [activeContent, setActiveContent] = useState("dashboard");
@@ -18,13 +24,19 @@ const DashboardAdmin: React.FC = () => {
 
       <main className="flex-1 p-8 transition-all duration-300 ease-in-out overflow-hidden">
         {activeContent === "dashboard" && <Widgets />}
-  {activeContent === "seguimiento" && <Tracking />}
-        {activeContent === "evaluacion" && <Evaluation />}
-        {activeContent === "experiencias" && (
+  {activeContent === "tracking" && <Tracking />}
+        {activeContent === "evaluation" && <Evaluation />}
+        {activeContent === "users" && <UserList />}
+        {activeContent === "roles" && <RolesList />}
+        {activeContent === "permissions" && <Permissions />}
+        {activeContent === "modules" && <Modules />}
+        {activeContent === "forms" && <Forms />}
+        {activeContent === "usersRol" && <UsersRol />}
+        {activeContent === "experiences" && (
           <Experiences onAgregar={() => setActiveContent("agregar-experiencia")} />
         )}
         {activeContent === "agregar-experiencia" && (
-            <AddExperience onVolver={() => setActiveContent("experiencias")} />
+            <AddExperience onVolver={() => setActiveContent("experiences")} />
         )}
       </main>
     </div>

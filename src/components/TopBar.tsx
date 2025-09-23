@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import perfilImg from "../../public/images/perfil.png";
 import { FaSearch, FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { BiLogOut } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
@@ -80,9 +81,10 @@ const TopBar: React.FC = () => {
             onClick={() => setOpenMenu(!openMenu)}
           >
             <img
-              src="https://cdn-icons-png.flaticon.com/512/847/847969.png"
+              src={perfilImg}
               alt="Avatar"
               className="w-8 h-8 rounded-full"
+              style={{ objectFit: "cover" }}
             />
             <span>{userName}</span>
             {openMenu ? <FaChevronUp /> : <FaChevronDown />}

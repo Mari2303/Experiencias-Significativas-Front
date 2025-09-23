@@ -17,7 +17,7 @@ const CriteriaMonitoring: React.FC = () => {
 				<p className="mb-6 text-gray-800">
 					La metodología y/o mecanismos definidos para realizar el seguimiento y la valoración periódica del proceso y los resultados de la experiencia significativa están en construcción.
 				</p>
-				<div className="flex flex-col gap-4">
+			<div className="flex flex-row gap-8">
 					<label className="inline-flex items-center cursor-pointer">
 						<input type="radio" name="seguimiento" className="custom-radio" value="0" />
 						<span className="ml-2">0</span>
@@ -36,12 +36,7 @@ const CriteriaMonitoring: React.FC = () => {
 					<p className="mb-6 text-gray-800">
 						Existe una metodología y/o mecanismos que permiten realizar seguimiento y valoración periódica del proceso y los resultados de la experiencia significativa. Se identifican y formulan acciones para fortalecer la metodología y/o los mecanismos dirigidos a la consecución y el análisis de la información, con el fin de realizar el seguimiento y la valoración de la experiencia, involucrando a la comunidad educativa.
 					</p>
-					<select className="w-48 border rounded p-2 mb-6">
-						<option value="">Elegir</option>
-						<option value="parcial">Parcial</option>
-						<option value="total">Total</option>
-						<option value="ninguno">Ninguno</option>
-					</select>
+					
 				</div>
 				<hr className="my-8 border-gray-300" />
 				{/* Segundo bloque extendido de criterio */}
@@ -49,7 +44,7 @@ const CriteriaMonitoring: React.FC = () => {
 					<p className="mb-6 text-gray-800">
 						Adoptan una metodología y/o mecanismos que se reconocen a nivel institucional para efectuar seguimiento y valoración a la ejecución de la experiencia significativa, para la transformación de los componentes propios de esta y el fortalecimiento de las áreas de gestión del establecimiento educativo, que sirvan como referente para otros que así lo requieran. En el seguimiento y valoración de la experiencia participan diferentes actores de la comunidad educativa.
 					</p>
-					<div className="flex flex-col gap-4">
+					<div className="flex flex-row gap-8">
 						<label className="inline-flex items-center cursor-pointer">
 							<input type="radio" name="seguimiento2" className="custom-radio" value="6" />
 							<span className="ml-2">6</span>

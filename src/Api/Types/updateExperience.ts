@@ -1,14 +1,22 @@
 export interface UpdateExperience {
-  experienceId: number;
-  nameExperiences: string;
-  developmenttime: string;
-  nameFirstLeader: string;
-  stateId: number;
-  name: string;
-  department: string;
-  municipality: string;
-  codeDane: string;
-  urlPdf: string;
-  urlLink: string;
-  criterias: any[];
+	experienceId: number;
+	experience: {
+		nameExperiences: string;
+		developmenttime: string;
+		nameFirstLeader: string;
+		stateId: number;
+	};
+	institution: {
+		name: string;
+		department: string;
+		municipality: string;
+		codeDane: string;
+	};
+	documents: Array<{
+		urlPdf: string;
+		urlLink: string;
+	}>;
+	criterias: Array<{
+		name: string;
+	}>;
 }

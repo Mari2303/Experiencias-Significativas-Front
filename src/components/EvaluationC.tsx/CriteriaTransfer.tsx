@@ -17,7 +17,7 @@ const CriteriaTransfer: React.FC = () => {
 				<p className="mb-6 text-gray-800">
 					Faltan procesos, metodologías, mecanismos o medios para dar a conocer dentro del establecimiento educativo la concepción, el desarrollo y los resultados de la experiencia.
 				</p>
-				<div className="flex flex-col gap-4">
+			<div className="flex flex-row gap-8">
 					<label className="inline-flex items-center cursor-pointer">
 						<input type="radio" name="transferencia" className="custom-radio" value="0" />
 						<span className="ml-2">0</span>
@@ -36,12 +36,7 @@ const CriteriaTransfer: React.FC = () => {
 					<p className="mb-6 text-gray-800">
 						Se definen y organizan los procesos, metodologías, mecanismos o medios para dar a conocer el desarrollo y los resultados de la experiencia dentro del establecimiento educativo. Se evidencian acciones para la difusión y socialización de la experiencia. A través de la sistematización y el análisis de los resultados de la experiencia significativa, se identifican acciones para transferir aprendizajes dentro del EE que sirvan para el fortalecimiento de la misma.
 					</p>
-					<select className="w-48 border rounded p-2 mb-6">
-						<option value="">Elegir</option>
-						<option value="parcial">Parcial</option>
-						<option value="total">Total</option>
-						<option value="ninguno">Ninguno</option>
-					</select>
+					
 				</div>
 				<hr className="my-8 border-gray-300" />
 				{/* Segundo bloque extendido de criterio */}
@@ -49,7 +44,7 @@ const CriteriaTransfer: React.FC = () => {
 					<p className="mb-6 text-gray-800">
 						Se han institucionalizado procesos, metodologías, mecanismos o medios de difusión con el fin de dar a conocer en la comunidad educativa la concepción, el desarrollo y los resultados de la experiencia significativa para la socialización en nuevos escenarios educativos. Diferentes procesos, metodologías, mecanismos, medios o aprendizajes de la experiencia significativa se han transferido de manera exitosa dentro y fuera del EE
 					</p>
-					<div className="flex flex-col gap-4">
+					<div className="flex flex-row gap-8">
 						<label className="inline-flex items-center cursor-pointer">
 							<input type="radio" name="transferencia2" className="custom-radio" value="6" />
 							<span className="ml-2">6</span>

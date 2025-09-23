@@ -1,7 +1,8 @@
 
-import React from "react";
-
-
+import React, { useState } from "react";
+import { Stepper, Step, StepLabel, Button } from "@mui/material";
+import axios from "axios";
+import type { Evaluation } from "../Api/Types/evaluation";
 import EvaluatorInfo from "./EvaluationC.tsx/EvaluatorInfo";
 import ExperienceInfo from "./EvaluationC.tsx/ExperienceInfo";
 import CriterioPertinencia from "./EvaluationC.tsx/CriterioPertinencia";
@@ -15,37 +16,109 @@ import CriteriaSustainability from "./EvaluationC.tsx/CriteriaSustainability ";
 import CriteriaTransfer from "./EvaluationC.tsx/CriteriaTransfer";
 import CriteriaFinalConcept from "./EvaluationC.tsx/CriteriaFinalConcept";
            
-const Evaluation: React.FC = () => {
+
+function Evaluation() {
+	const [activeStep, setActiveStep] = useState(0);
+	const [form, setForm] = useState<Evaluation>({
+		evaluationId: 0,
+		typeEvaluation: "",
+		accompanimentRole: "",
+		comments: "",
+		evaluationResult: "",
+		experienceId: 0,
+		experienceName: "",
+		stateId: 0,
+		institutionName: "",
+		criteriaEvaluations: [],
+		thematicLineNames: [],
+	});
+	const [isSaving, setIsSaving] = useState(false);
+	const [error, setError] = useState<string | null>(null);
+
+	const steps = [
+		"Evaluador",
+		"Experiencia",
+		"Pertinencia",
+		"Fundamentación",
+		"Innovación",
+		"Resultados",
+		"Empoderamiento",
+		"Monitoreo",
+		"Transformación",
+		"Sostenibilidad",
+		"Transferencia",
+		"Concepto Final"
+	];
+
+	const handleNext = () => {
+		setActiveStep((prev) => Math.min(prev + 1, steps.length - 1));
+	};
+	const handleBack = () => {
+		setActiveStep((prev) => Math.max(prev - 1, 0));
+	};
+
+	const handleChange = (changes: Partial<Evaluation>) => {
+		setForm((prev) => ({ ...prev, ...changes }));
+	};
+
+	const handleSubmit = async () => {
+		setIsSaving(true);
+		setError(null);
+		const token = localStorage.getItem("token");
+		try {
+			await axios.post("/api/Evaluation/create", form, {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			});
+			setIsSaving(false);
+			alert("Evaluación guardada correctamente");
+		} catch (err) {
+			setError("Error al guardar la evaluación");
+			setIsSaving(false);
+		}
+	};
+
 	return (
-		<div className="min-h-screen bg-white-700 flex flex-col items-center justify-center pb-30" style={{ maxHeight: '100vh' }}>
-			<div className="w-full max-w-3xl bg-white rounded-lg shadow-md p-8 mt-3550">
-				{/* Header principal */}
-				<h1 className="text-4xl font-bold !text-[#00aaff]  text-center">
-					Formulario de Evaluación de Experiencias Significativas
-				</h1>
-				<h2 className="text-lg !text-[#00aaff] mb-8 text-center">
-					Sistema de evaluación para experiencias educativas
-				</h2>
-				{/* Secciones internas */}
-				<EvaluatorInfo />
-				<div className="-mt-2">
-					<ExperienceInfo />
-				</div>
-				   <div className="h-12" />
-				   <CriterioPertinencia />
-				   <CriteriaFoundation />
-                   <CriteriaInnovation />
-                   <CriteriaResults />
-                   <CriteriaEmpowerment />
-                   <CriteriaMonitoring />
-                   <CriteriaTransformation />
-                   <CriteriaSustainability />
-                   <CriteriaTransfer />
-                   <CriteriaFinalConcept />
+		<div className="w-full max-w-3xl bg-white rounded-lg shadow-md p-8 mx-auto">
+			{activeStep === 0 && (
+				<>
+					<h1 className="text-4xl font-bold !text-[#00aaff]  text-center mt-8">
+						Formulario de Evaluación de Experiencias Significativas
+					</h1>
+					<h2 className="text-lg !text-[#00aaff] mb-8 text-center">
+						Sistema de evaluación para experiencias educativas
+					</h2>
+				</>
+			)}
+
+			<div className="mt-8">
+				{activeStep === 0 && <EvaluatorInfo value={form} onChange={handleChange} />}
+				{activeStep === 1 && <ExperienceInfo value={form} onChange={handleChange} />}
+				{activeStep === 2 && <CriterioPertinencia value={form} onChange={handleChange} />}
+				{activeStep === 3 && <CriteriaFoundation value={form} onChange={handleChange} />}
+				{activeStep === 4 && <CriteriaInnovation value={form} onChange={handleChange} />}
+				{activeStep === 5 && <CriteriaResults value={form} onChange={handleChange} />}
+				{activeStep === 6 && <CriteriaEmpowerment value={form} onChange={handleChange} />}
+				{activeStep === 7 && <CriteriaMonitoring value={form} onChange={handleChange} />}
+				{activeStep === 8 && <CriteriaTransformation value={form} onChange={handleChange} />}
+				{activeStep === 9 && <CriteriaSustainability value={form} onChange={handleChange} />}
+				{activeStep === 10 && <CriteriaTransfer value={form} onChange={handleChange} />}
+				{activeStep === 11 && <CriteriaFinalConcept value={form} onChange={handleChange} />}
 			</div>
-          
+			<div className="flex justify-between mt-8">
+				<Button disabled={activeStep === 0} onClick={handleBack} variant="outlined">Atrás</Button>
+				{activeStep < steps.length - 1 ? (
+					<Button onClick={handleNext} variant="contained" color="primary">Siguiente</Button>
+				) : (
+					<Button onClick={handleSubmit} variant="contained" color="success" disabled={isSaving}>
+						{isSaving ? "Guardando..." : "Guardar"}
+					</Button>
+				)}
+			</div>
+			{error && <div className="text-red-500 text-center mt-4">{error}</div>}
 		</div>
 	);
-};
+}
 
 export default Evaluation;

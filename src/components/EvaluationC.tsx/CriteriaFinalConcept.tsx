@@ -37,7 +37,7 @@ const CriteriaFinalConcept: React.FC = () => {
         <label className="block font-medium mb-1 text-gray-700 mb-2">
           Estado de desarrollo en el que se encuentra actualmente la experiencia <span className="text-red-500">*</span>
         </label>
-        <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-4">
           <label className="inline-flex items-center cursor-pointer">
             <input type="radio" name="estado" className="custom-radio" />
             <span className="ml-2">Naciente</span>

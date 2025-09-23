@@ -1,7 +1,13 @@
 import React from "react";
+import type { Evaluation } from "../../Api/Types/evaluation";
 import "./radioCustom.css";
 
-const ExperienceInfo: React.FC = () => {
+interface Props {
+  value: Evaluation;
+  onChange: (changes: Partial<Evaluation>) => void;
+}
+
+const ExperienceInfo: React.FC<Props> = ({ value, onChange }) => {
   return (
     <>
       <div className="bg-gray-100 rounded-t-lg px-6 py-3 mb-6 mt-4">
@@ -16,19 +22,25 @@ const ExperienceInfo: React.FC = () => {
         <label className="block font-medium mb-1 text-gray-700">
           Seleccione la Institución Educativa a la que pertenece: <span className="text-red-500">*</span>
         </label>
-        <select className="w-full border rounded p-2 bg-white" defaultValue="">
-          <option value="" disabled>Elegir</option>
-          {/* Opciones dinámicas */}
-        </select>
+        <input
+          type="text"
+          className="w-full border rounded p-2 bg-white"
+          placeholder="Nombre de la institución"
+          value={value.institutionName}
+          onChange={e => onChange({ institutionName: e.target.value })}
+        />
       </div>
       <div className="mb-6">
         <label className="block font-medium mb-1 text-gray-700">
           Enfoque temático de la Experiencia Significativa <span className="text-red-500">*</span>
         </label>
-        <select className="w-full border rounded p-2 bg-white" defaultValue="">
-          <option value="" disabled>Elegir</option>
-          {/* Opciones dinámicas */}
-        </select>
+        <input
+          type="text"
+          className="w-full border rounded p-2 bg-white"
+          placeholder="Enfoque temático"
+          value={value.thematicLineNames[0] || ""}
+          onChange={e => onChange({ thematicLineNames: [e.target.value] })}
+        />
       </div>
       <div className="mb-6">
         <label className="block font-medium mb-1 text-gray-700 mb-2">
@@ -36,15 +48,33 @@ const ExperienceInfo: React.FC = () => {
         </label>
         <div className="flex flex-col gap-2">
           <label className="inline-flex items-center cursor-pointer">
-            <input type="radio" name="estado" className="custom-radio" />
+            <input
+              type="radio"
+              name="estado"
+              className="custom-radio"
+              checked={value.stateId === 1}
+              onChange={() => onChange({ stateId: 1 })}
+            />
             <span className="ml-2">Naciente</span>
           </label>
           <label className="inline-flex items-center">
-            <input type="radio" name="estado" className="custom-radio" />
+            <input
+              type="radio"
+              name="estado"
+              className="custom-radio"
+              checked={value.stateId === 2}
+              onChange={() => onChange({ stateId: 2 })}
+            />
             <span className="ml-2">Creciente</span>
           </label>
           <label className="inline-flex items-center si">
-            <input type="radio" name="estado" className=" custom-radio" />
+            <input
+              type="radio"
+              name="estado"
+              className="custom-radio"
+              checked={value.stateId === 3}
+              onChange={() => onChange({ stateId: 3 })}
+            />
             <span className="ml-2">Inspiradora</span>
           </label>
         </div>
@@ -53,10 +83,13 @@ const ExperienceInfo: React.FC = () => {
         <label className="block font-medium mb-1 text-gray-700">
           Nombre de la Experiencia Significativa. <span className="text-red-500">*</span>
         </label>
-        <select className="w-full border rounded p-2 bg-white" defaultValue="">
-          <option value="" disabled>Elegir</option>
-          {/* Opciones dinámicas */}
-        </select>
+        <input
+          type="text"
+          className="w-175 border rounded p-2 bg-white"
+          placeholder="Ingrese el nombre de la experiencia"
+          value={value.experienceName}
+          onChange={e => onChange({ experienceName: e.target.value })}
+        />
       </div>
     </>
   );

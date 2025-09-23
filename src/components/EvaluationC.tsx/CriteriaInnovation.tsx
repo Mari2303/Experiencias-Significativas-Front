@@ -19,7 +19,7 @@ const CriteriaInnovation: React.FC = () => {
 				<p className="mb-6 text-gray-800">
 					La ES se encuentra en un proceso de búsqueda y definición de acciones novedosas, de cambios significativos en el diseño y uso de métodos, materiales, contenidos y recursos tecnológicos y no tecnológicos, para propiciar aprendizajes significativos, el desarrollo integral y la transformación de las prácticas, culturas y políticas institucionales.
 				</p>
-				<div className="flex flex-col gap-4">
+			<div className="flex flex-row gap-8">
 					<label className="inline-flex items-center cursor-pointer">
 						<input type="radio" name="innovacion" className="custom-radio" value="0" />
 						<span className="ml-2">0</span>
@@ -50,7 +50,7 @@ const CriteriaInnovation: React.FC = () => {
 							<p className="mb-6 text-gray-800">
 								Se ha identificado, definido e iniciado la implementación de acciones novedosas, con cambios significativos en el diseño y uso de métodos, materiales, contenidos y recursos tecnológicos y no tecnológicos, para propiciar aprendizajes significativos, el desarrollo integral y la transformación de las prácticas, culturas y políticas institucionales.
 							</p>
-							<div className="flex flex-col gap-4">
+							<div className="flex flex-row gap-8">
 								<label className="inline-flex items-center cursor-pointer">
 									<input type="radio" name="innovacion1" className="custom-radio" value="6" />
 									<span className="ml-2">6</span>
@@ -79,7 +79,7 @@ const CriteriaInnovation: React.FC = () => {
 							<p className="mb-6 text-gray-800">
 								Se han implementado acciones novedosas, con cambios significativos en el diseño y uso de métodos, materiales, contenidos y recursos tecnológicos y no tecnológicos y se han validado con los pares académicos y la comunidad.
 							</p>
-							<div className="flex flex-col gap-4">
+							<div className="flex flex-row gap-8">
 								<label className="inline-flex items-center cursor-pointer">
 									<input type="radio" name="innovacion2" className="custom-radio" value="11" />
 									<span className="ml-2">11</span>

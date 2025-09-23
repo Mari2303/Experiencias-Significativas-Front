@@ -19,7 +19,7 @@ const CriteriaEmpowerment: React.FC = () => {
 				<p className="mb-6 text-gray-800">
 					La experiencia significativa permanece en el contexto del aula y es poco conocida por el establecimiento educativo. La aceptación, apropiación y participación de diferentes miembros de la comunidad educativa es incipiente.
 				</p>
-				<div className="flex flex-col gap-4">
+			<div className="flex flex-row gap-8">
 					<label className="inline-flex items-center cursor-pointer">
 						<input type="radio" name="empoderamiento" className="custom-radio" value="0" />
 						<span className="ml-2">0</span>
@@ -38,12 +38,7 @@ const CriteriaEmpowerment: React.FC = () => {
 							<p className="mb-6 text-gray-800">
 								El líder o los líderes han orientado estrategias para el reconocimiento, aceptación, apropiación y participación de la comunidad en la concepción y ejecución de la experiencia significativa en el establecimiento educativo y se han superado las dificultades encontradas.
 							</p>
-							<select className="w-48 border rounded p-2 mb-6">
-								<option value="">Elegir</option>
-								<option value="parcial">Parcial</option>
-								<option value="total">Total</option>
-								<option value="ninguno">Ninguno</option>
-							</select>
+							
 						</div>
 						<hr className="my-8 border-gray-300" />
 						{/* Segundo bloque extendido de criterio */}
@@ -51,7 +46,7 @@ const CriteriaEmpowerment: React.FC = () => {
 							<p className="mb-6 text-gray-800">
 								Se ha logrado una completa autonomía en el funcionamiento de la experiencia, con el apoyo de la comunidad educativa. Se evidencia reconocimiento, aceptación, apropiación y participación de la comunidad educativa en la experiencia significativa, de manera que esta ejerce un liderazgo activo sobre su ejecución.
 							</p>
-							<div className="flex flex-col gap-4">
+							<div className="flex flex-row gap-8">
 								<label className="inline-flex items-center cursor-pointer">
 									<input type="radio" name="empoderamiento2" className="custom-radio" value="6" />
 									<span className="ml-2">6</span>

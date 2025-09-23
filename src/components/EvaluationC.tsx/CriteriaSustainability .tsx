@@ -17,7 +17,7 @@ const CriteriaSustainability: React.FC = () => {
 				<p className="mb-6 text-gray-800">
 					Los mecanismos que garantizan el mantenimiento, fortalecimiento y consolidación de la experiencia significativa dentro del establecimiento educativo son incipientes.
 				</p>
-				<div className="flex flex-col gap-4">
+			<div className="flex flex-row gap-8">
 					<label className="inline-flex items-center cursor-pointer">
 						<input type="radio" name="sostenibilidad" className="custom-radio" value="0" />
 						<span className="ml-2">0</span>
@@ -36,12 +36,7 @@ const CriteriaSustainability: React.FC = () => {
 					<p className="mb-6 text-gray-800">
 						Contempla mecanismos que buscan generar acciones para el mantenimiento, fortalecimiento y consolidación de la experiencia significativa dentro del establecimiento educativo, dando continuidad o institucionalizando las actividades para el cumplimiento de los objetivos de la misma. Se plantean estrategias para articular las acciones de cooperación que recibe la experiencia por parte de otras entidades, a través de programas y proyectos externos al establecimiento educativo
 					</p>
-					<select className="w-48 border rounded p-2 mb-6">
-						<option value="">Elegir</option>
-						<option value="parcial">Parcial</option>
-						<option value="total">Total</option>
-						<option value="ninguno">Ninguno</option>
-					</select>
+				
 				</div>
 				<hr className="my-8 border-gray-300" />
 				{/* Segundo bloque extendido de criterio */}
@@ -49,7 +44,7 @@ const CriteriaSustainability: React.FC = () => {
 					<p className="mb-6 text-gray-800">
 						Existen acciones consolidadas que permiten garantizar la sostenibilidad de la experiencia, a partir de la institucionalización y apoyo de la comunidad educativa. Se implementan estrategias destinadas a la articulación de acciones de cooperación con otras entidades y/o instituciones públicas o privadas, a través de planes, programas y proyectos externos al establecimiento educativo.
 					</p>
-					<div className="flex flex-col gap-4">
+					<div className="flex flex-row gap-8">
 						<label className="inline-flex items-center cursor-pointer">
 							<input type="radio" name="sostenibilidad2" className="custom-radio" value="6" />
 							<span className="ml-2">6</span>

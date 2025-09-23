@@ -17,7 +17,7 @@ const CriteriaResults: React.FC = () => {
 				<p className="mb-6 text-gray-800">
 					Durante la implementación de la experiencia significativa, no se identifica la obtención de logros o son mínimos en relación con los objetivos propuestos. Los resultados obtenidos no han generado un impacto en la solución de las necesidades o problemáticas identificadas.
 				</p>
-				<div className="flex flex-col gap-4">
+			<div className="flex flex-row gap-8">
 					<label className="inline-flex items-center cursor-pointer">
 						<input type="radio" name="resultados" className="custom-radio" value="0" />
 						<span className="ml-2">0</span>
@@ -48,12 +48,7 @@ const CriteriaResults: React.FC = () => {
 							<p className="mb-6 text-gray-800">
 								La experiencia significativa evidencia logros parciales en relación con los objetivos propuestos. Los resultados obtenidos evidencian impacto en la solución parcial de las necesidades o problemáticas identificadas.
 							</p>
-							<select className="w-48 border rounded p-2 mb-6">
-								<option value="">Elegir</option>
-								<option value="parcial">Parcial</option>
-								<option value="total">Total</option>
-								<option value="ninguno">Ninguno</option>
-							</select>
+							
 						</div>
 						<hr className="my-8 border-gray-300" />
 						{/* Segundo bloque extendido de criterio */}
@@ -61,7 +56,7 @@ const CriteriaResults: React.FC = () => {
 							<p className="mb-6 text-gray-800">
 								Evidencia la obtención de todos los objetivos propuestos.  Los resultados obtenidos evidencian impacto en la solución total de las necesidades o problemáticas identificadas.
 							</p>
-							<div className="flex flex-col gap-4">
+							<div className="flex flex-row gap-8">
 								<label className="inline-flex items-center cursor-pointer">
 									<input type="radio" name="resultados2" className="custom-radio" value="11" />
 									<span className="ml-2">11</span>

@@ -1,6 +1,31 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { getEnum } from "../../Api/Services/Helper";
+import type { Evaluation } from "../../Api/Types/evaluation";
 
-const EvaluatorInfo: React.FC = () => {
+interface Props {
+  value: Evaluation;
+  onChange: (changes: Partial<Evaluation>) => void;
+}
+
+const EvaluatorInfo: React.FC<Props> = ({ value, onChange }) => {
+  const [evaluationTypes, setEvaluationTypes] = useState<{ id: number; displayText: string }[]>([]);
+
+  useEffect(() => {
+    const fetchEvaluationTypes = async () => {
+      const result = await getEnum("TypeEvaluation");
+      setEvaluationTypes(result || []);
+    };
+    fetchEvaluationTypes();
+  }, []);
+  const [roles, setRoles] = useState<{ id: number; displayText: string }[]>([]);
+
+  useEffect(() => {
+    const fetchRoles = async () => {
+      const result = await getEnum("AccompanimentRole");
+      setRoles(result || []);
+    };
+    fetchRoles();
+  }, []);
   return (
     <>
       <div className="bg-gray-100 rounded-t-lg px-6 py-3 mb-6 ">
@@ -16,24 +41,42 @@ const EvaluatorInfo: React.FC = () => {
           <label className="block font-medium mb-1 text-gray-700">
             Rol en el acompañamiento de la experiencia significativa <span className="text-red-500">*</span>
           </label>
-          <select className="w-full border rounded p-2 bg-white" defaultValue="">
+          <select
+            className="w-full border rounded p-2 bg-white"
+            value={value.accompanimentRole}
+            onChange={e => onChange({ accompanimentRole: e.target.value })}
+          >
             <option value="" disabled>Elegir</option>
+            {roles.map(role => (
+              <option key={role.id} value={role.displayText}>{role.displayText}</option>
+            ))}
           </select>
         </div>
         <div>
           <label className="block font-medium mb-4 text-gray-700">
             Nombre Completo <span className="text-red-500">*</span>
           </label>
-          <select className="w-full border rounded p-2 bg-white" defaultValue="">
-            <option value="" disabled>Elegir</option>
-          </select>
+          <input
+            type="text"
+            className="w-full border rounded p-2"
+            placeholder="Ingrese el nombre completo"
+            value={value.comments}
+            onChange={e => onChange({ comments: e.target.value })}
+          />
         </div>
         <div>
           <label className="block font-medium mb-1 text-gray-700">
             Tipo de evaluación que aplicará a la experiencia significativa <span className="text-red-500">*</span>
           </label>
-          <select className="w-full border rounded p-2 bg-white" defaultValue="">
+          <select
+            className="w-full border rounded p-2 bg-white"
+            value={value.typeEvaluation}
+            onChange={e => onChange({ typeEvaluation: e.target.value })}
+          >
             <option value="" disabled>Elegir</option>
+            {evaluationTypes.map(type => (
+              <option key={type.id} value={type.displayText}>{type.displayText}</option>
+            ))}
           </select>
         </div>
       </div>

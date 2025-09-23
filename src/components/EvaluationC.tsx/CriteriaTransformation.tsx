@@ -17,7 +17,7 @@ const CriteriaTransformation: React.FC = () => {
 				<p className="mb-6 text-gray-800">
 					Se encuentran proyectando procesos autorreflexivos y valorativos para reorganizar y actualizar elementos conceptuales, metodológicos e instrumentales, de acuerdo con los resultados de su implementación, con el propósito de generar acciones de mejoramiento tanto de la práctica, como del proceso educativo en general. No se identifica cómo ha aprendido de sus resultados, ni si los ha usado para su mejoramiento.
 				</p>
-				<div className="flex flex-col gap-4">
+			<div className="flex flex-row gap-8">
 					<label className="inline-flex items-center cursor-pointer">
 						<input type="radio" name="transformacion" className="custom-radio" value="0" />
 						<span className="ml-2">0</span>
@@ -36,12 +36,7 @@ const CriteriaTransformation: React.FC = () => {
 					<p className="mb-6 text-gray-800">
 						Existen o se están implementando nuevos elementos conceptuales, metodológicos e instrumentales, para generar, a lo largo del tiempo, acciones de mejoramiento tanto de la práctica, como del proceso educativo en general y en función del desarrollo integral de niños, niñas, adolescentes, jóvenes y adultos.
 					</p>
-					<select className="w-48 border rounded p-2 mb-6">
-						<option value="">Elegir</option>
-						<option value="parcial">Parcial</option>
-						<option value="total">Total</option>
-						<option value="ninguno">Ninguno</option>
-					</select>
+					
 				</div>
 				<hr className="my-8 border-gray-300" />
 				{/* Segundo bloque extendido de criterio */}
@@ -49,7 +44,7 @@ const CriteriaTransformation: React.FC = () => {
 					<p className="mb-6 text-gray-800">
 						La experiencia se ha convertido en punto de referencia en la implementación de elementos conceptuales, metodológicos, instrumentales para la formulación de acciones pedagógicas de los docentes del establecimiento educativo. Se identifican elementos que le permiten a la experiencia trascender como plan, programa, proyecto o intervención, aportando nuevos conocimientos para el desarrollo integral de los niños, niñas, adolescentes, jóvenes y adultos, de las áreas de gestión y de las prácticas, culturas y políticas institucionales.
 					</p>
-					<div className="flex flex-col gap-4">
+					<div className="flex flex-row gap-8">
 						<label className="inline-flex items-center cursor-pointer">
 							<input type="radio" name="transformacion2" className="custom-radio" value="6" />
 							<span className="ml-2">6</span>
