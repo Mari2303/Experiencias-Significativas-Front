@@ -1,5 +1,5 @@
 export interface CriteriaEvaluation {
-	score: number;
+	score: number[];
 	descriptionContribution: string;
 	evaluationId: number;
 	criteriaId: number;

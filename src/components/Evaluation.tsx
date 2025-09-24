@@ -15,9 +15,9 @@ import CriteriaTransformation from "./EvaluationC.tsx/CriteriaTransformation";
 import CriteriaSustainability from "./EvaluationC.tsx/CriteriaSustainability ";
 import CriteriaTransfer from "./EvaluationC.tsx/CriteriaTransfer";
 import CriteriaFinalConcept from "./EvaluationC.tsx/CriteriaFinalConcept";
-           
 
-function Evaluation() {
+
+function Evaluation({ experienceId }: { experienceId: number | null }) {
 	const [activeStep, setActiveStep] = useState(0);
 	const [form, setForm] = useState<Evaluation>({
 		evaluationId: 0,
@@ -30,10 +30,12 @@ function Evaluation() {
 		stateId: 0,
 		institutionName: "",
 		criteriaEvaluations: [],
-		thematicLineNames: [],
+		thematicLineNames: []
 	});
 	const [isSaving, setIsSaving] = useState(false);
 	const [error, setError] = useState<string | null>(null);
+	// Estados para validación y errores
+	// Eliminada validación y errores, solo conexión API
 
 	const steps = [
 		"Evaluador",
@@ -65,18 +67,22 @@ function Evaluation() {
 		setIsSaving(true);
 		setError(null);
 		const token = localStorage.getItem("token");
-		try {
-			await axios.post("/api/Evaluation/create", form, {
-				headers: {
-					Authorization: `Bearer ${token}`,
-				},
-			});
-			setIsSaving(false);
-			alert("Evaluación guardada correctamente");
-		} catch (err) {
-			setError("Error al guardar la evaluación");
-			setIsSaving(false);
-		}
+		console.log("Formulario a enviar:", form);
+		setIsSaving(false);
+		alert("Evaluación guardada correctamente");
+		// Aquí iría la lógica para enviar 'form' a la API
+		 try {
+		 	await axios.post("/api/Evaluation/create", form, {
+		 		headers: {
+		 			Authorization: `Bearer ${token}`,
+		 		},
+		 	});
+		 	setIsSaving(false);
+		 	alert("Evaluación guardada correctamente");
+		 } catch (err) {
+		 	setError("Error al guardar la evaluación");
+		 	setIsSaving(false);
+		 }
 	};
 
 	return (
@@ -93,8 +99,18 @@ function Evaluation() {
 			)}
 
 			<div className="mt-8">
-				{activeStep === 0 && <EvaluatorInfo value={form} onChange={handleChange} />}
-				{activeStep === 1 && <ExperienceInfo value={form} onChange={handleChange} />}
+				{activeStep === 0 && (
+					<EvaluatorInfo
+						value={form}
+						onChange={handleChange}
+					/>
+				)}
+				{activeStep === 1 && (
+					<ExperienceInfo
+						value={form}
+						onChange={handleChange}
+					/>
+				)}
 				{activeStep === 2 && <CriterioPertinencia value={form} onChange={handleChange} />}
 				{activeStep === 3 && <CriteriaFoundation value={form} onChange={handleChange} />}
 				{activeStep === 4 && <CriteriaInnovation value={form} onChange={handleChange} />}
@@ -109,7 +125,13 @@ function Evaluation() {
 			<div className="flex justify-between mt-8">
 				<Button disabled={activeStep === 0} onClick={handleBack} variant="outlined">Atrás</Button>
 				{activeStep < steps.length - 1 ? (
-					<Button onClick={handleNext} variant="contained" color="primary">Siguiente</Button>
+					<Button
+						onClick={handleNext}
+						variant="contained"
+						color="primary"
+					>
+						Siguiente
+					</Button>
 				) : (
 					<Button onClick={handleSubmit} variant="contained" color="success" disabled={isSaving}>
 						{isSaving ? "Guardando..." : "Guardar"}

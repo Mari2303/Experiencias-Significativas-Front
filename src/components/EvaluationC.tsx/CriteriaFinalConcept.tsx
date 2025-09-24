@@ -1,6 +1,14 @@
 import React from "react";
+import { Evaluation } from "../../Api/Types/evaluation";
 
-const CriteriaFinalConcept: React.FC = () => {
+interface CriteriaFinalConceptProps {
+  value: Evaluation;
+  onChange: (value: Evaluation) => void;
+  onSubmit?: () => void;
+  isSaving?: boolean;
+}
+
+const CriteriaFinalConcept: React.FC<CriteriaFinalConceptProps> = ({ value, onChange, onSubmit, isSaving }) => {
   return (
     <div className=" min-h-screen flex flex-col justify-between p-0">
       <div className="max-w-5xl w-full mx-auto">
@@ -29,40 +37,19 @@ const CriteriaFinalConcept: React.FC = () => {
             </span>
           </div>
         </div>
-        <div className="bg-white rounded-lg p-6 mb-8">
-          <p className="font-semibold text-gray-800 mb-4">
-            Respecto a la evaluación la experiencia significativa una vez analizado su evolución y trayectoria se valora como:
-          </p>
-          <div className="mb-6">
-        <label className="block font-medium mb-1 text-gray-700 mb-2">
-          Estado de desarrollo en el que se encuentra actualmente la experiencia <span className="text-red-500">*</span>
-        </label>
-                <div className="flex flex-col gap-4">
-          <label className="inline-flex items-center cursor-pointer">
-            <input type="radio" name="estado" className="custom-radio" />
-            <span className="ml-2">Naciente</span>
-          </label>
-          <label className="inline-flex items-center">
-            <input type="radio" name="estado" className="custom-radio" />
-            <span className="ml-2">Creciente</span>
-          </label>
-          <label className="inline-flex items-center si">
-            <input type="radio" name="estado" className=" custom-radio" />
-            <span className="ml-2">Inspiradora</span>
-          </label>
-        </div>
-        </div>
       </div>
       <div className="w-full flex justify-center pb-8">
         <button
           type="button"
           className="bg-sky-500 hover:bg-sky-600 text-white font-semibold py-3 px-16 rounded focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-opacity-50 text-lg transition-colors"
+          onClick={onSubmit}
+          disabled={isSaving}
         >
-          Enviar
+          {isSaving ? "Guardando..." : "Enviar"}
         </button>
       </div>
     </div>
-    </div>
+    
   );
 };
 

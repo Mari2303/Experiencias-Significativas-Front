@@ -201,6 +201,8 @@ const RolesList: React.FC = () => {
                       className="px-3 py-1 rounded bg-sky-600 text-white hover:bg-sky-700 text-sm"
                       onClick={() => setEditRole(role)}
                     >Editar</button>
+
+                    
                     <button
                       className="px-3 py-1 rounded bg-red-500 text-white hover:bg-red-700 text-sm"
                       onClick={async () => {
@@ -217,11 +219,7 @@ const RolesList: React.FC = () => {
                             setDeleteError("No se puede eliminar este Rol porque todavía tiene usuarios vinculados. Por favor, desactiva primero sus datos asociados antes de eliminarlo.");
                             return;
                           }
-                          await axios.put(`/api/Role/${role.id}`, {
-                            ...role,
-                            state: false,
-                            deletedAt: new Date().toISOString(),
-                          }, {
+                          await axios.delete(`/api/Role/${role.id}`, {
                             headers: { Authorization: `Bearer ${token}` },
                           });
                           setLoading(true);

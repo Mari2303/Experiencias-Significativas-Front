@@ -13,6 +13,7 @@ import Permissions from "../components/Permissions";
 import Modules from "../components/Modules";
 import Forms from "../components/Forms";
 import UsersRol from "../components/UsersRol";
+import FormModule from "../components/FormModule";
 
 const DashboardAdmin: React.FC = () => {
   const [activeContent, setActiveContent] = useState("dashboard");
@@ -32,8 +33,9 @@ const DashboardAdmin: React.FC = () => {
         {activeContent === "modules" && <Modules />}
         {activeContent === "forms" && <Forms />}
         {activeContent === "usersRol" && <UsersRol />}
+        {activeContent === "formModule" && <FormModule />}
         {activeContent === "experiences" && (
-          <Experiences onAgregar={() => setActiveContent("agregar-experiencia")} />
+        <Experiences onAgregar={() => setActiveContent("agregar-experiencia")} />
         )}
         {activeContent === "agregar-experiencia" && (
             <AddExperience onVolver={() => setActiveContent("experiences")} />
