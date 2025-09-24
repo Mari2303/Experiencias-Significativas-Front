@@ -15,12 +15,12 @@ const DashboardTeacher: React.FC = () => {
       <Sidebar setActiveContent={setActiveContent} />
 
       <main className="flex-1 p-8 transition-all duration-300 ease-in-out overflow-hidden bg-transparent">
-        {activeContent === "dashboardTeacher" && <StarT />}
-        {activeContent === "experiencias" && (
+        {activeContent === "dashboard" && <StarT />}
+        {activeContent === "experiences" && (
           <Experiences onAgregar={() => setActiveContent("agregar-experiencia")} />
         )}
         {activeContent === "agregar-experiencia" && (
-          <AgregarExperiencia onVolver={() => setActiveContent("experiencias")} />
+          <AgregarExperiencia onVolver={() => setActiveContent("experiences")} />
         )}
       </main>
     </div>

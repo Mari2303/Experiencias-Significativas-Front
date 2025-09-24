@@ -90,10 +90,10 @@ const TopBar: React.FC = () => {
             {openMenu ? <FaChevronUp /> : <FaChevronDown />}
 
       
-            
-            {/* Menú desplegable */}
+
+            {/* Menú desplegable con fondo negro translúcido */}
             {openMenu && (
-              <div className="absolute top-12 right-0 bg-white shadow-lg rounded-lg overflow-hidden w-44 z-10 flex flex-col">
+              <div className="absolute top-12 right-0 bg-white shadow-lg rounded-lg overflow-hidden w-44 z-[1000] flex flex-col">
                 <button
                   className="py-1 hover:bg-gray-100 text-center"
                   onClick={() => {

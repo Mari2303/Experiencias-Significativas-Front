@@ -29,11 +29,11 @@ const EvaluatorInfo: React.FC<Props> = ({ value, onChange }) => {
   return (
     <>
       <div className="bg-gray-100 rounded-t-lg px-6 py-3 mb-6 ">
-        <span className="text-lg font-semibold !text-[#00aaff]">
+        <span className="text-lg font-semibold !text-[#374151]">
           1. Información del Evaluador
         </span>
       </div>
-      <p className="!text-[#00aaff] text-sm mb-6 px-2">
+      <p className="!text-[#374151] text-sm mb-6 px-2">
         En esta sección se registra los datos básicos del evaluador asignado a cada una de las experiencias significativas
       </p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

@@ -1,7 +1,11 @@
 // src/components/Widgets.tsx
 import React, { useState } from "react";
 
+import ExperienceModal from "./ExperienceModal";
+
 const Widgets: React.FC = () => {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedExperienceId, setSelectedExperienceId] = useState<number | null>(null);
   const [selectedEje, setSelectedEje] = useState<number | null>(null);
   const [experiencias, setExperiencias] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
@@ -45,7 +49,7 @@ const Widgets: React.FC = () => {
     { id: 9, label: "Danza, Deporte y Recreación", img: "/images/deporte.png", imgClass: "w-20" },
   ];
   return (
-    <div>
+  <div>
       <div className="font-bold text-[#00aaff] text-[28.242px] w-full">
         <p>Ejes temáticos</p>
       </div>
@@ -87,7 +91,13 @@ const Widgets: React.FC = () => {
                     className="w-40 h-16 mb-3"
                   />
                   <div className="mb-2 font-semibold text-sky-700 text-base">ID: {exp.experienceId}</div>
-                  <button className="bg-gray-100 rounded px-4 py-2 mt-2 text-sm font-semibold">
+                  <button
+                    className="bg-gray-100 rounded px-4 py-2 mt-2 text-sm font-semibold"
+                    onClick={() => {
+                      setSelectedExperienceId(exp.experienceId);
+                      setModalOpen(true);
+                    }}
+                  >
                     Visitar Experiencia
                   </button>
                 </div>
@@ -95,6 +105,14 @@ const Widgets: React.FC = () => {
             </div>
           )}
         </div>
+      )}
+      {/* Modal de experiencia */}
+      {modalOpen && selectedExperienceId && (
+        <ExperienceModal
+          show={modalOpen}
+          onClose={() => setModalOpen(false)}
+          experienceId={selectedExperienceId}
+        />
       )}
     </div>
   );
