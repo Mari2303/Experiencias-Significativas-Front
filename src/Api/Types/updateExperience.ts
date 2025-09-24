@@ -5,6 +5,8 @@ export interface UpdateExperience {
 		developmenttime: string;
 		nameFirstLeader: string;
 		stateId: number;
+		evaluationResult: string;
+	
 	};
 	institution: {
 		name: string;

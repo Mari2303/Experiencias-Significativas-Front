@@ -21,7 +21,7 @@ const ExperienceModal: React.FC<ExperienceModalProps> = ({ show, onClose, experi
       })
         .then(res => {
           // Buscar la experiencia por id
-          setExperience(res?.data ?? null);
+           setExperience(res?.data ?? null);
           console.log(res);
         })
         .catch(() => setExperience(null));
@@ -82,21 +82,36 @@ const ExperienceModal: React.FC<ExperienceModalProps> = ({ show, onClose, experi
               <label className="block font-semibold mb-1">Municipio:</label>
               <input className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-200" placeholder="Ingrese el municipio" value={experience?.institution.municipality || ""} readOnly />
             </div>
-            <div>
-              <label className="block font-semibold mb-1">Criterios evaluados:</label>
-              <select className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-200" disabled>
-                <option>{experience?.criterias?.join(", ") || "Seleccione los criterios"}</option>
-              </select>
-            </div>
-            {/* Nueva estructura para los 4 campos finales */}
+<div>
+  <label className="block font-semibold mb-1">Criterios evaluados:</label>
+  <select
+    className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-200 cursor-not-allowed"
+    value={experience?.criterias?.[0]?.name || ""}
+    onChange={() => {}}
+  >
+    {experience?.criterias?.map((c, index) => (
+      <option key={index} value={c.name}>
+        {c.name}
+      </option>
+    ))}
+  </select>
+</div>
+
+
+    {/* Nueva estructura para los 4 campos finales */}
             <div className="col-span-2 grid grid-cols-2 gap-x-4 gap-y-4">
               <div>
                 <label className="block font-semibold mb-1">Código DANE:</label>
                 <input className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-200" placeholder="Ingrese el código DANE" value={experience?.institution.codeDane || ""} readOnly />
               </div>
-              <div>
-                <label className="block font-semibold mb-1">Estado actual:</label>
-                <input className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-200" placeholder="Ingrese el estado actual" value={experience?.experience.stateId || ""} readOnly />
+    <div>
+  <label className="block font-semibold mb-1">Estado actual:</label>
+  <input
+    className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-200"
+    placeholder="Estado actual"
+    value={experience?.experience?.evaluationResult || "Naciente"} // usamos el resultado que envía el backend
+    readOnly
+  />
               </div>
               <div>
                 <label className="block font-semibold mb-1">Adjuntar PDF</label>
