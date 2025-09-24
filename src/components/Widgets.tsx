@@ -90,7 +90,7 @@ const Widgets: React.FC = () => {
                     alt="icono"
                     className="w-40 h-16 mb-3"
                   />
-                  <div className="mb-2 font-semibold text-sky-700 text-base">ID: {exp.experienceId}</div>
+                  <div className="mb-2 font-semibold text-sky-700 text-base"></div>
                   <button
                     className="bg-gray-100 rounded px-4 py-2 mt-2 text-sm font-semibold"
                     onClick={() => {

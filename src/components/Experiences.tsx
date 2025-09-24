@@ -1,8 +1,8 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ExperienceModal from "./ExperienceModal";
 import Evaluation from "./Evaluation";
-import { set } from "react-hook-form";
+// import { set } from "react-hook-form";
 
 interface ExperiencesProps {
   onAgregar: () => void;
@@ -12,33 +12,37 @@ const Experiences = ({ onAgregar }: ExperiencesProps) => {
   const [showModal, setShowModal] = useState(false);
   const [showEvaluation, setShowEvaluation] = useState(false);
 
-  const [experienceList, setExperienceList] = useState([]); // Lista de experiencias
+  const [experienceList, setExperienceList] = useState<{ id: number }[]>([]); // Lista de experiencias
 
   const role = localStorage.getItem("role");
 
-  const experiencias = [
-    { id: 1, titulo: "Visitar Experiencia" },
-    { id: 2, titulo: "Visitar Experiencia" },
-    { id: 3, titulo: "Visitar Experiencia" },
-    { id: 4, titulo: "Visitar Experiencia" },
-  ];
+  // const experiencias = [
+  //   { id: 1, titulo: "Visitar Experiencia" },
+  //   { id: 2, titulo: "Visitar Experiencia" },
+  //   { id: 3, titulo: "Visitar Experiencia" },
+  //   { id: 4, titulo: "Visitar Experiencia" },
+  // ];
 
   const nuevas = [1, 2, 3];
+  const [selectedExperienceId, setSelectedExperienceId] = useState<number | null>(null);
 
-  const handleVisitarClick = () => {
-    setShowEvaluation(true);
-  };
-
-  const handleCloseEvaluation = () => {
-    setShowEvaluation(false);
-  };
-
-  const handleAgregarClick = () => {
+  const handleVisitarClick = (id: number) => {
+    setSelectedExperienceId(id);
     setShowModal(true);
   };
 
   const handleClose = () => {
     setShowModal(false);
+    setSelectedExperienceId(null);
+  };
+
+  // const handleAgregarClick = () => {
+  //   setShowModal(true);
+  //   setSelectedExperienceId(null);
+  // };
+
+  const handleCloseEvaluation = () => {
+    setShowEvaluation(false);
   };
 
   useEffect(() => {
@@ -153,49 +157,49 @@ const Experiences = ({ onAgregar }: ExperiencesProps) => {
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-10">
         {experienceList ? experienceList.map((exp) => (
-          <>
-            <div
-              key={`${exp.id}.1`}
-              className="relative border rounded-xl p-10 flex flex-col items-center justify-center shadow-sm hover:shadow-lg transition duration-200 cursor-pointer"
+          <div
+            key={exp.id}
+            className="relative border rounded-xl p-10 flex flex-col items-center justify-center shadow-sm hover:shadow-lg transition duration-200 cursor-pointer"
+          >
+            {/* Icono en la esquina superior derecha */}
+            <button
+              className="absolute top-3 right-3 text-gray-400 hover:text-blue-500"
+              aria-label="Icono"
+              onClick={() => handleVisitarClick(exp.id)}
             >
-              {/* Icono en la esquina superior derecha */}
-              <button
-                className="absolute top-3 right-3 text-gray-400 hover:text-blue-500"
-                aria-label="Icono"
-                onClick={handleVisitarClick}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="size-6"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="size-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"
-                  />
-                </svg>
-              </button>
-              {/* Resto del contenido de la tarjeta */}
-              <img
-                src="/images/Experiencias.png"
-                alt="icono"
-                className="w-40 h-17 mb-4"
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"
               />
-              <button className="bg-gray-100 rounded px-4 py-2 mt-2 font-semibold" onClick={handleAgregarClick}>
-                Visitar Experiencia
-              </button>
-            </div>
-            {/* Modal reutilizable para agregar experiencia */}
-            <ExperienceModal key={`${exp.id}.2`} show={showModal} onClose={handleClose} experienceId={exp.id}/>
-          </>
+            </svg>
+            </button>
+            {/* Resto del contenido de la tarjeta */}
+            <img
+              src="/images/Experiencias.png"
+              alt="icono"
+              className="w-40 h-17 mb-4"
+            />
+            <button className="bg-gray-100 rounded px-4 py-2 mt-2 font-semibold" onClick={() => handleVisitarClick(exp.id)}>
+              Visitar Experiencia
+            </button>
+          </div>
         )) : (
           <p>Cargando experiencias...</p>
         )}
       </div>
+      {/* Modal para mostrar la experiencia seleccionada */}
+      {showModal && (
+        <ExperienceModal show={showModal} onClose={handleClose} experienceId={selectedExperienceId ?? undefined} />
+      )}
 
       <div className="font-bold text-[#00aaff] text-[28.242px] w-full">
         <p>Registro de Nuevas Experiencias</p>

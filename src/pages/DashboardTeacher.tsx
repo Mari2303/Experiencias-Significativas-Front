@@ -7,7 +7,7 @@ import AgregarExperiencia from "../components/AddExperience"; // <-- nuevo
 
 
 const DashboardTeacher: React.FC = () => {
-  const [activeContent, setActiveContent] = useState("dashboardTeacher");
+  const [activeContent, setActiveContent] = useState("dashboard");
 
   return (
     <div className="flex flex-col min-h-screen w-full bg-cover bg-center">
