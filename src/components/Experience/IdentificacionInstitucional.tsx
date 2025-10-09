@@ -43,7 +43,12 @@ const IdentificacionInstitucional: React.FC<Props> = ({ value, onChange }) => {
             type="text"
             name="nameExperiences"
             value={value.nameExperiences || ""}
-            onChange={e => onChange({ ...value, nameExperiences: e.target.value })}
+            onChange={e =>
+    onChange({
+      ...value,
+      nameExperiences: e.target.value.replace(/[^A-Za-z\s]/g, ""), // solo letras y espacios
+    })
+  }
             className="w-full border rounded p-2 mt-1"
             placeholder="Nombre de la experiencia"
           />
@@ -110,7 +115,12 @@ const IdentificacionInstitucional: React.FC<Props> = ({ value, onChange }) => {
             type="text"
             name="name"
             value={value.name || ""}
-            onChange={e => onChange({ ...value, name: e.target.value })}
+            onChange={e =>
+    onChange({
+      ...value,
+      name: e.target.value.replace(/[^A-Za-z\s]/g, ""), // solo letras y espacios
+    })
+  }
             className="w-full border rounded p-2 mt-1"
             placeholder="Nombre del establecimiento"
           />
@@ -125,7 +135,12 @@ const IdentificacionInstitucional: React.FC<Props> = ({ value, onChange }) => {
             type="text"
             name="nameRector"
             value={value.nameRector || ""}
-            onChange={e => onChange({ ...value, nameRector: e.target.value })}
+            onChange={e =>
+    onChange({
+      ...value,
+      nameRector: e.target.value.replace(/[^A-Za-z\s]/g, ""),
+    })
+  }
             className="w-full border rounded p-2 mt-1"
             placeholder="Nombre del rector o director"
           />
@@ -136,7 +151,12 @@ const IdentificacionInstitucional: React.FC<Props> = ({ value, onChange }) => {
             type="text"
             name="departament"
             value={value.departament || ""}
-            onChange={e => onChange({ ...value, departament: e.target.value })}
+            onChange={e =>
+    onChange({
+      ...value,
+    departament: e.target.value.replace(/[^A-Za-z\s]/g, ""), // solo letras y espacios
+    })
+  }
             className="w-full border rounded p-2 mt-1"
             placeholder="Departamento"
           />
@@ -151,7 +171,12 @@ const IdentificacionInstitucional: React.FC<Props> = ({ value, onChange }) => {
             type="text"
             name="municipality"
             value={value.municipality || ""}
-            onChange={e => onChange({ ...value, municipality: e.target.value })}
+            onChange={e =>
+    onChange({
+      ...value,
+      municipality: e.target.value.replace(/[^A-Za-z\s]/g, ""), // solo letras y espacios
+    })
+  }
             className="w-full border rounded p-2 mt-1"
             placeholder="Municipio o ciudad"
           />
@@ -188,7 +213,13 @@ const IdentificacionInstitucional: React.FC<Props> = ({ value, onChange }) => {
             type="text"
             name="phone"
             value={value.phone || ""}
-            onChange={e => onChange({ ...value, phone: Number(e.target.value) })}
+            maxLength={10}
+  onChange={(e) =>
+    onChange({
+      ...value,
+      phone: Number(e.target.value.replace(/\D/g, "")), // solo números
+    })
+  }
             className="w-full border rounded p-2 mt-1"
             placeholder="Teléfonos de contacto"
           />

@@ -8,12 +8,12 @@ interface CriterioPertinenciaProps {
 
 
 const CriterioPertinencia: React.FC<CriterioPertinenciaProps> = ({ value, onChange }) => {
-	const CRITERIA_ID = 0; // ID fijo para Pertinencia (ajústalo según tu backend)
+const CRITERIA_ID = 1; // ID real para Pertinencia
 	// Buscar el criterio por ID, o inicializarlo
   const criteria =
     value.criteriaEvaluations.find((c) => c.criteriaId === CRITERIA_ID) ??
     {
-			score: [0, 0, 0],
+			score: 0,
 			descriptionContribution: "",
 			evaluationId: 0,
       criteriaId: CRITERIA_ID,
@@ -24,10 +24,10 @@ const CriterioPertinencia: React.FC<CriterioPertinenciaProps> = ({ value, onChan
     };
 
 	// Manejo de puntajes
-	const updateScore = (index: number, score: number) => {
+	const updateScore = (score: number) => {
 		const updatedCriteria: CriteriaEvaluation = {
 			...criteria,
-			score: criteria.score.map((v, i) => (i === index ? score : v)),
+			score,
 		};
 
 		onChange({
@@ -80,11 +80,11 @@ const CriterioPertinencia: React.FC<CriterioPertinenciaProps> = ({ value, onChan
 						<label key={num} className="inline-flex items-center cursor-pointer">
 							<input
 								type="radio"
-								name="pertinenciaGrupo1"
+								name="pertinencia"
 								className="custom-radio"
 								value={num}
-								checked={criteria.score[0] === num}
-								onChange={() => updateScore(0, num)}
+								checked={criteria.score === num}
+								onChange={() => updateScore(num)}
 							/>
 							<span className="ml-2">{num === -1 ? "No aplica" : num}</span>
 						</label>
@@ -101,11 +101,11 @@ const CriterioPertinencia: React.FC<CriterioPertinenciaProps> = ({ value, onChan
 						<label key={num} className="inline-flex items-center cursor-pointer">
 							<input
 								type="radio"
-								name="pertinenciaGrupo2"
+								name="pertinencia"
 								className="custom-radio"
 								value={num}
-								checked={criteria.score[1] === num}
-								onChange={() => updateScore(1, num)}
+								checked={criteria.score === num}
+								onChange={() => updateScore(num)}
 							/>
 							<span className="ml-2">{num}</span>
 						</label>
@@ -125,8 +125,8 @@ const CriterioPertinencia: React.FC<CriterioPertinenciaProps> = ({ value, onChan
 								name="pertinenciaGrupo3"
 								className="custom-radio"
 								value={num}
-								checked={criteria.score[2] === num}
-								onChange={() => updateScore(2, num)}
+								checked={criteria.score === num}
+								onChange={() => updateScore(num)}
 							/>
 							<span className="ml-2">{num}</span>
 						</label>

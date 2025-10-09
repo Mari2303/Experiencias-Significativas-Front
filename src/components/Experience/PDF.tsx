@@ -109,18 +109,7 @@ const PDFUploader: React.FC<{
         </span>
       </div>
 
-      {/* Campo para editar nombre si lo quieres distinto al file.name */}
-      {value?.urlPdf && (
-        <div className="mt-4">
-          <label className="font-semibold">Nombre del documento</label>
-          <input
-            type="text"
-            className="w-full border rounded p-2"
-            value={value.name || ""}
-            onChange={(e) => onChange({ ...value, name: e.target.value })}
-          />
-        </div>
-      )}
+      
 
       {/* Campo de URL */}
       <div className="mt-4">

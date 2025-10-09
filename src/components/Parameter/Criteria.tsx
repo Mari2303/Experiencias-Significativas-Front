@@ -1,17 +1,30 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { UserRole } from "../Api/Types/userRol";
 
+interface Criteria {
+  id: number;
+  name: string;
+  code: string;
+  descriptionContribution: string;
+  descruotionType: string;
+  evaluationValue: string;
+  state?: boolean; // Estado activo/inactivo
+  createdAt?: string;
+  deletedAt?: string;
+}
 
-interface EditUserRoleFormProps {
-  userRole: UserRole;
+interface EditCriteriaFormProps {
+  criteria: Criteria;
   onClose: () => void;
   onUpdated: () => void;
 }
 
-const EditUserRoleForm: React.FC<EditUserRoleFormProps> = ({ userRole, onClose, onUpdated }) => {
-  const [userId, setUserId] = useState(userRole.userId);
-  const [roleId, setRoleId] = useState(userRole.roleId);
+const EditCriteriaForm: React.FC<EditCriteriaFormProps> = ({ criteria, onClose, onUpdated }) => {
+  const [name, setName] = useState(criteria.name);
+  const [code, setCode] = useState(criteria.code);
+  const [descriptionContribution, setDescriptionContribution] = useState(criteria.descriptionContribution);
+  const [descruotionType, setDescruotionType] = useState(criteria.descruotionType);
+  const [evaluationValue, setEvaluationValue] = useState(criteria.evaluationValue);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -22,13 +35,16 @@ const EditUserRoleForm: React.FC<EditUserRoleFormProps> = ({ userRole, onClose, 
     const token = localStorage.getItem("token");
     try {
       await axios.put(
-        `/api/UserRole`,
+        `/api/Criteria`,
         {
-          id: userRole.id,
-          userId,
-          roleId,
-          state: userRole.state ?? true,
-          createdAt: userRole.createdAt ?? new Date().toISOString(),
+          id: criteria.id,
+          name,
+          code,
+          descriptionContribution,
+          descruotionType,
+          evaluationValue,
+          state: criteria.state ?? true,
+          createdAt: criteria.createdAt ?? new Date().toISOString(),
         },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -38,7 +54,7 @@ const EditUserRoleForm: React.FC<EditUserRoleFormProps> = ({ userRole, onClose, 
       onUpdated();
       onClose();
     } catch {
-      setError("Error al actualizar rol de usuario");
+      setError("Error al actualizar criterio");
       setLoading(false);
     }
   };
@@ -46,22 +62,28 @@ const EditUserRoleForm: React.FC<EditUserRoleFormProps> = ({ userRole, onClose, 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
       <form onSubmit={handleSubmit} className="bg-white p-6 rounded-xl shadow-lg w-full max-w-md">
-        <h3 className="text-xl font-bold mb-4 text-sky-700">Editar Rol de Usuario</h3>
-        <label className="block mb-2 font-semibold">ID de Usuario</label>
+        <h3 className="text-xl font-bold mb-4 text-sky-700">Editar Criterio</h3>
+        <label className="block mb-2 font-semibold">Código</label>
+        <input value={code} onChange={(e) => setCode(e.target.value)} className="w-full mb-4 p-2 border rounded" />
+        <label className="block mb-2 font-semibold">Nombre</label>
+        <input value={name} onChange={(e) => setName(e.target.value)} className="w-full mb-4 p-2 border rounded" />
+        <label className="block mb-2 font-semibold">Contribución</label>
         <input
-          type="number"
-          value={userId}
-          onChange={(e) => setUserId(Number(e.target.value))}
+          value={descriptionContribution}
+          onChange={(e) => setDescriptionContribution(e.target.value)}
           className="w-full mb-4 p-2 border rounded"
-          required
         />
-        <label className="block mb-2 font-semibold">ID de Rol</label>
+        <label className="block mb-2 font-semibold">Tipo</label>
         <input
-          type="number"
-          value={roleId}
-          onChange={(e) => setRoleId(Number(e.target.value))}
+          value={descruotionType}
+          onChange={(e) => setDescruotionType(e.target.value)}
           className="w-full mb-4 p-2 border rounded"
-          required
+        />
+        <label className="block mb-2 font-semibold">Valor de Evaluación</label>
+        <input
+          value={evaluationValue}
+          onChange={(e) => setEvaluationValue(e.target.value)}
+          className="w-full mb-4 p-2 border rounded"
         />
         {error && <div className="text-red-500 mb-2">{error}</div>}
         <div className="flex gap-4 justify-end">
@@ -77,14 +99,17 @@ const EditUserRoleForm: React.FC<EditUserRoleFormProps> = ({ userRole, onClose, 
   );
 };
 
-interface AddUserRoleFormProps {
+interface AddCriteriaFormProps {
   onClose: () => void;
   onAdded: () => void;
 }
 
-const AddUserRoleForm: React.FC<AddUserRoleFormProps> = ({ onClose, onAdded }) => {
-  const [userId, setUserId] = useState(0);
-  const [roleId, setRoleId] = useState(0);
+const AddCriteriaForm: React.FC<AddCriteriaFormProps> = ({ onClose, onAdded }) => {
+  const [name, setName] = useState("");
+  const [code, setCode] = useState("");
+  const [descriptionContribution, setDescriptionContribution] = useState("");
+  const [descruotionType, setDescruotionType] = useState("");
+  const [evaluationValue, setEvaluationValue] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -95,11 +120,14 @@ const AddUserRoleForm: React.FC<AddUserRoleFormProps> = ({ onClose, onAdded }) =
     const token = localStorage.getItem("token");
     try {
       await axios.post(
-        `/api/UserRole`,
+        `/api/Criteria`,
         {
           id: 0,
-          userId,
-          roleId,
+          name,
+          code,
+          descriptionContribution,
+          descruotionType,
+          evaluationValue,
           state: true,
           createdAt: new Date().toISOString(),
         },
@@ -111,7 +139,7 @@ const AddUserRoleForm: React.FC<AddUserRoleFormProps> = ({ onClose, onAdded }) =
       onAdded();
       onClose();
     } catch {
-      setError("Error al agregar rol de usuario");
+      setError("Error al agregar criterio");
       setLoading(false);
     }
   };
@@ -119,20 +147,29 @@ const AddUserRoleForm: React.FC<AddUserRoleFormProps> = ({ onClose, onAdded }) =
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
       <form onSubmit={handleSubmit} className="bg-white p-6 rounded-xl shadow-lg w-full max-w-md">
-        <h3 className="text-xl font-bold mb-4 text-sky-700">Agregar Rol de Usuario</h3>
-        <label className="block mb-2 font-semibold">ID de Usuario</label>
+        <h3 className="text-xl font-bold mb-4 text-sky-700">Agregar Criterio</h3>
+        <label className="block mb-2 font-semibold">Código</label>
+        <input value={code} onChange={(e) => setCode(e.target.value)} className="w-full mb-4 p-2 border rounded" required />
+        <label className="block mb-2 font-semibold">Nombre</label>
+        <input value={name} onChange={(e) => setName(e.target.value)} className="w-full mb-4 p-2 border rounded" required />
+        <label className="block mb-2 font-semibold">Contribución</label>
         <input
-          type="number"
-          value={userId}
-          onChange={(e) => setUserId(Number(e.target.value))}
+          value={descriptionContribution}
+          onChange={(e) => setDescriptionContribution(e.target.value)}
           className="w-full mb-4 p-2 border rounded"
           required
         />
-        <label className="block mb-2 font-semibold">ID de Rol</label>
+        <label className="block mb-2 font-semibold">Tipo</label>
         <input
-          type="number"
-          value={roleId}
-          onChange={(e) => setRoleId(Number(e.target.value))}
+          value={descruotionType}
+          onChange={(e) => setDescruotionType(e.target.value)}
+          className="w-full mb-4 p-2 border rounded"
+          required
+        />
+        <label className="block mb-2 font-semibold">Valor de Evaluación</label>
+        <input
+          value={evaluationValue}
+          onChange={(e) => setEvaluationValue(e.target.value)}
           className="w-full mb-4 p-2 border rounded"
           required
         />
@@ -150,79 +187,79 @@ const AddUserRoleForm: React.FC<AddUserRoleFormProps> = ({ onClose, onAdded }) =
   );
 };
 
-const UserRoleList: React.FC = () => {
-  const [userRoles, setUserRoles] = useState<UserRole[]>([]);
-  const [editUserRole, setEditUserRole] = useState<UserRole | null>(null);
-  const [addUserRoleOpen, setAddUserRoleOpen] = useState(false);
+const CriteriaList: React.FC = () => {
+  const [criteria, setCriteria] = useState<Criteria[]>([]);
+  const [editCriteria, setEditCriteria] = useState<Criteria | null>(null);
+  const [addCriteriaOpen, setAddCriteriaOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [onlyActive, setOnlyActive] = useState(true); // Estado para filtrar activos/inactivos
 
-  const fetchUserRoles = () => {
+  const fetchCriteria = () => {
     const token = localStorage.getItem("token");
     axios
-      .get(`/api/UserRole/getAll`, {
+      .get(`/api/Criteria/getAll`, {
         params: { OnlyActive: onlyActive }, // Usar el filtro OnlyActive
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
         if (Array.isArray(res.data.data)) {
-          const userRolesNormalized = res.data.data.map((userRole: UserRole) => ({
-            ...userRole,
+          const criteriaNormalized = res.data.data.map((criterion: Criteria) => ({
+            ...criterion,
             state: onlyActive, // Asignar el estado basado en el filtro OnlyActive
           }));
-          setUserRoles(userRolesNormalized);
+          setCriteria(criteriaNormalized);
         } else {
-          setUserRoles([]);
+          setCriteria([]);
         }
         setLoading(false);
       })
       .catch(() => {
-        setError("Error al cargar roles de usuario");
+        setError("Error al cargar criterios");
         setLoading(false);
       });
   };
 
   useEffect(() => {
-    fetchUserRoles();
+    fetchCriteria();
   }, [onlyActive]); // Refrescar cuando cambie el filtro
 
-  if (loading) return <div>Cargando roles de usuario...</div>;
+  if (loading) return <div>Cargando criterios...</div>;
   if (error) return <div>{error}</div>;
 
   const handleDeactivate = async (id: number) => {
     const token = localStorage.getItem("token");
     try {
-      await axios.delete(`/api/UserRole/${id}`, {
+      await axios.delete(`/api/Criteria/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      fetchUserRoles(); // Refrescar lista
+      fetchCriteria(); // Refrescar lista
     } catch (err) {
-      console.error("Error al desactivar rol de usuario:", err);
+      console.error("Error al desactivar criterio:", err);
     }
   };
 
   const handleActivate = async (id: number) => {
     const token = localStorage.getItem("token");
     try {
-      await axios.patch(`/api/UserRole/restore/${id}`, {}, {
+      await axios.patch(`/api/Criteria/restore/${id}`, {}, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      fetchUserRoles(); // Refrescar lista
+      fetchCriteria(); // Refrescar lista
     } catch (err) {
-      console.error("Error al activar rol de usuario:", err);
+      console.error("Error al activar criterio:", err);
     }
   };
 
   return (
     <div className="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-lg">
-      <h2 className="text-2xl font-bold text-sky-700 mb-6 text-center">Lista de Roles de Usuario</h2>
+      <h2 className="text-2xl font-bold text-sky-700 mb-6 text-center">Lista de Criterios</h2>
       <div className="flex justify-between mb-4">
         <button
           className="px-4 py-2 rounded bg-sky-600 text-white hover:bg-sky-700 font-semibold"
-          onClick={() => setAddUserRoleOpen(true)}
+          onClick={() => setAddCriteriaOpen(true)}
         >
-          Agregar Rol de Usuario
+          Agregar Criterio
         </button>
         <div className="flex gap-4">
           <button
@@ -247,26 +284,32 @@ const UserRoleList: React.FC = () => {
         <table className="min-w-full border border-gray-200 rounded-lg">
           <thead className="bg-sky-100">
             <tr>
-              <th className="py-3 px-4 text-left font-semibold text-gray-700 border-b">ID de Usuario</th>
-              <th className="py-3 px-4 text-left font-semibold text-gray-700 border-b">ID de Rol</th>
+              <th className="py-3 px-4 text-left font-semibold text-gray-700 border-b">Código</th>
+              <th className="py-3 px-4 text-left font-semibold text-gray-700 border-b">Nombre</th>
+              <th className="py-3 px-4 text-left font-semibold text-gray-700 border-b">Contribución</th>
+              <th className="py-3 px-4 text-left font-semibold text-gray-700 border-b">Tipo</th>
+              <th className="py-3 px-4 text-left font-semibold text-gray-700 border-b">Valor de Evaluación</th>
               <th className="py-3 px-4 text-left font-semibold text-gray-700 border-b">Estado</th>
               <th className="py-3 px-4 text-left font-semibold text-gray-700 border-b">Acciones</th>
             </tr>
           </thead>
           <tbody>
-            {userRoles.length === 0 ? (
+            {criteria.length === 0 ? (
               <tr>
-                <td colSpan={4} className="py-6 px-4 text-center text-gray-500">
-                  No hay roles de usuario para mostrar.
+                <td colSpan={7} className="py-6 px-4 text-center text-gray-500">
+                  No hay criterios para mostrar.
                 </td>
               </tr>
             ) : (
-              userRoles.map((userRole) => (
-                <tr key={userRole.id} className="hover:bg-sky-50 transition-colors">
-                  <td className="py-2 px-4 border-b">{userRole.userId}</td>
-                  <td className="py-2 px-4 border-b">{userRole.roleId}</td>
+              criteria.map((criterion) => (
+                <tr key={criterion.id} className="hover:bg-sky-50 transition-colors">
+                  <td className="py-2 px-4 border-b">{criterion.code}</td>
+                  <td className="py-2 px-4 border-b">{criterion.name}</td>
+                  <td className="py-2 px-4 border-b">{criterion.descriptionContribution}</td>
+                  <td className="py-2 px-4 border-b">{criterion.descruotionType}</td>
+                  <td className="py-2 px-4 border-b">{criterion.evaluationValue}</td>
                   <td className="py-2 px-4 border-b">
-                    {userRole.state ? (
+                    {criterion.state ? (
                       <span className="text-green-600 font-semibold">Activo</span>
                     ) : (
                       <span className="text-red-600 font-semibold">Inactivo</span>
@@ -275,21 +318,21 @@ const UserRoleList: React.FC = () => {
                   <td className="py-2 px-4 border-b flex gap-2">
                     <button
                       className="px-3 py-1 rounded bg-sky-600 text-white hover:bg-sky-700 text-sm"
-                      onClick={() => setEditUserRole(userRole)}
+                      onClick={() => setEditCriteria(criterion)}
                     >
                       Editar
                     </button>
-                    {userRole.state ? (
+                    {criterion.state ? (
                       <button
                         className="px-3 py-1 rounded bg-red-500 hover:bg-red-700 text-white text-sm"
-                        onClick={() => handleDeactivate(userRole.id)}
+                        onClick={() => handleDeactivate(criterion.id)}
                       >
                         Desactivar
                       </button>
                     ) : (
                       <button
                         className="px-3 py-1 rounded bg-green-500 hover:bg-green-700 text-white text-sm"
-                        onClick={() => handleActivate(userRole.id)}
+                        onClick={() => handleActivate(criterion.id)}
                       >
                         Activar
                       </button>
@@ -302,22 +345,22 @@ const UserRoleList: React.FC = () => {
         </table>
       </div>
 
-      {editUserRole && (
-        <EditUserRoleForm
-          userRole={editUserRole}
-          onClose={() => setEditUserRole(null)}
+      {editCriteria && (
+        <EditCriteriaForm
+          criteria={editCriteria}
+          onClose={() => setEditCriteria(null)}
           onUpdated={() => {
             setLoading(true);
-            fetchUserRoles();
+            fetchCriteria();
           }}
         />
       )}
-      {addUserRoleOpen && (
-        <AddUserRoleForm
-          onClose={() => setAddUserRoleOpen(false)}
+      {addCriteriaOpen && (
+        <AddCriteriaForm
+          onClose={() => setAddCriteriaOpen(false)}
           onAdded={() => {
             setLoading(true);
-            fetchUserRoles();
+            fetchCriteria();
           }}
         />
       )}
@@ -325,4 +368,4 @@ const UserRoleList: React.FC = () => {
   );
 };
 
-export default UserRoleList;
+export default CriteriaList;

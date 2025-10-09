@@ -7,13 +7,13 @@ interface CriteriaFoundationProps {
 }
 
 const CriteriaFoundation: React.FC<CriteriaFoundationProps> = ({ value, onChange }) => {
-  const CRITERIA_ID = 1; // 👈 ID fijo para Fundamentación (ajústalo según tu modelo)
+  const CRITERIA_ID = 2; // ID real para Fundamentación
 
   // Buscar si ya existe este criterio en la evaluación
   const criteria =
     value.criteriaEvaluations.find((c) => c.criteriaId === CRITERIA_ID) ??
     {
-      score: [0, 0,0],
+      score: 0,
       descriptionContribution: "",
       evaluationId: 0,
       criteriaId: CRITERIA_ID,
@@ -23,10 +23,10 @@ const CriteriaFoundation: React.FC<CriteriaFoundationProps> = ({ value, onChange
       deletedAt: "",
     };
 
-    const updateScore = (index: number, score: number) => {
+    const updateScore = (score: number) => {
     const updatedCriteria: CriteriaEvaluation = {
       ...criteria,
-      score: criteria.score.map((v, i) => (i === index ? score : v)),
+      score,
     };
 
     onChange({
@@ -92,8 +92,8 @@ const CriteriaFoundation: React.FC<CriteriaFoundationProps> = ({ value, onChange
                 name="fundamentacion"
                 className="custom-radio"
                 value={val}
-                checked={criteria.score[0] === val}
-                onChange={() => updateScore(0, val)}
+                checked={criteria.score === val}
+                onChange={() => updateScore( val)}
               />
               <span className="ml-2">{val}</span>
             </label>
@@ -117,8 +117,8 @@ const CriteriaFoundation: React.FC<CriteriaFoundationProps> = ({ value, onChange
                   name="fundamentacion1"
                   className="custom-radio"
                   value={val}
-                  checked={criteria.score[1] === val}
-                  onChange={() => updateScore(1, val)}
+                  checked={criteria.score === val}
+                  onChange={() => updateScore(val)}
                 />
                 <span className="ml-2">{val}</span>
               </label>
@@ -145,8 +145,8 @@ const CriteriaFoundation: React.FC<CriteriaFoundationProps> = ({ value, onChange
                   name="fundamentacion2"
                   className="custom-radio"
                   value={val}
-                  checked={criteria.score[2] === val}
-                  onChange={() => updateScore(2, val)}
+                  checked={criteria.score === val}
+                  onChange={() => updateScore(val)}
                 />
                 <span className="ml-2">{val}</span>
               </label>

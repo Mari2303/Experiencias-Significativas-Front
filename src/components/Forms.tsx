@@ -1,16 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { Form } from "../Api/Types/form";
 
-interface Form {
-  id: number;
-  name: string;
-  path: string;
-  description: string;
-  icon: string;
-  order: number;
-  state?: boolean;
-  createdAt?: string;
-}
 
 interface EditFormProps {
   form: Form;

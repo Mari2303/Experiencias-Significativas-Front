@@ -1,5 +1,7 @@
 import axios from "axios";
 
+let setSessionExpired: (expired: boolean) => void = () => {}; // Variable para activar el modal
+
 // Instancia de Axios
 const configApi = axios.create({
   baseURL: "http://localhost:5173/api/",
@@ -16,6 +18,25 @@ configApi.interceptors.request.use((config) => {
   }
   return config;
 });
+
+// Interceptor para manejar errores de respuesta
+configApi.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      console.log("Token expirado, activando modal...");
+      setSessionExpired(true); // Activar el modal
+      localStorage.removeItem("token"); // Eliminar el token
+      localStorage.removeItem("userId"); // Eliminar el userId
+    }
+    return Promise.reject(error);
+  }
+);
+
+// Función para configurar el manejador del modal
+export const setSessionExpiredHandler = (handler: (expired: boolean) => void) => {
+  setSessionExpired = handler;
+};
 
 // Función para guardar el token en localStorage con expiración
 export const saveToken = (token: string, p0: number) => {

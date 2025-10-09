@@ -2,11 +2,13 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { useEffect, useState } from "react";
 import ExperienceModal from "./ExperienceModal";
 import Evaluation from "./Evaluation";
+import type { Experience } from "../Api/Types/experienceTypes";
 // import { set } from "react-hook-form";
 
 interface ExperiencesProps {
   onAgregar: () => void;
 }
+
 
 const Experiences = ({ onAgregar }: ExperiencesProps) => {
   const [showModal, setShowModal] = useState(false);
@@ -14,16 +16,11 @@ const Experiences = ({ onAgregar }: ExperiencesProps) => {
   // Estado para mostrar el modal de Evaluation desde el icono
   const [showEvaluationFromIcon, setShowEvaluationFromIcon] = useState(false);
 
-  const [experienceList, setExperienceList] = useState<{ id: number }[]>([]); // Lista de experiencias
+  const [experienceList, setExperienceList] = useState<Experience[]>([]); // Lista de experiencias
 
   const role = localStorage.getItem("role");
 
-  // const experiencias = [
-  //   { id: 1, titulo: "Visitar Experiencia" },
-  //   { id: 2, titulo: "Visitar Experiencia" },
-  //   { id: 3, titulo: "Visitar Experiencia" },
-  //   { id: 4, titulo: "Visitar Experiencia" },
-  // ];
+  
 
   const nuevas = [1, 2, 3];
   const [selectedExperienceId, setSelectedExperienceId] = useState<number | null>(null);
@@ -221,7 +218,7 @@ const Experiences = ({ onAgregar }: ExperiencesProps) => {
               >
                 &times;
               </button>
-              <Evaluation experienceId={selectedExperienceId ?? null} />
+              <Evaluation experienceId={selectedExperienceId ?? null} experiences={experienceList} />
             </div>
           </div>
         )}

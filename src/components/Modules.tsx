@@ -1,13 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { Module } from "../Api/Types/module";
 
-interface Module {
-  id: number;
-  name: string;
-  description: string;
-  state?: boolean;
-  createdAt?: string;
-}
 interface AddModuleFormProps {
   onClose: () => void;
   onAdded: () => void;

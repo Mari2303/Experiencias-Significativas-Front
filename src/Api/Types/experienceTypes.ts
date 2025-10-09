@@ -49,6 +49,7 @@ export interface HistoryExperience {
 }
 
 export interface Experience {
+  id: number;
   nameExperiences: string;
   code: string;
   nameFirstLeader: string;
@@ -64,6 +65,7 @@ export interface Experience {
   thematicLocation: string;
   stateId: number;
   thematicLineIds: number[];
+  thematicLineNames?: string[]; // Nombres de las líneas temáticas (opcional, para autocompletar)
   coordinationTransversalProjects: string;
   population: string;
   pedagogicalStrategies: string;

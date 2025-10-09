@@ -7,13 +7,13 @@ interface CriteriaInnovationProps {
 }
 
 const CriteriaInnovation: React.FC<CriteriaInnovationProps> = ({ value, onChange }) => {
-  const CRITERIA_ID = 2; // 👈 ID fijo de este criterio (ajústalo según tu modelo)
+  const CRITERIA_ID = 3; // ID real para Innovación
 
   // Buscar si ya existe este criterio en la evaluación
   const criteria =
     value.criteriaEvaluations.find((c) => c.criteriaId === CRITERIA_ID) ??
     {
-      score: [0, 0 ,0],
+      score: 0,
       descriptionContribution: "",
       evaluationId: 0,
       criteriaId: CRITERIA_ID,
@@ -23,10 +23,10 @@ const CriteriaInnovation: React.FC<CriteriaInnovationProps> = ({ value, onChange
       deletedAt: "",
     };
 
-  const updateScore = (index: number, score: number) => {
+  const updateScore = (score: number) => {
     const updatedCriteria: CriteriaEvaluation = {
       ...criteria,
-      score: criteria.score.map((v, i) => (i === index ? score : v)),
+      score,
     };
 
     onChange({
@@ -94,8 +94,8 @@ const CriteriaInnovation: React.FC<CriteriaInnovationProps> = ({ value, onChange
                 name="innovacion"
                 className="custom-radio"
                 value={val}
-                checked={criteria.score[0] === val}
-                onChange={() => updateScore(0,val)}
+                checked={criteria.score === val}
+                onChange={() => updateScore(val)}
               />
               <span className="ml-2">{val}</span>
             </label>
@@ -123,8 +123,8 @@ const CriteriaInnovation: React.FC<CriteriaInnovationProps> = ({ value, onChange
                   name="innovacion1"
                   className="custom-radio"
                   value={val}
-                  checked={criteria.score[1] === val}
-                  onChange={() => updateScore(1, val)}
+                  checked={criteria.score === val}
+                  onChange={() => updateScore(val)}
                 />
                 <span className="ml-2">{val}</span>
               </label>
@@ -153,8 +153,8 @@ const CriteriaInnovation: React.FC<CriteriaInnovationProps> = ({ value, onChange
                   name="innovacion2"
                   className="custom-radio"
                   value={val}
-                  checked={criteria.score[2] === val}
-                  onChange={() => updateScore(2,val)}
+                  checked={criteria.score === val}
+                  onChange={() => updateScore(val)}
                 />
                 <span className="ml-2">{val}</span>
               </label>

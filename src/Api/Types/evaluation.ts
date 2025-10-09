@@ -1,5 +1,5 @@
 export interface CriteriaEvaluation {
-	score: number[];
+	score: number;
 	descriptionContribution: string;
 	evaluationId: number;
 	criteriaId: number;
@@ -21,4 +21,5 @@ export interface Evaluation {
 	institutionName: string;
 	criteriaEvaluations: CriteriaEvaluation[];
 	thematicLineNames: string[];
+	userId: number;
 }

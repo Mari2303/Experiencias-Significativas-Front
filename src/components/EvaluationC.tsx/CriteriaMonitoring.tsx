@@ -7,13 +7,13 @@ interface CriteriaMonitoringProps {
 }
 
 const CriteriaMonitoring: React.FC<CriteriaMonitoringProps> = ({ value, onChange }) => {
-  const CRITERIA_ID = 5; // 👈 ID fijo de este criterio
+  const CRITERIA_ID = 6; // ID real para Seguimiento y valoración
 
   // Buscar si ya existe este criterio en la evaluación
   const criteria =
     value.criteriaEvaluations.find((c) => c.criteriaId === CRITERIA_ID) ??
     {
-      score: [0,0,0],
+      score: 0,
       descriptionContribution: "",
       evaluationId: 0,
       criteriaId: CRITERIA_ID,
@@ -23,10 +23,10 @@ const CriteriaMonitoring: React.FC<CriteriaMonitoringProps> = ({ value, onChange
       deletedAt: "",
     };
 
-  const updateScore = (index: number, score: number) => {
+  const updateScore = (score: number) => {
     const updatedCriteria: CriteriaEvaluation = {
       ...criteria,
-      score: criteria.score.map((v, i) => (i === index ? score : v)),
+      score,
     };
 
     onChange({
@@ -96,8 +96,8 @@ const CriteriaMonitoring: React.FC<CriteriaMonitoringProps> = ({ value, onChange
                 name="seguimiento"
                 className="custom-radio"
                 value={val}
-                checked={criteria.score[0] === val}
-                onChange={() => updateScore(0,val)}
+                checked={criteria.score === val}
+                onChange={() => updateScore(val)}
               />
               <span className="ml-2">{val}</span>
             </label>
@@ -142,8 +142,8 @@ const CriteriaMonitoring: React.FC<CriteriaMonitoringProps> = ({ value, onChange
                   name="seguimiento2"
                   className="custom-radio"
                   value={val}
-                  checked={criteria.score[1] === val}
-                  onChange={() => updateScore(1, val)}
+                  checked={criteria.score === val}
+                  onChange={() => updateScore(val)}
                 />
                 <span className="ml-2">{val}</span>
               </label>

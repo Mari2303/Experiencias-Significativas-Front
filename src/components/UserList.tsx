@@ -1,15 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { User } from "../Api/Types/user";
 
-interface User {
-  id: number;
-  code: string;
-  username: string;
-  state?: boolean;
-  createdAt?: string;
-  deletedAt?: string;
-  personId?: number;
-}
 
 
 interface EditUserFormProps {
@@ -61,8 +53,7 @@ const EditUserForm: React.FC<EditUserFormProps> = ({ user, onClose, onUpdated })
         <input value={user.code} disabled className="w-full mb-4 p-2 border rounded bg-gray-100" />
         <label className="block mb-2 font-semibold">Nombre de Usuario</label>
         <input value={username} onChange={e => setUsername(e.target.value)} className="w-full mb-4 p-2 border rounded" />
-        <label className="block mb-2 font-semibold">Contraseña</label>
-        <input type="password" value={password} onChange={e => setPassword(e.target.value)} className="w-full mb-4 p-2 border rounded" />
+        
         {error && <div className="text-red-500 mb-2">{error}</div>}
         <div className="flex gap-4 justify-end">
           <button type="button" onClick={onClose} className="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400">Cancelar</button>

@@ -1,14 +1,6 @@
 
 // Servicio para obtener el menú dinámico usando fetch
-export interface MenuItem {
-	formId: number;
-	form: string;
-	path: string;
-	icon: string;
-	order: number;
-	moduleId: number;
-	module: string;
-}
+import { MenuItem } from '../Types/menu';
 
 export async function fetchMenu(userId: number, token: string): Promise<MenuItem[]> {
   const response = await fetch(`/api/User/${userId}/menu`, {

@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Stepper, Step, StepLabel, Button } from "@mui/material";
 import axios from "axios";
 import type { Evaluation } from "../Api/Types/evaluation";
@@ -15,9 +15,17 @@ import CriteriaTransformation from "./EvaluationC.tsx/CriteriaTransformation";
 import CriteriaSustainability from "./EvaluationC.tsx/CriteriaSustainability ";
 import CriteriaTransfer from "./EvaluationC.tsx/CriteriaTransfer";
 import CriteriaFinalConcept from "./EvaluationC.tsx/CriteriaFinalConcept";
+import type { Experience, Institution } from "../Api/Types/experienceTypes";
 
 
-function Evaluation({ experienceId }: { experienceId: number | null }) {
+
+
+interface EvaluationProps {
+	experienceId?: number | null;
+	experiences?: Experience[];
+}
+
+function Evaluation({ experienceId, experiences = [] }: EvaluationProps) {
 	const [activeStep, setActiveStep] = useState(0);
 	const [form, setForm] = useState<Evaluation>({
 		evaluationId: 0,
@@ -25,13 +33,43 @@ function Evaluation({ experienceId }: { experienceId: number | null }) {
 		accompanimentRole: "",
 		comments: "",
 		evaluationResult: "",
-		experienceId: 0,
+		experienceId: experienceId ?? 0,
 		experienceName: "",
 		stateId: 0,
 		institutionName: "",
 		criteriaEvaluations: [],
-		thematicLineNames: []
+		thematicLineNames: [],
+		userId: Number(localStorage.getItem("userId")) || 0
 	});
+		// Eliminado: las experiencias ahora vienen por props desde Experiences.tsx
+
+	// Cargar experiencias al montar (igual que en Experiences.tsx)
+		// Eliminado: las experiencias ahora vienen por props
+
+	// Sincroniza experienceId y rellena los campos de ExperienceInfo
+		useEffect(() => {
+				if (experienceId && experiences.length > 0) {
+					const exp = experiences.find(e => e.id === experienceId);
+					if (exp) {
+						console.log('Experiencia seleccionada:', exp);
+						setForm(prev => ({
+							...prev,
+							experienceId: exp.id,
+							institutionName: exp.institution?.name || "",
+							experienceName: exp.nameExperiences || "",
+							thematicLineNames: exp.thematicLineIds ? exp.thematicLineIds.map(id => id.toString()) : [],
+							stateId: exp.stateId || 0
+						}));
+					}
+				}
+		}, [experienceId, experiences]);
+
+	// Sincroniza el experienceId recibido por props con el modelo de evaluación
+	useEffect(() => {
+		if (experienceId && experienceId !== form.experienceId) {
+			setForm(prev => ({ ...prev, experienceId }));
+		}
+	}, [experienceId]);
 	const [isSaving, setIsSaving] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 	// Estados para validación y errores
@@ -67,22 +105,22 @@ function Evaluation({ experienceId }: { experienceId: number | null }) {
 		setIsSaving(true);
 		setError(null);
 		const token = localStorage.getItem("token");
-		console.log("Formulario a enviar:", form);
-		setIsSaving(false);
-		alert("Evaluación guardada correctamente");
-		// Aquí iría la lógica para enviar 'form' a la API
-		 try {
-		 	await axios.post("/api/Evaluation/create", form, {
-		 		headers: {
-		 			Authorization: `Bearer ${token}`,
-		 		},
-		 	});
-		 	setIsSaving(false);
-		 	alert("Evaluación guardada correctamente");
-		 } catch (err) {
-		 	setError("Error al guardar la evaluación");
-		 	setIsSaving(false);
-		 }
+		// Actualiza el userId antes de enviar
+		const userId = Number(localStorage.getItem("userId")) || 0;
+		const formToSend = { ...form, userId };
+		console.log("Formulario a enviar:", formToSend);
+		try {
+			await axios.post("/api/Evaluation/create", formToSend, {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			});
+			setIsSaving(false);
+			alert("Evaluación guardada correctamente");
+		} catch (err) {
+			setError("Error al guardar la evaluación");
+			setIsSaving(false);
+		}
 	};
 
 	return (
@@ -92,9 +130,7 @@ function Evaluation({ experienceId }: { experienceId: number | null }) {
 					<h1 className="text-4xl font-bold !text-[#00aaff]  text-center mt-8">
 						Formulario de Evaluación de Experiencias Significativas
 					</h1>
-					<h2 className="text-lg !text-[#00aaff] mb-8 text-center">
-						Sistema de evaluación para experiencias educativas
-					</h2>
+					
 				</>
 			)}
 
@@ -134,7 +170,7 @@ function Evaluation({ experienceId }: { experienceId: number | null }) {
 					</Button>
 				) : (
 					<Button onClick={handleSubmit} variant="contained" color="success" disabled={isSaving}>
-						{isSaving ? "Guardando..." : "Guardar"}
+						{isSaving ? "Enviando..." : "Enviar"}
 					</Button>
 				)}
 			</div>

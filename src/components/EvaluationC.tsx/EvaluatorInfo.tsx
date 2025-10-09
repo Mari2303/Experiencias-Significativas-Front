@@ -51,6 +51,7 @@ const EvaluatorInfo: React.FC<Props> = ({ value, onChange }) => {
               <option key={role.id} value={role.displayText}>{role.displayText}</option>
             ))}
           </select>
+          <span className="text-red-500">*</span>
         </div>
         <div>
           <label className="block font-medium mb-4 text-gray-700">

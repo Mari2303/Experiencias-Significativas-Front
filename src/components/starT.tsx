@@ -39,13 +39,12 @@ const starT: React.FC = () => {
   return (
     <div
       className="w-full h-full rounded-3xl min-h-screen bg-cover bg-center relative"
-      style={{ backgroundImage: 'url(/images/fondo_teacher.png)' }}
     >
       {/* Cohete decorativo translúcido grande y centrado */}
       <img
-        src="/images/CoheteEx.png"
+        src="/images/coheteT.png"
         alt="Cohete"
-        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-20 z-0 w-[700px] h-[600px] pointer-events-none select-none"
+        className="absolute ml-230 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-50 z-0 w-[900px] h-[900px] pointer-events-none select-none"
         style={{ filter: 'blur(0.5px)' }}
       />
       <div className="relative z-10 font-bold text-[#00aaff] text-7xl w-full">
@@ -73,7 +72,7 @@ const starT: React.FC = () => {
                   alt="icono"
                   className="w-40 h-16 mb-3"
                 />
-                <div className="mb-2 font-semibold text-sky-700 text-base">ID: {exp.experienceId}</div>
+                <div className="mb-2 font-semibold text-sky-700 text-base"></div>
                 <button
                   className="bg-gray-100 rounded px-4 py-2 mt-2 text-sm font-semibold"
                   onClick={() => {

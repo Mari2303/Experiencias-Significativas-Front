@@ -8,13 +8,13 @@ interface CriteriaTransferProps {
 
 const CriteriaTransfer: React.FC<CriteriaTransferProps> = ({ value, onChange }) => {
   // Definimos el id único de este criterio
-  const CRITERIA_ID = 8;
+  const CRITERIA_ID = 9; // ID real para Transferencia
 
   // Buscamos si ya existe este criterio en la evaluación
   const criteria =
     value.criteriaEvaluations.find((c) => c.criteriaId === CRITERIA_ID) ??
     {
-			score: [0, 0, 0],
+			score: 0,
 			descriptionContribution: "",
 			evaluationId: 0,
       criteriaId: CRITERIA_ID,
@@ -24,10 +24,10 @@ const CriteriaTransfer: React.FC<CriteriaTransferProps> = ({ value, onChange }) 
 			deletedAt: ""
     };
 
-  const updateScore = (index: number, score: number) => {
+  const updateScore = (score: number) => {
     const updatedCriteria: CriteriaEvaluation = {
       ...criteria,
-      score: criteria.score.map((v, i) => (i === index ? score : v)),
+      score,
     };
 
     onChange({
@@ -65,9 +65,17 @@ const CriteriaTransfer: React.FC<CriteriaTransferProps> = ({ value, onChange }) 
           <span className="font-bold !text-[#2196f3] text-lg">Transferencia:</span>
           <span className="text-gray-800 font-normal">
             {" "}
-            Valora la potencialidad de adaptación, difusión y réplica de la experiencia...
+            Valora la potencialidad de adaptación, difusión y réplica de la experiencia en otros contextos educativos similares, así como los mecanismos concretos de socialización y apropiación fuera de su espacio original.
           </span>
         </div>
+        <p className="mb-2 text-gray-800">
+          
+Solo podrá seleccionar un Estado y valorar de manera cuantitativa  de acuerdo a su concepto como tutor/evaluador, al igual  podrá  realizar aportes  para el mejoramiento.  Una vez realizada la valoración,  las demás preguntas se debe seleccionar{" "}
+          <span className="font-bold">No aplica.</span>
+        </p>
+        <p className="mb-6 text-gray-800">
+          Faltan procesos, metodologías, mecanismos o medios para dar a conocer dentro del establecimiento educativo la concepción, el desarrollo y los resultados de la experiencia.
+        </p>
 
         {/* Primer bloque */}
         <div className="flex flex-row gap-8">
@@ -78,8 +86,8 @@ const CriteriaTransfer: React.FC<CriteriaTransferProps> = ({ value, onChange }) 
                 name="transferencia1"
                 className="custom-radio"
                 value={val}
-                checked={criteria.score[0] === val}
-                onChange={() => updateScore(0, val)}
+                checked={criteria.score === val}
+                onChange={() => updateScore(val)}
               />
               <span className="ml-2">{val === -1 ? "No aplica" : val}</span>
             </label>
@@ -88,7 +96,7 @@ const CriteriaTransfer: React.FC<CriteriaTransferProps> = ({ value, onChange }) 
 
         {/* Segundo bloque */}
         <div className="mt-12 mb-8">
-          <p className="mb-6 text-gray-800">Texto del segundo bloque...</p>
+          <p className="mb-6 text-gray-800">Se han institucionalizado procesos, metodologías, mecanismos o medios de difusión con el fin de dar a conocer en la comunidad educativa la concepción, el desarrollo y los resultados de la experiencia significativa para la socialización en nuevos escenarios educativos. Diferentes procesos, metodologías, mecanismos, medios o aprendizajes de la experiencia significativa se han transferido de manera exitosa dentro y fuera del EE</p>
           <div className="flex flex-row gap-8">
             {[6, 7, 8, 9, 10].map((val) => (
               <label key={val} className="inline-flex items-center cursor-pointer">
@@ -97,8 +105,8 @@ const CriteriaTransfer: React.FC<CriteriaTransferProps> = ({ value, onChange }) 
                   name="transferencia2"
                   className="custom-radio"
                   value={val}
-                  checked={criteria.score[1] === val}
-                  onChange={() => updateScore(1, val)}
+                  checked={criteria.score === val}
+                  onChange={() => updateScore(val)}
                 />
                 <span className="ml-2">{val}</span>
               </label>

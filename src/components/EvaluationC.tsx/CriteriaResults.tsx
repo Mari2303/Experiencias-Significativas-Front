@@ -7,13 +7,13 @@ interface CriteriaResultsProps {
 }
 
 const CriteriaResults: React.FC<CriteriaResultsProps> = ({ value, onChange }) => {
-  const CRITERIA_ID = 3;
+  const CRITERIA_ID = 4; // ID real para Resultados
 
   // Buscar si ya existe este criterio en la evaluación
   const criteria =
     value.criteriaEvaluations.find((c) => c.criteriaId === CRITERIA_ID) ??
     {
-			score: [0, 0, 0],
+			score: 0,
 			descriptionContribution: "",
 			evaluationId: 0,
       criteriaId: CRITERIA_ID,
@@ -23,10 +23,10 @@ const CriteriaResults: React.FC<CriteriaResultsProps> = ({ value, onChange }) =>
 			deletedAt: ""
     };
 
-  const updateScore = (index: number, score: number) => {
+  const updateScore = (score: number) => {
     const updatedCriteria: CriteriaEvaluation = {
       ...criteria,
-      score: criteria.score.map((v, i) => (i === index ? score : v)),
+      score,
     };
 
     onChange({
@@ -69,12 +69,11 @@ const CriteriaResults: React.FC<CriteriaResultsProps> = ({ value, onChange }) =>
           </span>
         </div>
         <p className="mb-2 text-gray-800">
-          Sólo podrá seleccionar un Estado y valorar de manera cuantitativa...{" "}
+          Soló podrá seleccionar un Estado y valorar de manera cuantitativa  de acuerdo a su concepto como tutor/evaluador, al igual  podrá  realizar aportes  para el mejoramiento.  Una vez realizada la valoración,  las demás preguntas se debe seleccionar {" "}
           <span className="font-bold">No aplica.</span>
         </p>
         <p className="mb-6 text-gray-800">
-          Durante la implementación de la experiencia significativa, no se identifica la obtención de logros o son
-          mínimos...
+          Durante la implementación de la experiencia significativa, no se identifica la obtención de logros o son mínimos en relación con los objetivos propuestos. Los resultados obtenidos no han generado un impacto en la solución de las necesidades o problemáticas identificadas.
         </p>
 
         {/* Primer bloque */}
@@ -86,27 +85,22 @@ const CriteriaResults: React.FC<CriteriaResultsProps> = ({ value, onChange }) =>
                 name="resultados1"
                 className="custom-radio"
                 value={val}
-                checked={criteria.score[0] === val}
-                onChange={() => updateScore(0,val)}
+                checked={criteria.score === val}
+                onChange={() => updateScore(val)}
               />
               <span className="ml-2">{val === -1 ? "No aplica" : val}</span>
             </label>
           ))}
         </div>
 
-        {/* Bloque extendido */}
-        <div className="mt-12 mb-8">
-          <p className="mb-6 text-gray-800">
-            La experiencia significativa evidencia logros parciales en relación con los objetivos propuestos...
-          </p>
-        </div>
+       
 
         <hr className="my-8 border-gray-300" />
 
         {/* Segundo bloque */}
         <div className="mb-8">
           <p className="mb-6 text-gray-800">
-            Evidencia la obtención de todos los objetivos propuestos. Los resultados obtenidos evidencian impacto total...
+            Evidencia la obtención de todos los objetivos propuestos. Los resultados obtenidos evidencian impacto en la solución total de las necesidades o problemáticas identificadas.
           </p>
           <div className="flex flex-row gap-8">
             {[11, 12, 13, 14, 15].map((val) => (
@@ -116,8 +110,8 @@ const CriteriaResults: React.FC<CriteriaResultsProps> = ({ value, onChange }) =>
                   name="resultados2"
                   className="custom-radio"
                   value={val}
-                  checked={criteria.score[1] === val}
-                  onChange={() => updateScore(1,val)}
+                  checked={criteria.score === val}
+                  onChange={() => updateScore(val)}
                 />
                 <span className="ml-2">{val}</span>
               </label>

@@ -1,14 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { Permission } from "../Api/Types/permissions";
 
-interface Permission {
-  id: number;
-  code: string;
-  name: string;
-  description: string;
-  state?: boolean;
-  createdAt?: string;
-}
 interface AddPermissionFormProps {
   onClose: () => void;
   onAdded: () => void;
@@ -135,18 +128,24 @@ const Permissions: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [onlyActive, setOnlyActive] = useState(true); // Estado para filtrar permisos activos/inactivos
 
   const fetchPermissions = () => {
     const token = localStorage.getItem("token");
     axios
       .get("/api/Permission/getAll", {
+        params: { OnlyActive: onlyActive }, // Usar el filtro OnlyActive
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
       .then((res) => {
         if (Array.isArray(res.data.data)) {
-          setPermissions(res.data.data);
+          const permissionsNormalized = res.data.data.map((permission: Permission) => ({
+            ...permission,
+            state: onlyActive, // Asignar el estado basado en el filtro OnlyActive
+          }));
+          setPermissions(permissionsNormalized);
         } else {
           setPermissions([]);
         }
@@ -160,7 +159,7 @@ const Permissions: React.FC = () => {
 
   useEffect(() => {
     fetchPermissions();
-  }, []);
+  }, [onlyActive]); // Refrescar cuando cambie el filtro
 
   if (loading) return <div>Cargando permisos...</div>;
   if (error) return <div>{error}</div>;
@@ -168,11 +167,31 @@ const Permissions: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-lg">
       <h2 className="text-2xl font-bold text-sky-700 mb-6 text-center">Lista de Permisos</h2>
-      <div className="flex justify-end mb-4">
+      <div className="flex justify-between mb-4">
         <button
           className="px-4 py-2 rounded bg-sky-600 text-white hover:bg-sky-700 font-semibold"
           onClick={() => setAddPermissionOpen(true)}
-        >Agregar Permiso</button>
+        >
+          Agregar Permiso
+        </button>
+        <div className="flex justify-between mb-4">
+  <button
+    className={`px-4 py-2 rounded font-semibold ${
+      onlyActive ? "bg-green-500 hover:bg-green-600 text-white" : "bg-gray-300 hover:bg-gray-400 text-black"
+    }`}
+    onClick={() => setOnlyActive(true)} // Mostrar activos
+  >
+    Mostrar Activos
+  </button>
+  <button
+    className={`px-4 py-2 rounded font-semibold ${
+      !onlyActive ? "bg-red-500 hover:bg-red-600 text-white" : "bg-gray-300 hover:bg-gray-400 text-black"
+    }`}
+    onClick={() => setOnlyActive(false)} // Mostrar inactivos
+  >
+    Mostrar Inactivos
+  </button>
+</div>
       </div>
       <div className="overflow-x-auto">
         <table className="min-w-full border border-gray-200 rounded-lg">
@@ -181,13 +200,16 @@ const Permissions: React.FC = () => {
               <th className="py-3 px-4 text-left font-semibold text-gray-700 border-b">Código</th>
               <th className="py-3 px-4 text-left font-semibold text-gray-700 border-b">Nombre</th>
               <th className="py-3 px-4 text-left font-semibold text-gray-700 border-b">Descripción</th>
+              <th className="py-3 px-4 text-left font-semibold text-gray-700 border-b">Estado</th>
               <th className="py-3 px-4 text-left font-semibold text-gray-700 border-b">Acciones</th>
             </tr>
           </thead>
           <tbody>
             {permissions.length === 0 ? (
               <tr>
-                <td colSpan={4} className="py-6 px-4 text-center text-gray-500">No hay permisos para mostrar.</td>
+                <td colSpan={5} className="py-6 px-4 text-center text-gray-500">
+                  No hay permisos para mostrar.
+                </td>
               </tr>
             ) : (
               permissions.map((permission) => (
@@ -195,34 +217,53 @@ const Permissions: React.FC = () => {
                   <td className="py-2 px-4 border-b">{permission.code}</td>
                   <td className="py-2 px-4 border-b">{permission.name}</td>
                   <td className="py-2 px-4 border-b">{permission.description}</td>
+                  <td className="py-2 px-4 border-b">
+                    {permission.state ? (
+                      <span className="text-green-600 font-semibold">Activo</span>
+                    ) : (
+                      <span className="text-red-600 font-semibold">Inactivo</span>
+                    )}
+                  </td>
                   <td className="py-2 px-4 border-b flex gap-2">
                     <button
                       className="px-3 py-1 rounded bg-sky-600 text-white hover:bg-sky-700 text-sm"
                       onClick={() => setEditPermission(permission)}
-                    >Editar</button>
-                    <button
-                      className="px-3 py-1 rounded bg-red-500 text-white hover:bg-red-700 text-sm"
-                      onClick={async () => {
-                        const token = localStorage.getItem("token");
-                        try {
-                          await axios.put(`/api/Permission/${permission.id}`, {
-                            ...permission,
-                            state: false,
-                            deletedAt: new Date().toISOString(),
-                          }, {
-                            headers: { Authorization: `Bearer ${token}` },
-                          });
-                          setLoading(true);
-                          fetchPermissions();
-                        } catch (err: any) {
-                          if (err?.response?.status === 400 && err?.response?.data?.message) {
-                            setDeleteError(err.response.data.message);
-                          } else {
-                            setDeleteError("No se puede eliminar este Permiso porque todavía tiene registros relacionados activos. Por favor, desactiva primero sus datos asociados antes de eliminarlo.");
+                    >
+                      Editar
+                    </button>
+                    {permission.state ? (
+                      <button
+                        className="px-3 py-1 rounded bg-red-500 hover:bg-red-700 text-white text-sm"
+                        onClick={async () => {
+                          const token = localStorage.getItem("token");
+                          try {
+                            await axios.delete(`/api/Permission/${permission.id}`, {
+                              headers: { Authorization: `Bearer ${token}` },
+                            });
+                            fetchPermissions(); // Refrescar lista
+                          } catch (err: any) {
+                            if (err?.response?.status === 400 && err?.response?.data?.message) {
+                              setDeleteError(err.response.data.message);
+                            } else {
+                              setDeleteError(
+                                "No se puede eliminar este Permiso porque todavía tiene registros relacionados activos. Por favor, desactiva primero sus datos asociados antes de eliminarlo."
+                              );
+                            }
                           }
-                        }
-                      }}
-                    >Eliminar</button>
+                        }}
+                      >
+                        Eliminar
+                      </button>
+                    ) : (
+                      <button
+                        className="px-3 py-1 rounded bg-green-500 hover:bg-green-700 text-white text-sm"
+                        onClick={() => {
+                          // Lógica para activar el permiso si es necesario
+                        }}
+                      >
+                        Activar
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))
@@ -249,7 +290,6 @@ const Permissions: React.FC = () => {
           }}
         />
       )}
-      {/* Modal de error al eliminar permiso */}
       {deleteError && (
         <div className="fixed inset-0 bg-white bg-opacity-50 flex justify-center items-center z-[1100] overflow-auto p-2 sm:p-4">
           <div className="bg-white p-6 rounded-xl shadow-lg w-full max-w-md text-center">
@@ -258,7 +298,9 @@ const Permissions: React.FC = () => {
             <button
               className="px-4 py-2 rounded bg-sky-600 text-white hover:bg-sky-700"
               onClick={() => setDeleteError(null)}
-            >Cerrar</button>
+            >
+              Cerrar
+            </button>
           </div>
         </div>
       )}

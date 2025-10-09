@@ -55,7 +55,14 @@ const AddExperience: React.FC<AddExperienceProps> = ({ onVolver }) => {
     otroTema: "",
     thematicLocation: ""
   });
-  const [tematicaForm, setTematicaForm] = useState<any>({});
+  const [tematicaForm, setTematicaForm] = useState<any>({
+    thematicLineIds: [],
+    pedagogicalStrategies: "",
+    coordinationTransversalProjects: "",
+    coverage: "",
+    population: "",
+    experiencesCovidPandemic: ""
+  });
   const [nivelesForm, setNivelesForm] = useState<NivelesFormValue>({
     niveles: {
       Primaria: { checked: false, grados: [] },
@@ -116,7 +123,7 @@ const AddExperience: React.FC<AddExperienceProps> = ({ onVolver }) => {
       ? [
         {
           name: pdfFile.name || "Documento PDF",
-          urlPdf: pdfFile.urlLink || "",
+          urlPdf: pdfFile.urlPdf || "",
           urlLink: pdfFile.urlLink || "",
         },
       ]
@@ -153,13 +160,18 @@ const AddExperience: React.FC<AddExperienceProps> = ({ onVolver }) => {
       thematicLineIds: formData.thematicLineIds?.length
         ? formData.thematicLineIds
         : tematicaForm.thematicLineIds || [],
+      coordinationTransversalProjects: tematicaForm.coordinationTransversalProjects || "",
+      pedagogicalStrategies: tematicaForm.pedagogicalStrategies || "",
+      coverage: tematicaForm.coverage || "",
+      population: tematicaForm.population || "",
+      experiencesCovidPandemic: tematicaForm.experiencesCovidPandemic || "",
 
       grades: grades,
       populationGradeIds: populationGradeIds,
       developmenttime: tiempo.developmenttime || "",
       recognition: tiempo.recognition || "",
       socialization: tiempo.socialization || "",
-      userId: localStorage.getItem("userId") || 0,
+      userId: Number(localStorage.getItem("userId")) || 0,
 
       institution: {
         name: identificacionInstitucional.name || "",
@@ -202,18 +214,25 @@ const AddExperience: React.FC<AddExperienceProps> = ({ onVolver }) => {
       });
 
       if (!res.ok) {
-        let errorText = "Error al registrar la experiencia";
+        // Mejor manejo de error: mostrar siempre el mensaje del backend
+        let errorText = `Error al registrar la experiencia (HTTP ${res.status})`;
+        let backendMsg = "";
         try {
-          const errorData = await res.json();
-          errorText =
-            errorData?.message ?? errorData?.error ?? (typeof errorData === "string" ? errorData : errorText);
+          // Intenta parsear como JSON
+          const errorData = await res.clone().json();
+          backendMsg = errorData?.message || errorData?.error || JSON.stringify(errorData);
         } catch {
           try {
-            const text = await res.text();
-            if (text) errorText = text;
-          } catch { }
+            // Si no es JSON, intenta como texto
+            backendMsg = await res.clone().text();
+          } catch {}
+        }
+        if (backendMsg && backendMsg !== "") {
+          errorText += `: ${backendMsg}`;
         }
         setErrorMessage(errorText);
+        // También loguea el payload para depuración
+        console.error("Payload enviado:", payload);
         return;
       }
 

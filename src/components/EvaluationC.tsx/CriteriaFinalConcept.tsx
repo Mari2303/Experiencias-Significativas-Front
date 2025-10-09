@@ -8,9 +8,9 @@ interface CriteriaFinalConceptProps {
   isSaving?: boolean;
 }
 
-const CriteriaFinalConcept: React.FC<CriteriaFinalConceptProps> = ({ value, onChange, onSubmit, isSaving }) => {
+const CriteriaFinalConcept: React.FC<CriteriaFinalConceptProps> = () => {
   return (
-    <div className=" min-h-screen flex flex-col justify-between p-0">
+    <div className=" flex flex-col p-0">
       <div className="max-w-5xl w-full mx-auto">
         <div className="bg-white rounded-lg p-6 mt-8 mb-8">
           <h2 className="text-2xl font-semibold text-sky-600 mb-4">
@@ -39,14 +39,6 @@ const CriteriaFinalConcept: React.FC<CriteriaFinalConceptProps> = ({ value, onCh
         </div>
       </div>
       <div className="w-full flex justify-center pb-8">
-        <button
-          type="button"
-          className="bg-sky-500 hover:bg-sky-600 text-white font-semibold py-3 px-16 rounded focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-opacity-50 text-lg transition-colors"
-          onClick={onSubmit}
-          disabled={isSaving}
-        >
-          {isSaving ? "Guardando..." : "Enviar"}
-        </button>
       </div>
     </div>
     

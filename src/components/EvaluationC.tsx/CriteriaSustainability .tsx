@@ -7,13 +7,13 @@ interface CriteriaSustainabilityProps {
 }
 
 const CriteriaSustainability: React.FC<CriteriaSustainabilityProps> = ({ value, onChange }) => {
-  const CRITERIA_ID = 7;
+  const CRITERIA_ID = 8; // ID real para Sostenibilidad
 
   // Buscar si ya existe este criterio en la evaluación
   const criteria =
     value.criteriaEvaluations.find((c) => c.criteriaId === CRITERIA_ID) ??
     {
-			score: [0, 0, 0],
+			score: 0,
 			descriptionContribution: "",
 			evaluationId: 0,
       criteriaId: CRITERIA_ID,
@@ -23,10 +23,10 @@ const CriteriaSustainability: React.FC<CriteriaSustainabilityProps> = ({ value, 
 			deletedAt: ""
     };
 
-  const updateScore = (index: number, score: number) => {
+  const updateScore = (score: number) => {
     const updatedCriteria: CriteriaEvaluation = {
       ...criteria,
-      score: criteria.score.map((v, i) => (i === index ? score : v)),
+      score,
     };
 
     onChange({
@@ -69,7 +69,7 @@ const CriteriaSustainability: React.FC<CriteriaSustainabilityProps> = ({ value, 
           </span>
         </div>
         <p className="mb-2 text-gray-800">
-          Solo podrá seleccionar un Estado y valorar de manera cuantitativa...{" "}
+          Solo podrá seleccionar un Estado y valorar de manera cuantitativa  de acuerdo a su concepto como tutor/evaluador, al igual  podrá  realizar aportes  para el mejoramiento.  Una vez realizada la valoración,  las demás preguntas se debe seleccionar{" "}
           <span className="font-bold">No aplica.</span>
         </p>
         <p className="mb-6 text-gray-800">
@@ -86,28 +86,22 @@ const CriteriaSustainability: React.FC<CriteriaSustainabilityProps> = ({ value, 
                 name="sostenibilidad1"
                 className="custom-radio"
                 value={val}
-                checked={criteria.score[0] === val}
-                onChange={() => updateScore(0, val)}
+                checked={criteria.score === val}
+                onChange={() => updateScore(val)}
               />
               <span className="ml-2">{val === -1 ? "No aplica" : val}</span>
             </label>
           ))}
         </div>
 
-        {/* Bloque extendido */}
-        <div className="mt-12 mb-8">
-          <p className="mb-6 text-gray-800">
-            Contempla mecanismos que buscan generar acciones para el mantenimiento, fortalecimiento y consolidación de la
-            experiencia significativa...
-          </p>
-        </div>
+      
 
         <hr className="my-8 border-gray-300" />
 
         {/* Segundo bloque */}
         <div className="mb-8">
           <p className="mb-6 text-gray-800">
-            Existen acciones consolidadas que permiten garantizar la sostenibilidad de la experiencia...
+            Existen acciones consolidadas que permiten garantizar la sostenibilidad de la experiencia, a partir de la institucionalización y apoyo de la comunidad educativa.  Se implementan estrategias destinadas a la articulación de acciones de cooperación con otras entidades y/o instituciones públicas o privadas, a través de planes, programas y proyectos externos al establecimiento educativo
           </p>
           <div className="flex flex-row gap-8">
             {[6, 7, 8, 9, 10].map((val) => (
@@ -117,8 +111,8 @@ const CriteriaSustainability: React.FC<CriteriaSustainabilityProps> = ({ value, 
                   name="sostenibilidad2"
                   className="custom-radio"
                   value={val}
-                  checked={criteria.score[1] === val}
-                  onChange={() => updateScore(1, val)}
+                  checked={criteria.score === val}
+                  onChange={() => updateScore(val)}
                 />
                 <span className="ml-2">{val}</span>
               </label>

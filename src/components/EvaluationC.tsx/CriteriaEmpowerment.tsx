@@ -7,13 +7,13 @@ interface CriteriaEmpowermentProps {
 }
 
 const CriteriaEmpowerment: React.FC<CriteriaEmpowermentProps> = ({ value, onChange }) => {
-  const CRITERIA_ID = 4; // 👈 ID fijo para Empoderamiento (ajústalo según tu modelo)
+  const CRITERIA_ID = 5; // ID real para Empoderamiento
 
   // Buscar si ya existe este criterio en la evaluación
   const criteria =
     value.criteriaEvaluations.find((c) => c.criteriaId === CRITERIA_ID) ??
     {
-      score: [0,0,0],
+      score: 0,
       descriptionContribution: "",
       evaluationId: 0,
       criteriaId: CRITERIA_ID,
@@ -23,10 +23,10 @@ const CriteriaEmpowerment: React.FC<CriteriaEmpowermentProps> = ({ value, onChan
       deletedAt: "",
     };
 
-  const updateScore = (index: number, score: number) => {
+  const updateScore = (score: number) => {
     const updatedCriteria: CriteriaEvaluation = {
       ...criteria,
-      score: criteria.score.map((v, i) => (i === index ? score : v)),
+      score,
     };
 
     onChange({
@@ -90,8 +90,8 @@ const CriteriaEmpowerment: React.FC<CriteriaEmpowermentProps> = ({ value, onChan
                 name="empoderamiento"
                 className="custom-radio"
                 value={val}
-                checked={criteria.score[0] === val}
-                onChange={() => updateScore(0, val)}
+                checked={criteria.score === val}
+                onChange={() => updateScore(val)}
               />
               <span className="ml-2">{val}</span>
             </label>
@@ -126,8 +126,8 @@ const CriteriaEmpowerment: React.FC<CriteriaEmpowermentProps> = ({ value, onChan
                   name="empoderamiento2"
                   className="custom-radio"
                   value={val}
-                  checked={criteria.score[1] === val}
-                  onChange={() => updateScore(1, val)}
+                  checked={criteria.score === val}
+                  onChange={() => updateScore(val)}
                 />
                 <span className="ml-2">{val}</span>
               </label>

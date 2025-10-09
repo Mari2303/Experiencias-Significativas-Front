@@ -27,18 +27,26 @@ const LideresForm: React.FC<LideresFormProps> = ({ value, onChange }) => {
               placeholder="Nombre(s) y apellido(s)"
               className="w-full border rounded p-2 mt-1"
               value={lider.nameFirstLeader || ""}
-              onChange={(e) =>
-                handleChange(i, "nameFirstLeader", e.target.value)
-              }
+              pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$"
+              title="Solo se permiten letras y espacios"
+               onChange={(e) => {
+                const val = e.target.value.replace(/[^A-Za-z\s]/g, ""); 
+                handleChange(i, "nameFirstLeader", val);
+              }}
+              required
             />
 
             <input
               placeholder="Documento de identidad"
               className="w-full border rounded p-2 mt-2"
               value={lider.firstIdentityDocument || ""}
-              onChange={(e) =>
-                handleChange(i, "firstIdentityDocument", e.target.value)
-              }
+              onChange={(e) => {
+                const val = e.target.value.replace(/\D/g, ""); // solo números
+                if (val.length <= 10) {
+                  handleChange(i, "firstIdentityDocument", val);
+                }
+              }}
+              required
             />
 
             <input
@@ -46,22 +54,29 @@ const LideresForm: React.FC<LideresFormProps> = ({ value, onChange }) => {
               className="w-full border rounded p-2 mt-2"
               value={lider.firdtEmail || ""}
               onChange={(e) => handleChange(i, "firdtEmail", e.target.value)}
+              required
             />
 
             <input
               placeholder="Cargo"
               className="w-full border rounded p-2 mt-2"
               value={lider.firstPosition || ""}
-              onChange={(e) =>
-                handleChange(i, "firstPosition", e.target.value)
-              }
+              onChange={(e) => {
+                const val = e.target.value.replace(/[^A-Za-z\s]/g, "");
+                handleChange(i, "firstPosition", val);
+              }}
+              required
             />
 
             <input
               placeholder="Teléfono"
               className="w-full border rounded p-2 mt-2"
               value={lider.firstPhone || ""}
-              onChange={(e) => handleChange(i, "firstPhone", e.target.value)}
+              onChange={(e) => {
+                const val = e.target.value.replace(/\D/g, ""); // solo números
+                handleChange(i, "firstPhone", val);
+              }}
+              required
             />
           </div>
         ))}

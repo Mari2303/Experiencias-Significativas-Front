@@ -7,13 +7,13 @@ interface CriteriaTransformationProps {
 }
 
 const CriteriaTransformation: React.FC<CriteriaTransformationProps> = ({ value, onChange }) => {
-  const CRITERIA_ID = 6; // ID único para "Transformación"
+  const CRITERIA_ID = 7; // ID real para Transformación
 
   // Buscar si ya existe el objeto para este criterioId
   const criteria =
     value.criteriaEvaluations.find((c) => c.criteriaId === CRITERIA_ID) ??
     {
-			score: [0, 0, 0],
+			score: 0,
 			descriptionContribution: "",
 			evaluationId: 0,
       criteriaId: CRITERIA_ID,
@@ -23,10 +23,10 @@ const CriteriaTransformation: React.FC<CriteriaTransformationProps> = ({ value, 
 			deletedAt: ""
     };
 
-  const updateScore = (index: number, score: number) => {
+  const updateScore = (score: number) => {
     const updated: CriteriaEvaluation = {
       ...criteria,
-      score: criteria.score.map((v, i) => (i === index ? score : v)),
+      score,
     };
 
     onChange({
@@ -84,8 +84,8 @@ const CriteriaTransformation: React.FC<CriteriaTransformationProps> = ({ value, 
                 name={`transformacion1-${CRITERIA_ID}`}
                 className="custom-radio"
                 value={val}
-                checked={criteria.score[0] === val}
-                onChange={() => updateScore(0, val)}
+                checked={criteria.score === val}
+                onChange={() => updateScore(val)}
               />
               <span className="ml-2">{val === -1 ? "No aplica" : val}</span>
             </label>
@@ -120,8 +120,8 @@ const CriteriaTransformation: React.FC<CriteriaTransformationProps> = ({ value, 
                   name={`transformacion2-${CRITERIA_ID}`}
                   className="custom-radio"
                   value={val}
-                  checked={criteria.score[1] === val}
-                  onChange={() => updateScore(1, val)}
+                  checked={criteria.score === val}
+                  onChange={() => updateScore(val)}
                 />
                 <span className="ml-2">{val}</span>
               </label>

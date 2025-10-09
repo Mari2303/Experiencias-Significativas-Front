@@ -185,45 +185,62 @@ useEffect(() => {
             <input
               type="text"
               value={PrimerNombre}
-              onChange={(e) => setNombre(e.target.value)}
-              required
-             className="w-70 border border-gray-300 rounded-md px-4 py-2 shadow-sm focus:ring-pink-500 focus:border-pink-500"
-
-            />
-          </div>
+              onChange={(e) => {
+      const regex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]*$/;
+      if (regex.test(e.target.value)) {
+        setNombre(e.target.value);
+      }
+    }}
+    required
+    className="w-70 border border-white-300 rounded-md px-4 py-2 shadow-sm focus:ring-pink-500 focus:border-pink-500 bg-white"
+  />
+</div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700">Segundo Nombre:</label>
             <input
               type="text"
               value={SegundoNombre}
-              onChange={(e) => setSegundoNombre(e.target.value)}
-
-            className="w-70 border border-gray-300 rounded-md px-4 py-2 shadow-sm focus:ring-pink-500 focus:border-pink-500"
-            />
-          </div>
-
+              onChange={(e) => {
+      const regex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]*$/;
+      if (regex.test(e.target.value)) {
+        setSegundoNombre(e.target.value);
+      }
+    }}
+    className="w-70 border border-gray-300 rounded-md px-4 py-2 shadow-sm focus:ring-pink-500 focus:border-pink-500 bg-white"
+  />
+</div>
           <div>
             <label className="block text-sm font-medium text-gray-700">Primer Apellido:</label>
             <input
               type="text"
               value={PrimerApellido}
-              onChange={(e) => setPrimerApellido(e.target.value)}
-              required
-              className="mt-1 block w-70 border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-            />
-          </div>
+              onChange={(e) => {
+      const regex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]*$/;
+      if (regex.test(e.target.value)) {
+        setPrimerApellido(e.target.value);
+      }
+    }}
+    required
+    className="w-70 border border-gray-300 rounded-md px-4 py-2 shadow-sm focus:ring-pink-500 focus:border-pink-500 bg-white"
+  />
+</div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700">Segundo Apellido:</label>
             <input
               type="text"
               value={SegundoApellido}
-              onChange={(e) => setSegundoApellido(e.target.value)}
-              required
-              className="mt-1 block w-70 border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-            />
-          </div>
+              onChange={(e) => {
+      const regex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]*$/;
+      if (regex.test(e.target.value)) {
+        setSegundoApellido(e.target.value);
+      }
+    }}
+    
+    className="w-70 border border-gray-300 rounded-md px-4 py-2 shadow-sm focus:ring-pink-500 focus:border-pink-500 bg-white"
+  />
+</div>
 
           <div>
   <label className="block text-sm font-medium text-gray-700">Tipo de Documento:</label>
@@ -231,7 +248,7 @@ useEffect(() => {
   value={TipoDocumento}
   onChange={(e) => setTipoDocumento(e.target.value)}
   required
-  className="mt-1 block w-70 border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+  className="mt-1 block w-70 border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white"
 >
   <option value="">Seleccione...</option>
   {documentTypes.map((doc) => (
@@ -250,13 +267,24 @@ useEffect(() => {
               pattern="[0-9]*"
               value={NumeroDocumento}
               onChange={(e) => {
-                const val = e.target.value.replace(/[^0-9]/g, "");
-                setNumeroDocumento(val);
-              }}
-              required
-              className="mt-1 block w-70 border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-            />
-          </div>
+      const val = e.target.value.replace(/[^0-9]/g, "");
+      if (val.length <= 10) setNumeroDocumento(val); // límite 10
+    }}
+    required
+    minLength={8}
+    maxLength={10}
+    className="mt-1 block w-70 border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white"
+  />
+  <p
+    className={`text-xs mt-1 ${
+      NumeroDocumento.length < 8 || NumeroDocumento.length > 10
+        ? "text-red-500"
+        : "text-green-600"
+    }`}
+  >
+    {NumeroDocumento.length} / 8-10 caracteres
+  </p>
+</div>
 
           <div className="relative">
             <label className="block text-sm font-medium text-gray-700">Código DANE:</label>
@@ -267,7 +295,7 @@ useEffect(() => {
               onFocus={() => setCodigoDaneFocus(true)}
               onBlur={() => setTimeout(() => setCodigoDaneFocus(false), 100)}
               required
-              className="mt-1 block w-70 border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+              className="mt-1 block w-70 border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white"
               placeholder="Seleccione o escriba..."
               autoComplete="off"
             />
@@ -299,12 +327,12 @@ useEffect(() => {
               value={NombreUsuario}
               onChange={(e) => setNombreUsuario(e.target.value)}
               required
-              className="mt-1 block w-70 border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+              className="mt-1 block w-70 border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white"
             />
           </div>
 
           <div className="relative">
-            <label className="block text-sm font-medium text-gray-700">Correo Institucional:</label>
+            <label className="block text-sm font-medium text-gray-700">Correo de la Institucion:</label>
             <input
               type="text"
               value={emailInstitucional}
@@ -312,7 +340,7 @@ useEffect(() => {
               onFocus={() => setEmailInstitucionalFocus(true)}
               onBlur={() => setTimeout(() => setEmailInstitucionalFocus(false), 100)}
               required
-              className="mt-1 block w-70 border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+              className="mt-1 block w-70 border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white"
               placeholder="Seleccione o escriba..."
               autoComplete="off"
             />
@@ -344,7 +372,7 @@ useEffect(() => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="mt-1 block w-70 border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+              className="mt-1 block w-70 border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white"
             />
           </div>
 
@@ -356,13 +384,21 @@ useEffect(() => {
               pattern="[0-9]*"
               value={telefono}
               onChange={(e) => {
-                const val = e.target.value.replace(/[^0-9]/g, "");
-                setTelefono(val);
-              }}
-              required
-              className="mt-1 block w-70 border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-            />
-          </div>
+      const val = e.target.value.replace(/[^0-9]/g, "");
+      if (val.length <= 10) setTelefono(val); // límite 10
+    }}
+    required
+    maxLength={10}
+    className="mt-1 block w-70 border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white"
+  />
+  <p
+    className={`text-xs mt-1 ${
+      telefono.length !== 10 ? "text-red-500" : "text-green-600"
+    }`}
+  >
+    {telefono.length} / 10 caracteres
+  </p>
+</div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700">Contraseña:</label>
@@ -371,7 +407,7 @@ useEffect(() => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="mt-1 block w-70 border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+              className="mt-1 block w-70 border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white"
             />
           </div>
 
@@ -381,7 +417,7 @@ useEffect(() => {
           <div className="md:col-span-2 flex justify-center">
             <button
               type="submit"
-              className="w-120 bg-indigo-600 text-white py-2 px-4 !rounded-xl hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500"
+              className="w-120 bg-[#00aaff] text-white py-2 px-4 !rounded-xl hover:bg-[#00aaff] focus:ring-2 focus:ring-[#00aaff]"
             >
               Registrarse
             </button>
