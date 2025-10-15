@@ -142,6 +142,7 @@ const TematicaForm: React.FC<TematicaFormProps> = ({ value, onChange }) => {
           type="text"
           placeholder="Articulación y proyectos transversales"
           value={value.coordinationTransversalProjects || ""}
+          maxLength={10}
           onChange={handleInput("coordinationTransversalProjects")}
         />
         <input

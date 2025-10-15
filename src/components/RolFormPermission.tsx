@@ -1,16 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import type { RolFormPermission } from "../Api/Types/rolFormPermission";
 
-interface RolFormPermission {
-  id: number;
-  roleId: number;
-  formId: number;
-  permissionId: number;
-  role: string;
-  form: string;
-  permission: string;
-  state?: boolean; // Estado activo/inactivo
-}
 
 const RolFormPermissionList: React.FC = () => {
   const [permissions, setPermissions] = useState<RolFormPermission[]>([]);

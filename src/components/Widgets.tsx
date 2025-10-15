@@ -112,10 +112,12 @@ const Widgets: React.FC = () => {
           show={modalOpen}
           onClose={() => setModalOpen(false)}
           experienceId={selectedExperienceId}
+          mode="view" // Solo visualizar
         />
       )}
     </div>
   );
 };
 
+0+63
 export default Widgets;

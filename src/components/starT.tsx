@@ -1,6 +1,4 @@
-
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import ExperienceModal from "./ExperienceModal";
 
 const starT: React.FC = () => {
@@ -11,29 +9,37 @@ const starT: React.FC = () => {
   const [selectedExperienceId, setSelectedExperienceId] = useState<number | null>(null);
 
   useEffect(() => {
-    setLoading(true);
-    setError(null);
-    const token = localStorage.getItem("token");
-    fetch("/api/ExperienceLineThematic/getAll", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      },
-    })
-      .then(res => res.json())
-      .then(data => {
-        if (Array.isArray(data.data)) {
-          setExperiencias(data.data);
-        } else {
-          setExperiencias([]);
-        }
-        setLoading(false);
-      })
-      .catch(() => {
+    const fetchExperiencias = async () => {
+      setLoading(true);
+      setError(null);
+      const token = localStorage.getItem("token");
+      const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "";
+      const endpoint = `${API_BASE}/api/Experience/List`;
+
+      try {
+        const res = await fetch(endpoint, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+        });
+
+        if (!res.ok) throw new Error("Error al obtener experiencias");
+
+        const data = await res.json();
+        console.log("Experiencias obtenidas:", data);
+
+        setExperiencias(data); // Almacenar las experiencias obtenidas
+      } catch (err) {
+        console.error("Error al cargar experiencias:", err);
         setError("Error al cargar experiencias");
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+
+    fetchExperiencias();
   }, []);
 
   return (
@@ -72,11 +78,11 @@ const starT: React.FC = () => {
                   alt="icono"
                   className="w-40 h-16 mb-3"
                 />
-                <div className="mb-2 font-semibold text-sky-700 text-base"></div>
+                <div className="mb-2 font-semibold text-sky-700 text-base">{exp.name}</div>
                 <button
                   className="bg-gray-100 rounded px-4 py-2 mt-2 text-sm font-semibold"
                   onClick={() => {
-                    setSelectedExperienceId(exp.experienceId);
+                    setSelectedExperienceId(exp.id);
                     setModalOpen(true);
                   }}
                 >
@@ -93,11 +99,11 @@ const starT: React.FC = () => {
           show={modalOpen}
           onClose={() => setModalOpen(false)}
           experienceId={selectedExperienceId}
+          mode="view" // Solo visualizar
         />
       )}
     </div>
   );
 };
-
 
 export default starT;

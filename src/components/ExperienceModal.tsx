@@ -6,11 +6,11 @@ interface ExperienceModalProps {
   show: boolean;
   onClose: () => void;
   experienceId?: number;
+  mode: "view" | "edit"; // Nuevo modo: "view" para visualizar, "edit" para actualizar
 }
 
-const ExperienceModal: React.FC<ExperienceModalProps> = ({ show, onClose, experienceId }) => {
+const ExperienceModal: React.FC<ExperienceModalProps> = ({ show, onClose, experienceId, mode }) => {
   const [experience, setExperience] = useState<UpdateExperience | null>(null);
-  const [editMode, setEditMode] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -58,7 +58,7 @@ const ExperienceModal: React.FC<ExperienceModalProps> = ({ show, onClose, experi
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold text-sky-700">
-            {editMode ? "Editar Experiencia" : "Actualizar / Información de la Experiencia"}
+            {mode === "edit" ? "Editar Experiencia" : "Información de la Experiencia"}
           </h2>
           <button
             onClick={onClose}
@@ -87,7 +87,7 @@ const ExperienceModal: React.FC<ExperienceModalProps> = ({ show, onClose, experi
           className="flex-1 flex flex-col"
           onSubmit={async (e) => {
             e.preventDefault();
-            if (!experienceId || !experience) return;
+            if (mode === "view" || !experienceId || !experience) return; // Solo actualizar en modo "edit"
             setLoading(true);
             setError(null);
             try {
@@ -98,7 +98,6 @@ const ExperienceModal: React.FC<ExperienceModalProps> = ({ show, onClose, experi
                   "Content-Type": "application/json",
                 },
               });
-              setEditMode(false);
               setLoading(false);
               onClose();
             } catch (err) {
@@ -107,135 +106,156 @@ const ExperienceModal: React.FC<ExperienceModalProps> = ({ show, onClose, experi
             }
           }}
         >
-          {/* Contenido del formulario */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            {/* Campos del formulario */}
+          {/* Campos del formulario */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
             <div className="col-span-2">
               <label className="block font-semibold mb-1">Título de la experiencia:</label>
-              <input
-                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-200"
-                placeholder="Ingrese el título de la experiencia"
-                value={experience?.experience.nameExperiences || ""}
-                readOnly={!editMode}
-                onChange={(e) =>
-                  editMode &&
-                  setExperience((exp) =>
-                    exp
-                      ? { ...exp, experience: { ...exp.experience, nameExperiences: e.target.value } }
-                      : exp
-                  )
-                }
-              />
+              {mode === "view" ? (
+                <p className="w-full text-gray-800">{experience?.experience.nameExperiences || "Sin información"}</p>
+              ) : (
+                <input
+                  className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-200"
+                  placeholder="Ingrese el título de la experiencia"
+                  value={experience?.experience.nameExperiences || ""}
+                  onChange={(e) =>
+                    mode === "edit" &&
+                    setExperience((exp) =>
+                      exp
+                        ? { ...exp, experience: { ...exp.experience, nameExperiences: e.target.value } }
+                        : exp
+                    )
+                  }
+                />
+              )}
             </div>
             <div className="col-span-2">
               <label className="block font-semibold mb-1">Nombre del establecimiento educativo:</label>
-              <input
-                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-200"
-                placeholder="Ingrese el nombre del establecimiento"
-                value={experience?.institution.name || ""}
-                readOnly={!editMode}
-                onChange={(e) =>
-                  editMode &&
-                  setExperience((exp) =>
-                    exp ? { ...exp, institution: { ...exp.institution, name: e.target.value } } : exp
-                  )
-                }
-              />
+              {mode === "view" ? (
+                <p className="w-full text-gray-800">{experience?.institution.name || "Sin información"}</p>
+              ) : (
+                <input
+                  className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-200"
+                  placeholder="Ingrese el nombre del establecimiento educativo"
+                  value={experience?.institution.name || ""}
+                  onChange={(e) =>
+                    mode === "edit" &&
+                    setExperience((exp) =>
+                      exp ? { ...exp, institution: { ...exp.institution, name: e.target.value } } : exp
+                    )
+                  }
+                />
+              )}
             </div>
             <div className="col-span-2">
               <label className="block font-semibold mb-1">Nombre Completo del líder:</label>
-              <input
-                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-200"
-                placeholder="Ingrese el nombre completo del líder"
-                value={experience?.experience.nameFirstLeader || ""}
-                readOnly={!editMode}
-                onChange={(e) =>
-                  editMode &&
-                  setExperience((exp) =>
-                    exp
-                      ? { ...exp, experience: { ...exp.experience, nameFirstLeader: e.target.value } }
-                      : exp
-                  )
-                }
-              />
+              {mode === "view" ? (
+                <p className="w-full text-gray-800">{experience?.experience.nameFirstLeader || "Sin información"}</p>
+              ) : (
+                <input
+                  className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-200"
+                  placeholder="Ingrese el nombre completo del líder"
+                  value={experience?.experience.nameFirstLeader || ""}
+                  onChange={(e) =>
+                    mode === "edit" &&
+                    setExperience((exp) =>
+                      exp
+                        ? { ...exp, experience: { ...exp.experience, nameFirstLeader: e.target.value } }
+                        : exp
+                    )
+                  }
+                />
+              )}
             </div>
             <div>
               <label className="block font-semibold mb-1">Departamento:</label>
-              <input
-                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-200"
-                placeholder="Ingrese el departamento"
-                value={experience?.institution.department || ""}
-                readOnly={!editMode}
-                onChange={(e) =>
-                  editMode &&
-                  setExperience((exp) =>
-                    exp
-                      ? { ...exp, institution: { ...exp.institution, department: e.target.value } }
-                      : exp
-                  )
-                }
-              />
+              {mode === "view" ? (
+                <p className="w-full text-gray-800">{experience?.institution.department || "Sin información"}</p>
+              ) : (
+                <input
+                  className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-200"
+                  placeholder="Ingrese el departamento"
+                  value={experience?.institution.department || ""}
+                  onChange={(e) =>
+                    mode === "edit" &&
+                    setExperience((exp) =>
+                      exp
+                        ? { ...exp, institution: { ...exp.institution, department: e.target.value } }
+                        : exp
+                    )
+                  }
+                />
+              )}
             </div>
             <div>
               <label className="block font-semibold mb-1">Fecha:</label>
-              <input
-                type="date"
-                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-200"
-                placeholder="dd/mm/aaaa"
-                value={experience?.experience.developmenttime?.slice(0, 10) || ""}
-                readOnly={!editMode}
-                onChange={(e) =>
-                  editMode &&
-                  setExperience((exp) =>
-                    exp
-                      ? { ...exp, experience: { ...exp.experience, developmenttime: e.target.value } }
-                      : exp
-                  )
-                }
-              />
+              {mode === "view" ? (
+                <p className="w-full text-gray-800">{experience?.experience.developmenttime?.slice(0, 10) || "Sin información"}</p>
+              ) : (
+                <input
+                  type="date"
+                  className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-200"
+                  placeholder="dd/mm/aaaa"
+                  value={experience?.experience.developmenttime?.slice(0, 10) || ""}
+                  onChange={(e) =>
+                    mode === "edit" &&
+                    setExperience((exp) =>
+                      exp
+                        ? { ...exp, experience: { ...exp.experience, developmenttime: e.target.value } }
+                        : exp
+                    )
+                  }
+                />
+              )}
             </div>
             <div>
               <label className="block font-semibold mb-1">Municipio:</label>
-              <input
-                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-200"
-                placeholder="Ingrese el municipio"
-                value={experience?.institution.municipality || ""}
-                readOnly={!editMode}
-                onChange={(e) =>
-                  editMode &&
-                  setExperience((exp) =>
-                    exp
-                      ? { ...exp, institution: { ...exp.institution, municipality: e.target.value } }
-                      : exp
-                  )
-                }
-              />
+              {mode === "view" ? (
+                <p className="w-full text-gray-800">{experience?.institution.municipality || "Sin información"}</p>
+              ) : (
+                <input
+                  className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-200"
+                  placeholder="Ingrese el municipio"
+                  value={experience?.institution.municipality || ""}
+                  onChange={(e) =>
+                    mode === "edit" &&
+                    setExperience((exp) =>
+                      exp
+                        ? { ...exp, institution: { ...exp.institution, municipality: e.target.value } }
+                        : exp
+                    )
+                  }
+                />
+              )}
             </div>
             <div>
               <label className="block font-semibold mb-1">Criterios evaluados:</label>
-              <select
-                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-200 cursor-not-allowed"
-                value={experience?.criterias?.[0]?.name || ""}
-                onChange={() => {}}
-              >
-                {experience?.criterias?.map((c, index) => (
-                  <option key={index} value={c.name}>
-                    {c.name}
-                  </option>
-                ))}
-              </select>
+              {mode === "view" ? (
+                <p className="w-full text-gray-800">{experience?.criterias?.[0]?.name || "Sin información"}</p>
+              ) : (
+                <select
+                  className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-200"
+                  value={experience?.criterias?.[0]?.name || ""}
+                  onChange={() => {}}
+                >
+                  {experience?.criterias?.map((c, index) => (
+                    <option key={index} value={c.name}>
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
+              )}
             </div>
-            {/* Nueva estructura para los 4 campos finales */}
-            <div className="col-span-2 grid grid-cols-2 gap-x-4 gap-y-4">
-              <div>
-                <label className="block font-semibold mb-1">Código DANE:</label>
+            <div>
+              <label className="block font-semibold mb-1">Código DANE:</label>
+              {mode === "view" ? (
+                <p className="w-full text-gray-800">{experience?.institution.codeDane || "Sin información"}</p>
+              ) : (
                 <input
                   className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-200"
                   placeholder="Ingrese el código DANE"
                   value={experience?.institution.codeDane || ""}
-                  readOnly={!editMode}
                   onChange={(e) =>
-                    editMode &&
+                    mode === "edit" &&
                     setExperience((exp) =>
                       exp
                         ? { ...exp, institution: { ...exp.institution, codeDane: e.target.value } }
@@ -243,85 +263,80 @@ const ExperienceModal: React.FC<ExperienceModalProps> = ({ show, onClose, experi
                     )
                   }
                 />
-              </div>
-              <div>
-                <label className="block font-semibold mb-1">Estado actual:</label>
-                <input
-                  className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-200"
-                  placeholder="Estado actual"
-                  value={experience?.experience?.evaluationResult || "Naciente"} // usamos el resultado que envía el backend
-                  readOnly
-                />
-              </div>
-              <div>
-                <label className="block font-semibold mb-1">Adjuntar PDF:</label>
-                {experience?.documents[0]?.urlPdf ? (
+              )}
+            </div>
+            <div>
+              <label className="block font-semibold mb-1">Estado actual:</label>
+              <p className="w-full text-gray-800">{experience?.experience?.evaluationResult || "Naciente"}</p>
+            </div>
+            <div>
+              <label className="block font-semibold mb-1">Adjuntar PDF:</label>
+              {experience?.documents[0]?.urlPdf ? (
+                <a
+                  href={experience.documents[0].urlPdf}
+                  download="archivo.pdf" // Nombre del archivo al descargar
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block w-full text-blue-600 hover:underline truncate"
+                >
+                  {experience.documents[0].urlPdf}
+                </a>
+              ) : (
+                <p className="text-gray-500">No hay PDF adjunto</p>
+              )}
+            </div>
+            <div>
+              <label className="block font-semibold mb-1">Enlace:</label>
+              {mode === "view" ? (
+                experience?.documents[0]?.urlLink ? (
                   <a
-                    href={experience.documents[0].urlPdf}
-                    target="_blank" // Abrir en una nueva pestaña
-                    rel="noopener noreferrer" // Seguridad adicional
-                    className="block w-full border border-gray-300 rounded px-3 py-2 bg-gray-100 text-blue-600 hover:underline truncate"
+                    href={experience.documents[0].urlLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block text-blue-600 hover:underline truncate"
                   >
-                    {experience.documents[0].urlPdf}
+                    {experience.documents[0].urlLink}
                   </a>
                 ) : (
-                  <p className="text-gray-500">No hay PDF adjunto</p>
-                )}
-              </div>
-              <div>
-                <label className="block font-semibold mb-1">Enlace:</label>
-                <div className="flex items-center">
-                  <input
-                    className="w-full border border-gray-300 rounded-l px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-200 truncate"
-                    placeholder="Adjuntar Enlaces"
-                    value={experience?.documents[0]?.urlLink || ""}
-                    readOnly={!editMode}
-                    onChange={(e) =>
-                      editMode &&
-                      setExperience((exp) =>
-                        exp
-                          ? { ...exp, documents: [{ ...exp.documents[0], urlLink: e.target.value }] }
-                          : exp
-                      )
-                    }
-                  />
-                  <span className="inline-flex items-center px-3 border border-l-0 border-gray-300 rounded-r bg-gray-100">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5 text-gray-400"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M13.828 10.172a4 4 0 010 5.656m-3.656-3.656a4 4 0 015.656 0m-7.778 7.778a4 4 0 005.656 0l1.414-1.414a4 4 0 000-5.656m-3.656 3.656a4 4 0 010-5.656"
-                      />
-                    </svg>
-                  </span>
-                </div>
-              </div>
+                  <p className="text-gray-500">Sin información</p>
+                )
+              ) : (
+                <input
+                  className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-200 truncate"
+                  placeholder="Adjuntar Enlaces"
+                  value={experience?.documents[0]?.urlLink || ""}
+                  onChange={(e) =>
+                    mode === "edit" &&
+                    setExperience((exp) =>
+                      exp
+                        ? { ...exp, documents: [{ ...exp.documents[0], urlLink: e.target.value }] }
+                        : exp
+                    )
+                  }
+                />
+              )}
             </div>
           </div>
-          {/* Botón Listo / Guardar */}
+
+          {/* Botones */}
           <div className="flex justify-end items-center gap-4 mt-6">
             {error && <span className="text-red-500">{error}</span>}
-            <button
-              className="bg-gray-200 text-gray-700 font-semibold px-4 py-2 rounded hover:bg-gray-300"
-              type="button"
-              onClick={() => setEditMode(!editMode)}
-            >
-              {editMode ? "Cancelar" : "Actualizar"}
-            </button>
-            {editMode ? (
-              <button
-                type="submit"
-                className="bg-sky-500 text-white font-semibold px-4 py-2 rounded hover:bg-sky-600"
-              >
-                Guardar
-              </button>
+            {mode === "edit" ? (
+              <>
+                <button
+                  type="button"
+                  className="bg-gray-200 text-gray-700 font-semibold px-4 py-2 rounded hover:bg-gray-300"
+                  onClick={onClose}
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  className="bg-sky-500 text-white font-semibold px-4 py-2 rounded hover:bg-sky-600"
+                >
+                  Guardar
+                </button>
+              </>
             ) : (
               <button
                 type="button"

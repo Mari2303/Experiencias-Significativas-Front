@@ -1,21 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Person } from "../Api/Types/Person"; // Asegúrate de importar el tipo Person
+import { getEnum } from "../Api/Services/Helper"; // Asegúrate de importar la función para obtener enums
+import { DataSelectRequest } from "../Api/Types/HelperTypes";
 
-interface Person {
-  id: number;
-  documentType: string;
-  identificationNumber: string;
-  firstName: string;
-  middleName: string;
-  firstLastName: string;
-  secondLastName: string;
-  fullName: string;
-  codeDane: string;
-  emailInstitutional: string;
-  email: string;
-  phone: number;
-  state?: boolean; // Estado activo/inactivo
-}
 
 interface AddPersonFormProps {
   onClose: () => void;
@@ -33,8 +21,27 @@ const AddPersonForm: React.FC<AddPersonFormProps> = ({ onClose, onAdded }) => {
   const [phone, setPhone] = useState("");
   const [codeDane, setCodeDane] = useState("");
   const [documentType, setDocumentType] = useState(0); // Tipo de documento
+  const [documentTypes, setDocumentTypes] = useState<DataSelectRequest[]>([]); // Estado para los valores del enum
+    const [codigoDaneOptions, setCodigoDaneOptions] = useState<DataSelectRequest[]>([]);
+  
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchEnums = async () => {
+      try {
+        const documentTypes = await getEnum("DocumentType"); // Obtener valores del enum
+        setDocumentTypes(documentTypes);
+        console.log("DocumentTypes recibidos:", documentTypes);
+      } catch (err) {
+        console.error("Error al obtener DocumentType:", err);
+      }
+      const codigoDaneOptions = await getEnum("CodeDane");
+          setCodigoDaneOptions(codigoDaneOptions);
+          console.log("CodeDane recibidos:", codigoDaneOptions);
+    };
+    fetchEnums();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -85,10 +92,14 @@ const AddPersonForm: React.FC<AddPersonFormProps> = ({ onClose, onAdded }) => {
                 className="w-full px-3 py-2 border rounded-lg"
                 value={documentType}
                 onChange={(e) => setDocumentType(parseInt(e.target.value, 10))}
+                required
               >
-                <option value={0}>Cédula</option>
-                <option value={1}>Pasaporte</option>
-                <option value={2}>Tarjeta de Identidad</option>
+                <option value="">Seleccione...</option>
+                {documentTypes.map((doc) => (
+                  <option key={doc.id} value={doc.id}>
+                    {doc.displayText}
+                  </option>
+                ))}
               </select>
             </div>
             <div>
@@ -170,12 +181,18 @@ const AddPersonForm: React.FC<AddPersonFormProps> = ({ onClose, onAdded }) => {
             </div>
             <div>
               <label className="block text-gray-700 font-semibold mb-1">Código Dane</label>
-              <input
-                type="text"
+              <select
                 className="w-full px-3 py-2 border rounded-lg"
                 value={codeDane}
-                onChange={(e) => setCodeDane(e.target.value)}
-              />
+                onChange={(e) => setCodeDane(e.target.value)} // Actualizar el estado con el valor seleccionado
+              >
+                <option value="">Seleccione...</option>
+                {codigoDaneOptions.map((option) => (
+                  <option key={option.displayText} value={option.displayText}>
+                    {option.id} {/* Mostrar el texto del enum */}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
           <div className="flex justify-end gap-4 mt-6">
@@ -436,7 +453,9 @@ const PersonsList: React.FC = () => {
               <th className="py-3 px-4 text-left font-semibold text-gray-700 border-b">Número Identificación</th>
               <th className="py-3 px-4 text-left font-semibold text-gray-700 border-b">Nombre Completo</th>
               <th className="py-3 px-4 text-left font-semibold text-gray-700 border-b">Email</th>
+              <th className="py-3 px-4 text-left font-semibold text-gray-700 border-b">Email Institucional</th> {/* Nuevo campo */}
               <th className="py-3 px-4 text-left font-semibold text-gray-700 border-b">Teléfono</th>
+              <th className="py-3 px-4 text-left font-semibold text-gray-700 border-b">Código Dane</th> {/* Nuevo campo */}
               <th className="py-3 px-4 text-left font-semibold text-gray-700 border-b">Estado</th>
               <th className="py-3 px-4 text-left font-semibold text-gray-700 border-b">Acciones</th>
             </tr>
@@ -444,7 +463,7 @@ const PersonsList: React.FC = () => {
           <tbody>
             {persons.length === 0 ? (
               <tr>
-                <td colSpan={7} className="py-6 px-4 text-center text-gray-500">
+                <td colSpan={9} className="py-6 px-4 text-center text-gray-500">
                   No hay personas para mostrar.
                 </td>
               </tr>
@@ -455,7 +474,9 @@ const PersonsList: React.FC = () => {
                   <td className="py-2 px-4 border-b">{person.identificationNumber}</td>
                   <td className="py-2 px-4 border-b">{person.fullName}</td>
                   <td className="py-2 px-4 border-b">{person.email}</td>
+                  <td className="py-2 px-4 border-b">{person.emailInstitutional}</td> {/* Nuevo campo */}
                   <td className="py-2 px-4 border-b">{person.phone}</td>
+                  <td className="py-2 px-4 border-b">{person.codeDane}</td> {/* Nuevo campo */}
                   <td className="py-2 px-4 border-b">
                     {person.state ? (
                       <span className="text-green-600 font-semibold">Activo</span>

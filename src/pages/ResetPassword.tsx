@@ -2,24 +2,20 @@ import React, { useState } from "react";
 import Cohete from "../../public/images/Cohete.png"
 import flecha from "../../public/images/flecha.png";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const ResetPassword: React.FC = () => {
   const [step, setStep] = useState(1); 
   const [password, setPassword] = useState(""); 
-  const [code, setCode] = useState(Array(5).fill("")); 
+  const [code, setCode] = useState(Array(6).fill("")); 
   const [email, setEmail] = useState("");
 
   // Validaciones de la contraseña
   const hasUpperLower = /[a-z]/.test(password) && /[A-Z]/.test(password);
   const hasNumber = /\d/.test(password);
   const hasMinLength = password.length >= 8;
+  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
 
-  // Ir al paso 2 limpiando 
-  const goToStep2 = () => {
-    setPassword("");
-    setCode(Array(5).fill(""));
-    setStep(2);
-  };
 
   // Volver al paso 1 limpiando 
   const goBackToStep1 = () => {
@@ -41,6 +37,121 @@ const ResetPassword: React.FC = () => {
       const newCode = [...code];
       newCode[index] = value;
       setCode(newCode);
+
+      // Enfocar el siguiente cuadro si existe
+    if (value && index < code.length - 1) {
+      const nextInput = document.getElementById(`code-input-${index + 1}`);
+      if (nextInput) nextInput.focus();
+    }
+    }
+  };
+
+  const sendForgotPasswordEmail = async () => {
+    const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "";
+    const endpoint = `${API_BASE}/api/User/forgot-password`;
+
+    try {
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      if (!response.ok) throw new Error("Error al enviar el correo");
+
+      const data = await response.text();
+      console.log("Respuesta del servidor:", data);
+
+      Swal.fire({
+        title: "Éxito",
+        text: data,
+        icon: "success",
+        confirmButtonText: "Continuar",
+      }).then(() => setStep(2)); // Ir al paso 2
+    } catch (err) {
+      console.error("Error al enviar el correo:", err);
+
+      Swal.fire({
+        title: "Error",
+        text: "No se pudo enviar el correo. Verifique el correo ingresado.",
+        icon: "error",
+      });
+    }
+  };
+
+  const resetPassword = async () => {
+    const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "";
+    const endpoint = `${API_BASE}/api/User/reset-password`;
+
+    try {
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          code: code.join(""), // Convertir el array de código en un string
+          newPassword: password,
+        }),
+      });
+
+      if (!response.ok) throw new Error("Error al cambiar la contraseña");
+
+      const data = await response.text();
+      console.log("Respuesta del servidor:", data);
+
+      Swal.fire({
+        title: "Éxito",
+        text: "Contraseña cambiada exitosamente.",
+        icon: "success",
+        confirmButtonText: "Continuar",
+      }).then(() => setStep(1)); // Volver al paso 1
+    } catch (err) {
+      console.error("Error al cambiar la contraseña:", err);
+
+      Swal.fire({
+        title: "Error",
+        text: "No se pudo cambiar la contraseña. Verifique los datos ingresados.",
+        icon: "error",
+      });
+    }
+  };
+
+  const resendCode = async () => {
+    const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "";
+    const endpoint = `${API_BASE}/api/User/forgot-password`;
+
+    try {
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      if (!response.ok) throw new Error("Error al reenviar el código");
+
+      const data = await response.text();
+      console.log("Código reenviado:", data);
+
+      Swal.fire({
+        title: "Éxito",
+        text: "Código reenviado exitosamente.",
+        icon: "success",
+        confirmButtonText: "Continuar",
+      });
+    } catch (err) {
+      console.error("Error al reenviar el código:", err);
+
+      Swal.fire({
+        title: "Error",
+        text: "No se pudo reenviar el código. Verifique el correo ingresado.",
+        icon: "error",
+      });
     }
   };
 
@@ -159,13 +270,15 @@ const ResetPassword: React.FC = () => {
                 </label>
                 <input
                   type="email"
+                  value={email} // Conectar el estado `email`
+                  onChange={(e) => setEmail(e.target.value)} // Actualizar el estado `email`
                   placeholder="correo@ejemplo.com"
                   className="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
                 />
               </div>
 
               <button
-                onClick={goToStep2}
+                onClick={sendForgotPasswordEmail}
                 className="w-full bg-[#009CFF] text-white py-2 rounded-md hover:bg-blue-500 transition"
               >
                 Enviar código
@@ -186,6 +299,7 @@ const ResetPassword: React.FC = () => {
                 {code.map((digit, i) => (
                   <input
                     key={i}
+                    id={`code-input-${i}`} // Agregar un id único para cada cuadro
                     type="text"
                     maxLength={1}
                     value={digit}
@@ -233,11 +347,15 @@ const ResetPassword: React.FC = () => {
                 <li className={hasNumber ? "text-green-600" : "text-red-500"}>
                   Al menos un número
                 </li>
+                <li className={hasSpecialChar ? "text-green-600" : "text-red-500"}>
+                  Al menos un carácter especial (e.g., !@#$%^&*)
+                </li>
               </ul>
 
               {/* Botón cambiar */}
               <button
                 disabled={!(hasUpperLower && hasNumber && hasMinLength)}
+                onClick={resetPassword}
                 className={`w-full py-2 rounded-md transition ${
                   hasUpperLower && hasNumber && hasMinLength
                     ? "bg-[#009CFF] text-white hover:bg-blue-500"
@@ -264,7 +382,7 @@ const ResetPassword: React.FC = () => {
                 className="w-full border rounded-md p-3 mb-14 focus:outline-none focus:ring-2 focus:ring-blue-400 "
               />
               <button
-                onClick={() => setStep(2)}
+                onClick={resendCode}
                 className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600"
               >
                 Enviar

@@ -5,7 +5,7 @@ import TematicaForm from "./Experience/TematicaForm";
 import GrupoPoblacionalForm from "./Experience/GrupoPoblacional";
 import TiempoForm from "./Experience/TiempoForm";
 import IdentificacionInstitucional from "./Experience/IdentificacionInstitucional";
-import Componentes from "./Experience/Componentes";
+import Components from "./Experience/Components";
 import SeguimientoEvaluacion from "./Experience/SeguimientoEvaluacion";
 import InformacionApoyoForm from "./Experience/InformacionApoyoForm";
 import NivelesForm from "./Experience/NivelesForm";
@@ -263,7 +263,7 @@ const AddExperience: React.FC<AddExperienceProps> = ({ onVolver }) => {
         <NivelesForm value={nivelesForm} onChange={setNivelesForm} />
         <GrupoPoblacionalForm value={grupoPoblacional} onChange={setGrupoPoblacional} />
         <TiempoForm value={tiempo} onChange={setTiempo} />
-        <Componentes value={objectiveExperience} onChange={setObjectiveExperience} />
+        <Components value={objectiveExperience} onChange={setObjectiveExperience} />
         <SeguimientoEvaluacion value={seguimientoEvaluacion} onChange={setSeguimientoEvaluacion} />
         <InformacionApoyoForm value={informacionApoyo} onChange={setInformacionApoyo} />
 

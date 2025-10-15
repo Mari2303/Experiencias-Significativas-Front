@@ -1,14 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import type { LineThematic } from "../../Api/Types/lineThematic";
 
-interface LineThematic {
-  id: number;
-  name: string;
-  code: string;
-  state?: boolean; // Estado activo/inactivo
-  createdAt?: string;
-  deletedAt?: string;
-}
 
 interface EditLineThematicFormProps {
   lineThematic: LineThematic;

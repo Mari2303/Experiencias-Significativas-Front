@@ -1,14 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import type { State } from "../../Api/Types/state";
 
-interface State {
-  id: number;
-  name: string;
-  code: string;
-  state?: boolean; // Estado activo/inactivo
-  createdAt?: string;
-  deletedAt?: string;
-}
 
 interface EditStateFormProps {
   stateItem: State;

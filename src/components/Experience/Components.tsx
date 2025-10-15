@@ -9,7 +9,7 @@ interface Props {
 }
 
 
-const Componentes: React.FC<Props> = ({ value, onChange }) => {
+const Components: React.FC<Props> = ({ value, onChange }) => {
   return (
     <div className="w-full border rounded-lg p-6 mb-6">
       <h2 className="text-lg font-semibold mb-4">COMPONENTES</h2>
@@ -89,4 +89,4 @@ const Componentes: React.FC<Props> = ({ value, onChange }) => {
   );
 };
 
-export default Componentes;
+export default Components;

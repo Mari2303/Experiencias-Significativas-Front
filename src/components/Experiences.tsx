@@ -9,7 +9,6 @@ interface ExperiencesProps {
   onAgregar: () => void;
 }
 
-
 const Experiences = ({ onAgregar }: ExperiencesProps) => {
   const [showModal, setShowModal] = useState(false);
   const [showEvaluation, setShowEvaluation] = useState(false);
@@ -19,8 +18,6 @@ const Experiences = ({ onAgregar }: ExperiencesProps) => {
   const [experienceList, setExperienceList] = useState<Experience[]>([]); // Lista de experiencias
 
   const role = localStorage.getItem("role");
-
-  
 
   const nuevas = [1, 2, 3];
   const [selectedExperienceId, setSelectedExperienceId] = useState<number | null>(null);
@@ -204,7 +201,12 @@ const Experiences = ({ onAgregar }: ExperiencesProps) => {
       </div>
       {/* Modal para mostrar la experiencia seleccionada */}
       {showModal && (
-        <ExperienceModal show={showModal} onClose={handleClose} experienceId={selectedExperienceId ?? undefined} />
+        <ExperienceModal
+          show={showModal}
+          onClose={handleClose}
+          experienceId={selectedExperienceId ?? undefined}
+          mode="edit" // Solo actualizar
+        />
       )}
 
         {/* Modal de Evaluation desde el icono */}
@@ -259,6 +261,5 @@ const Experiences = ({ onAgregar }: ExperiencesProps) => {
     </div>
   );
 };
-
 
 export default Experiences;

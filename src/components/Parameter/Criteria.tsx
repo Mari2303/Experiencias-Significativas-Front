@@ -1,17 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import type { Criteria } from "../../Api/Types/criteria";
 
-interface Criteria {
-  id: number;
-  name: string;
-  code: string;
-  descriptionContribution: string;
-  descruotionType: string;
-  evaluationValue: string;
-  state?: boolean; // Estado activo/inactivo
-  createdAt?: string;
-  deletedAt?: string;
-}
 
 interface EditCriteriaFormProps {
   criteria: Criteria;
